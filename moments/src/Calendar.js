@@ -18,6 +18,21 @@ function DayBox(props) {
 }
 
 /*
+    One row in a calendar
+*/
+function WeekRow(props) {
+    // const array = Array(7).fill(NaN); // range to get 7 numbers
+    const row = props.data.map((data) =>
+        <DayBox data={data} />
+    );
+    return (
+        <tr>
+            {row}
+        </tr>
+    );
+}
+
+/*
     Calendar header for the names of the days
     e.g monday, tuesday etc..
 */
@@ -36,6 +51,17 @@ function DayHeaderRow() {
     Calendar template for one month
 */
 function Calendar() {
+    const calendarBody = [];
+    let counter = 0;
+    for (let i = 0; i < 6; i++) {
+        const row = Array(6);
+        for (let j = 0; j < 7; j++) {
+            row[j] = counter;
+            counter += 1;
+        }
+        calendarBody.push(<WeekRow data={row} />);
+    }
+
     return (
         <>
             <table>
@@ -43,6 +69,7 @@ function Calendar() {
                     <DayHeaderRow />
                 </thead>
                 <tbody>
+                    {calendarBody}
                 </tbody>
             </table>
         </>
