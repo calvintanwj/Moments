@@ -50,14 +50,19 @@ function DayHeaderRow() {
 /*
     Calendar template for one month
 */
-function Calendar() {
+function Calendar(props) {
     const calendarBody = [];
-    let counter = 0;
+    let day = 1;
     for (let i = 0; i < 6; i++) {
         const row = Array(6);
         for (let j = 0; j < 7; j++) {
-            row[j] = counter;
-            counter += 1;
+            if (day <= props.days) {
+                row[j] = day;
+                day += 1;
+            } else {
+                row[j] = null
+            }
+
         }
         calendarBody.push(<WeekRow data={row} />);
     }
@@ -65,6 +70,7 @@ function Calendar() {
     return (
         <>
             <table>
+                <caption>{props.calendarLabel}</caption>
                 <thead>
                     <DayHeaderRow />
                 </thead>

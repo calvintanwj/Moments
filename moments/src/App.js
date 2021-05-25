@@ -4,7 +4,7 @@ import Journal from "./Journal.js";
 function App() {
     return (
         <>
-            <Calendar />
+            <Calendar calendarLabel='May 2021' days={31} />
             <Journal />
         </>
     );
