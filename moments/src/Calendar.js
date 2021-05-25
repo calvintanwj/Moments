@@ -56,14 +56,20 @@ function DayHeaderRow() {
     props:
         calendarLabel: String Label for calendar e.g Month-Year
         days: Integer, number of days in the calendar month
+        offset: Number of days to shift start of month by, excluding current day
+        e.g if day starts on Monday, offset is 0
 */
 function Calendar(props) {
     const calendarBody = [];
     let day = 1;
+    let offsetCounter = 0;
     for (let i = 0; i < 6; i++) {
         const row = Array(6);
         for (let j = 0; j < 7; j++) {
-            if (day <= props.days) {
+            if (offsetCounter < props.offset) {
+                row[j] = null
+                offsetCounter += 1;
+            } else if (day <= props.days) {
                 row[j] = day;
                 day += 1;
             } else {
