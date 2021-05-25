@@ -10,6 +10,8 @@ const dayNames = [
 
 /*
     Box for each individual day in a calendar
+    props: 
+        Data: Data to be displayed in DayBox 
 */
 function DayBox(props) {
     return (
@@ -19,6 +21,8 @@ function DayBox(props) {
 
 /*
     One row in a calendar
+    props:
+        Data: Array of data to go into a WeekRow, sequentially added to week 
 */
 function WeekRow(props) {
     // const array = Array(7).fill(NaN); // range to get 7 numbers
@@ -49,6 +53,9 @@ function DayHeaderRow() {
 
 /*
     Calendar template for one month
+    props:
+        calendarLabel: String Label for calendar e.g Month-Year
+        days: Integer, number of days in the calendar month
 */
 function Calendar(props) {
     const calendarBody = [];
