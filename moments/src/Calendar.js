@@ -8,25 +8,42 @@ const dayNames = [
     "Sunday",
 ];
 
+/*
+    Box for each individual day in a calendar
+*/
+function DayBox(props) {
+    return (
+        <td>{props.data}</td>
+    );
+}
+
+/*
+    Calendar header for the names of the days
+    e.g monday, tuesday etc..
+*/
 function DayHeaderRow() {
-    const row = dayNames.map((day) =>
+    const days = dayNames.map((day) =>
         <td>{day}</td>);
 
     return (
         <tr>
-            {row}
+            {days}
         </tr>
     );
 }
 
 /*
-    Calendar box for one month
+    Calendar template for one month
 */
 function Calendar() {
     return (
         <>
             <table>
-                <DayHeaderRow />
+                <thead>
+                    <DayHeaderRow />
+                </thead>
+                <tbody>
+                </tbody>
             </table>
         </>
     );
