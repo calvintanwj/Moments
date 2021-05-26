@@ -1,9 +1,26 @@
+/* #Outer-Calendar {
+  border: solid;
+  border-collapse: collapse;
+}
+
+#Outer-Calendar > tbody > tr,
+#Outer-Calendar > thead > th {
+  border: solid;
+  text-align: center;
+  width: 80px;
+  height: 80px;
+} */
+
 table {
   border: solid;
   border-collapse: collapse;
 }
 
-th,
-td {
+tr,
+th {
   border: solid;
+  text-align: left;
+  vertical-align: top;
+  width: 80px;
+  height: 80px;
 }

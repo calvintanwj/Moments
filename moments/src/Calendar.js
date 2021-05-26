@@ -19,7 +19,17 @@ const dayNames = [
 function DayBox(props) {
     return (
         <td onClick={props.dayHandler}>
-            {props.label}
+            <table>
+                <thead>
+                    <tr>
+                        <th>{props.label}</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
         </td>
     );
 }
