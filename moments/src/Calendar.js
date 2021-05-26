@@ -1,3 +1,5 @@
+import './Calendar.css';
+
 const dayNames = [
     "Monday",
     "Tuesday",
@@ -42,7 +44,7 @@ function WeekRow(props) {
 */
 function DayHeaderRow() {
     const days = dayNames.map((day) =>
-        <td>{day}</td>);
+        <th scope="col">{day}</th>);
 
     return (
         <tr>
