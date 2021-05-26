@@ -95,7 +95,7 @@ function Calendar(props) {
             }
 
         }
-        calendarBody.push(<WeekRow labels={row} dayHandler={dayHandler} />);
+        calendarBody.push(<WeekRow key={"row-" + i} labels={row} dayHandler={dayHandler} />);
     }
 
     return (
@@ -103,7 +103,7 @@ function Calendar(props) {
             <table>
                 <caption>{props.calendarCaption}</caption>
                 <thead>
-                    <DayHeaderRow />
+                    <DayHeaderRow key="DayHeaderRow" />
                 </thead>
                 <tbody>
                     {calendarBody}
