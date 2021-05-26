@@ -56,7 +56,7 @@ function DayHeaderRow() {
 /*
     Calendar template for one month
     props:
-        calendarLabel: String Label for calendar e.g Month-Year
+        calendarCaption: String caption for calendar e.g Month-Year
         days: Integer, number of days in the calendar month
         offset: Number of days to shift start of month by, excluding current day
         e.g if day starts on Monday, offset is 0
@@ -65,16 +65,19 @@ function Calendar(props) {
     const calendarBody = [];
     let day = 1;
     let offsetCounter = 0;
+
+    // Create a 5 row by 7 col calendar body to fill with numbers 
     for (let i = 0; i < 6; i++) {
         const row = Array(6);
         for (let j = 0; j < 7; j++) {
-            if (offsetCounter < props.offset) {
+            if (offsetCounter < props.offset) { // offset the first day of the month
                 row[j] = null
                 offsetCounter += 1;
-            } else if (day <= props.days) {
+
+            } else if (day <= props.days) { // normal calendar days
                 row[j] = day;
                 day += 1;
-            } else {
+            } else { // Calendar month has been labelled and remainer of cells should be empty
                 row[j] = null
             }
 
@@ -85,7 +88,7 @@ function Calendar(props) {
     return (
         <>
             <table>
-                <caption>{props.calendarLabel}</caption>
+                <caption>{props.calendarCaption}</caption>
                 <thead>
                     <DayHeaderRow />
                 </thead>
