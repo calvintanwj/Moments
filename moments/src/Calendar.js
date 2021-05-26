@@ -13,23 +13,29 @@ const dayNames = [
 /*
     Box for each individual day in a calendar
     props: 
-        Data: Data to be displayed in DayBox 
+        label: label to be displayed in DayBox 
 */
 function DayBox(props) {
     return (
-        <td>{props.data}</td>
+        <td onClick={props.dayHandler}>
+            {props.label}
+        </td>
     );
 }
 
 /*
     One row in a calendar
     props:
-        Data: Array of data to go into a WeekRow, sequentially added to week 
+        label: Array of labels to go into a WeekRow, sequentially added to week 
 */
 function WeekRow(props) {
     // const array = Array(7).fill(NaN); // range to get 7 numbers
-    const row = props.data.map((data) =>
-        <DayBox data={data} />
+    const row = props.labels.map((label) =>
+        <DayBox
+            label={label}
+            dayHandler={() =>
+                props.dayHandler(label)
+            } />
     );
     return (
         <tr>
@@ -66,6 +72,13 @@ function Calendar(props) {
     let day = 1;
     let offsetCounter = 0;
 
+    /*
+        Handler for cell in calendar when clicked
+    */
+    function dayHandler(day) {
+        console.log(day + " clicked")
+    }
+
     // Create a 5 row by 7 col calendar body to fill with numbers 
     for (let i = 0; i < 6; i++) {
         const row = Array(6);
@@ -82,7 +95,7 @@ function Calendar(props) {
             }
 
         }
-        calendarBody.push(<WeekRow data={row} />);
+        calendarBody.push(<WeekRow labels={row} dayHandler={dayHandler} />);
     }
 
     return (
