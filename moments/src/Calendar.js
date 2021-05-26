@@ -1,4 +1,5 @@
 import './Calendar.css';
+import React, { useState } from 'react';
 
 const dayNames = [
     "Monday",
@@ -68,16 +69,21 @@ function DayHeaderRow() {
         e.g if day starts on Monday, offset is 0
 */
 function Calendar(props) {
-    const calendarBody = [];
-    let day = 1;
-    let offsetCounter = 0;
+
+    // keep track of the day that is currently selected
+    const [selectedDay, setDay] = useState(null);
 
     /*
         Handler for cell in calendar when clicked
     */
     function dayHandler(day) {
-        console.log(day + " clicked")
+        setDay(day);
     }
+
+
+    const calendarBody = [];
+    let day = 1;
+    let offsetCounter = 0;
 
     // Create a 5 row by 7 col calendar body to fill with numbers 
     for (let i = 0; i < 6; i++) {
@@ -100,7 +106,8 @@ function Calendar(props) {
 
     return (
         <>
-            <table>
+            <h1>Focused Day: {selectedDay}</h1>
+            <table id="Outer-Calendar">
                 <caption>{props.calendarCaption}</caption>
                 <thead>
                     <DayHeaderRow key="DayHeaderRow" />
