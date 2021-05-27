@@ -20,7 +20,7 @@ function DayBox(props) {
                 </td>
             </tr>
         )
-        : <td>No Events</td>;
+        : <tr><td>No Events</td></tr>;
     return (
         <td onClick={props.dayHandler}>
             <table>

@@ -14,7 +14,7 @@ const dayNames = [
 */
 function DayHeaderRow() {
     const days = dayNames.map((day) =>
-        <th scope="col">{day}</th>);
+        <th scope="col" key={day}>{day}</th>);
 
     return (
         <tr>
