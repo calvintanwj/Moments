@@ -1,0 +1,21 @@
+textarea {
+  border: 3px solid #cccccc;
+  outline: none;
+  border-radius: 20px;
+  padding: 20px;
+  font-size: 1em;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  display: inline;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+}
