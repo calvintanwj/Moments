@@ -22,7 +22,7 @@ function DayBox(props) {
     // date label for dayBox
     const label = props.label;
     // events for dayBox
-    const [events, setEvents] = useState(props.events);
+    const events = props.events;
 
     // conditionally rendering default text if no events in a day
     const eventsRow = events.length ?
@@ -105,6 +105,9 @@ function Calendar(props) {
     // keep track of the day that is currently selected
     const [selectedDay, setDay] = useState(null);
     const [formEventName, setFormEventName] = useState("");
+    const dayData = [];
+
+
     /*
         Handler for cell in calendar when clicked
     */
@@ -128,7 +131,6 @@ function Calendar(props) {
         setFormEventName("");
     }
 
-    const calendarBody = [];
     let day = 1;
     let offsetCounter = 0;
     let boxKey = 0;
@@ -162,7 +164,7 @@ function Calendar(props) {
             boxKey += 1;
             // ["Goto the barber", "Go workout"]
         }
-        calendarBody.push(<WeekRow key={"row-" + i} days={row} dayHandler={dayHandler} />);
+        dayData.push(row);
     }
 
     return (
@@ -181,7 +183,9 @@ function Calendar(props) {
                     <DayHeaderRow key="DayHeaderRow" />
                 </thead>
                 <tbody>
-                    {calendarBody}
+                    {dayData.map((row, index) =>
+                        <WeekRow key={"row-" + index} days={row} dayHandler={dayHandler} />
+                    )}
                 </tbody>
             </table>
         </>
