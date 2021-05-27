@@ -1,110 +1,142 @@
 import React, { useState } from "react";
-import Toolbar from "./Toolbar";
+import MarkdownToolbar from "./MarkdownToolbar";
 import ReactMarkdown from "react-markdown";
-import PreviewToolbar from "./PreviewToolbar";
+import ModeToolbar from "./ModeToolbar";
 
-//Global Variables
+// Global Variables
+
+// Consists of all the button types within the journal toolbar.
 const buttonTypes = [
   {
-    id: "1",
-    name: "bold-text",
-    text: "**",
+    key: "0",
+    id: "bold-text",
+    text: "** **",
     label: "Bold",
   },
   {
-    id: "2",
-    name: "italicize-text",
-    text: "__",
+    key: "1",
+    id: "italicize-text",
+    text: "_ _",
     label: "Italicize",
   },
   {
-    id: "3",
-    name: "link-image",
+    key: "2",
+    id: "link-image",
     text: "![image]()",
     label: "Image",
   },
   {
-    id: "4",
-    name: "link-link",
+    key: "3",
+    id: "link-link",
     text: "[Link]()",
     label: "Link",
   },
   {
-    id: "5",
-    name: "blockquote",
+    key: "4",
+    id: "blockquote",
     text: "> ",
     label: "Quote",
   },
   {
-    id: "6",
-    name: "bullet-list",
+    key: "5",
+    id: "bullet-list",
     text: "* ",
     label: "UL",
   },
   {
-    id: "7",
-    name: "numbered-list",
+    key: "6",
+    id: "numbered-list",
     text: "1. ",
     label: "OL",
   },
   {
-    id: "8",
-    name: "line-break",
+    key: "7",
+    id: "line-break",
     text: "---",
     label: "Line Break",
   },
   {
-    id: "9",
-    name: "inline-code",
+    key: "8",
+    id: "inline-code",
     text: "` `",
     label: "Inline Code",
   },
   {
-    id: "10",
-    name: "code-block",
+    key: "9",
+    id: "code-block",
     text: "``` ```",
     label: "Code Block",
   },
 ];
 
+// Journal component
 function Journal() {
-  const [input, setMarkdown] = useState("");
+  // Controls the state of text written in the journal
+  // Text should be blank. May add a template in the future
+  const [input, setInput] = useState("");
+
+  // Controls the state of whether the user is in editing or preview mode.
+  // User starts out in editing mode.
   const [isEditing, setEditing] = useState(true);
 
-  function handleChange(e) {
-    setMarkdown(e.target.value);
+  // Contains the main logic when text is written in the journal
+  function inputText(e) {
+    setInput(e.target.value);
   }
 
-  function handlePreviewerClick(bool) {
+  // Contains the main logic when tab is pressed
+  function clickTab(e) {
+    if (e.keyCode === 9) {
+      e.preventDefault();
+      setInput(input + "    ");
+    }
+  }
+
+  // Contains the main logic to toggle between editing and preview mode
+  function toggleMode(bool) {
     setEditing(bool);
   }
 
-  function handleToolbarClick(id) {
-    setMarkdown(input + buttonTypes[id - 1].text);
+  // Contains the main logic to handle a toolbar button being clicked
+  // Puts the respective markdown in the journal
+  function toolbarClick(key) {
+    const txtarea = document.getElementById("journal-area");
+    txtarea.focus();
+    setInput(
+      input.substring(0, txtarea.selectionStart) +
+        buttonTypes[key].text +
+        input.substring(txtarea.selectionStart + buttonTypes[key].text.length)
+    );
+    console.log(txtarea.selectionStart);
+    txtarea.setSelectionRange(0, 3);
   }
 
+  // Editing mode
   const editingMode = (
-    <div className="journal-text-area">
-      <textarea
-        id="journal"
-        placeholder="Write here"
-        value={input}
-        onChange={handleChange}
-      />
-    </div>
+    <textarea
+      id="journal-area"
+      placeholder="Write here"
+      value={input}
+      onChange={inputText}
+      onKeyDown={(e) => clickTab(e)}
+    />
   );
 
+  // Preview mode (makes use of the ReactMarkdown dependency)
   const previewMode = (
-    <div className="markdown-previewer">
+    <div id="preview-area">
       <ReactMarkdown>{input}</ReactMarkdown>
     </div>
   );
 
+  // The overall journal interface.
   return (
-    <div className="main-interface">
-      <Toolbar onClick={handleToolbarClick} buttons={buttonTypes} />
-      <PreviewToolbar onClick={handlePreviewerClick} />
-      <div>{isEditing ? editingMode : previewMode}</div>
+    <div id="main-interface">
+      <MarkdownToolbar onClick={toolbarClick} buttons={buttonTypes} />
+      <div id="modetb-with-area">
+        <ModeToolbar onClick={toggleMode} />
+        <span>{isEditing ? editingMode : previewMode}</span>
+      </div>
     </div>
   );
 }

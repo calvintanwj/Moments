@@ -1,21 +1,52 @@
-textarea {
-  border: 3px solid #cccccc;
-  outline: none;
-  border-radius: 20px;
-  padding: 20px;
-  font-size: 1em;
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+/* General styling of the main-interface */
+#main-interface {
+  float: right;
 }
 
-ul {
+#modetb-with-area {
+  float: right;
+}
+
+/* Styling of the journal and preview area */
+#journal-area, #preview-area {
+  font-size: 1.5em;
+  border: 5px solid #cccccc;
+  outline: none;
+  border-radius: 30px;
+  width: 45vw;
+  height: 70vh;
+  padding: 20px;
+  resize: none;
+  float: right;
+}
+
+/* Styling of the markdown toolbar */
+#markdown-toolbar {
+  display: inline;
   list-style-type: none;
 }
 
-li {
-  display: inline;
-}
-
-button {
+/* Styling of the markdown toolbar buttons */
+.markdowntb-bt {
   padding: 10px;
   margin: 5px;
+  cursor: pointer;
+}
+
+/* Styling of the mode toolbar */
+#mode-toolbar {
+  display: flex;
+  margin: 0 auto;
+}
+
+/* Styling of the mode toolbar buttons */
+.modetb-bt {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  margin: 0;
+}
+
+#bold-text {
+
 }
