@@ -82,7 +82,7 @@ function Calendar(props) {
 
     // keep track of the day that is currently selected
     const [selectedDay, setDay] = useState(null);
-
+    const [formEventName, setFormEventName] = useState(null);
     /*
         Handler for cell in calendar when clicked
     */
@@ -90,6 +90,21 @@ function Calendar(props) {
         setDay(day);
     }
 
+    /*
+        Handler for change in temporary input field, used to make name a new event
+    */
+    function handleChangeFormEventName(e) {
+        const name = e.target.value;
+        setFormEventName(name);
+    }
+
+    /*
+        Handler for button to submit details from temporary input field to make a new event
+    */
+    function handleSubmitEvent() {
+        console.log("Created event " + formEventName);
+        setFormEventName("");
+    }
 
     const calendarBody = [];
     let day = 1;
@@ -117,6 +132,13 @@ function Calendar(props) {
     return (
         <>
             <h1>Focused Day: {selectedDay}</h1>
+
+            <input type="text" value={formEventName}
+                onChange={handleChangeFormEventName
+                }>
+            </input>
+            <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input>
+
             <table id="Outer-Calendar">
                 <caption>{props.calendarCaption}</caption>
                 <thead>
