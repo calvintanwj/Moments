@@ -15,6 +15,8 @@ const dayNames = [
     Box for each individual day in a calendar
     props: 
         label: label to be displayed in DayBox 
+        events: Array of events that is within a day
+        
 */
 function DayBox(props) {
     // date label for dayBox
@@ -25,7 +27,11 @@ function DayBox(props) {
     // conditionally rendering default text if no events in a day
     const eventsRow = events.length ?
         events.map((event) =>
-            <tr>{event}</tr>
+            <tr>
+                <td>
+                    {event}
+                </td>
+            </tr>
         )
         : <td>No Events</td>;
     return (
@@ -50,6 +56,7 @@ function DayBox(props) {
     One row in a calendar
     props:
         label: Array of labels to go into a WeekRow, sequentially added to week 
+        
 */
 function WeekRow(props) {
     // const array = Array(7).fill(NaN); // range to get 7 numbers
@@ -96,7 +103,7 @@ function Calendar(props) {
 
     // keep track of the day that is currently selected
     const [selectedDay, setDay] = useState(null);
-    const [formEventName, setFormEventName] = useState(null);
+    const [formEventName, setFormEventName] = useState("");
     /*
         Handler for cell in calendar when clicked
     */
