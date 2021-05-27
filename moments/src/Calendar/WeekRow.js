@@ -11,10 +11,12 @@ function WeekRow(props) {
         <DayBox
             label={day["label"]}
             dayHandler={() =>
-                props.dayHandler(day["label"])
+                props.dayHandler(day["label"], day["row"], day["col"])
             }
             events={day["events"]}
             key={day["key"]}
+            row={day["row"]}
+            col={day["col"]}
         />
     );
     return (

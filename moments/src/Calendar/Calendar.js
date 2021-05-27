@@ -22,8 +22,9 @@ function Calendar(props) {
     /*
         Handler for cell in calendar when clicked
     */
-    function dayHandler(day) {
-        setDay(day);
+    function dayHandler(label, row, col) {
+        console.log(`${row}row, ${col}col`);
+        setDay(label);
     }
 
     /*
@@ -50,26 +51,29 @@ function Calendar(props) {
     for (let i = 0; i < 6; i++) {
         const row = new Array(6);
         for (let j = 0; j < 7; j++) {
+            const dayObject = {
+                events: [],
+                key: boxKey,
+                row: i,
+                col: j
+            }
             if (offsetCounter < props.offset) { // offset the first day of the month
                 row[j] = {
-                    label: null,
-                    events: [],
-                    key: boxKey,
+                    ...dayObject,
+                    label: ""
                 }
                 offsetCounter += 1;
 
             } else if (day <= props.days) { // normal calendar days
                 row[j] = {
+                    ...dayObject,
                     label: day,
-                    events: ["Go workout"],
-                    key: boxKey,
                 }
                 day += 1;
             } else { // Calendar month has been labelled and remainer of cells should be empty
                 row[j] = {
-                    label: null,
-                    events: [],
-                    key: boxKey,
+                    ...dayObject,
+                    label: ""
                 }
             }
             boxKey += 1;
