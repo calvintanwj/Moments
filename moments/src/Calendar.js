@@ -67,6 +67,7 @@ function WeekRow(props) {
                 props.dayHandler(day["label"])
             }
             events={day["events"]}
+            key={day["key"]}
         />
     );
     return (
@@ -130,15 +131,17 @@ function Calendar(props) {
     const calendarBody = [];
     let day = 1;
     let offsetCounter = 0;
+    let boxKey = 0;
 
     // Create a 5 row by 7 col calendar body to fill with numbers 
     for (let i = 0; i < 6; i++) {
-        const row = Array(6);
+        const row = new Array(6);
         for (let j = 0; j < 7; j++) {
             if (offsetCounter < props.offset) { // offset the first day of the month
                 row[j] = {
                     label: null,
                     events: [],
+                    key: boxKey,
                 }
                 offsetCounter += 1;
 
@@ -146,14 +149,17 @@ function Calendar(props) {
                 row[j] = {
                     label: day,
                     events: ["Go workout"],
+                    key: boxKey,
                 }
                 day += 1;
             } else { // Calendar month has been labelled and remainer of cells should be empty
                 row[j] = {
                     label: null,
                     events: [],
+                    key: boxKey,
                 }
             }
+            boxKey += 1;
             // ["Goto the barber", "Go workout"]
         }
         calendarBody.push(<WeekRow key={"row-" + i} days={row} dayHandler={dayHandler} />);
