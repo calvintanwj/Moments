@@ -14,15 +14,18 @@ import React, { useState } from 'react';
 function Calendar(props) {
 
     // keep track of the day that is currently selected
-    const [selectedDay, setDay] = useState(null);
+    const [selectedDay, setDay] = useState(null); // for debugging
     const [formEventName, setFormEventName] = useState("");
     const [dayData, setDayData] = useState(createEmptyCalendar());
+    const [row, setRow] = useState(null);
+    const [col, setCol] = useState(null);
 
     /*
         Handler to focus cell in calendar when clicked
     */
     function dayHandler(label, row, col) {
-        console.log(`${row}row, ${col}col`);
+        setRow(row);
+        setCol(col);
         setDay(label);
     }
 
@@ -38,6 +41,19 @@ function Calendar(props) {
         Handler for button to submit details from temporary input field to make a new event
     */
     function handleSubmitEvent() {
+        // shallow copy columns dayData
+        const newDayData = [...dayData]
+        // deep copy the dayData -> dayData is a 2-d array containig objects
+        newDayData.map((row) => { // copy row
+            return [row.map((day) => {
+                return { ...day }  // copy object
+            })]
+        });
+
+        // add new event to day
+        newDayData[row][col]["events"].push(formEventName)
+        setDayData(newDayData);
+
         //clear form
         setFormEventName("");
     }
