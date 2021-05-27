@@ -53,13 +53,13 @@ function DayBox(props) {
 */
 function WeekRow(props) {
     // const array = Array(7).fill(NaN); // range to get 7 numbers
-    const row = props.labels.map((label) =>
+    const row = props.days.map((day) =>
         <DayBox
-            label={label}
+            label={day["label"]}
             dayHandler={() =>
-                props.dayHandler(label)
+                props.dayHandler(day["label"])
             }
-            events={["Goto the barber", "Go workout"]}
+            events={day["events"]}
         />
     );
     return (
@@ -129,18 +129,27 @@ function Calendar(props) {
         const row = Array(6);
         for (let j = 0; j < 7; j++) {
             if (offsetCounter < props.offset) { // offset the first day of the month
-                row[j] = null
+                row[j] = {
+                    label: null,
+                    events: [],
+                }
                 offsetCounter += 1;
 
             } else if (day <= props.days) { // normal calendar days
-                row[j] = day;
+                row[j] = {
+                    label: day,
+                    events: ["Go workout"],
+                }
                 day += 1;
             } else { // Calendar month has been labelled and remainer of cells should be empty
-                row[j] = null
+                row[j] = {
+                    label: null,
+                    events: [],
+                }
             }
-
+            // ["Goto the barber", "Go workout"]
         }
-        calendarBody.push(<WeekRow key={"row-" + i} labels={row} dayHandler={dayHandler} />);
+        calendarBody.push(<WeekRow key={"row-" + i} days={row} dayHandler={dayHandler} />);
     }
 
     return (
