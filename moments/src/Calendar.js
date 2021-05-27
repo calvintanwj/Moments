@@ -17,16 +17,28 @@ const dayNames = [
         label: label to be displayed in DayBox 
 */
 function DayBox(props) {
+    // date label for dayBox
+    const label = props.label;
+    // events for dayBox
+    const [events, setEvents] = useState(props.events);
+
+    // conditionally rendering default text if no events in a day
+    const eventsRow = events.length ?
+        events.map((event) =>
+            <tr>{event}</tr>
+        )
+        : <td>No Events</td>;
     return (
         <td onClick={props.dayHandler}>
             <table>
                 <thead>
                     <tr>
-                        <th>{props.label}</th>
+                        <th>{label}</th>
                     </tr>
 
                 </thead>
                 <tbody>
+                    {eventsRow}
                 </tbody>
             </table>
 
@@ -46,7 +58,9 @@ function WeekRow(props) {
             label={label}
             dayHandler={() =>
                 props.dayHandler(label)
-            } />
+            }
+            events={["Goto the barber", "Go workout"]}
+        />
     );
     return (
         <tr>
