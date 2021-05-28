@@ -11,61 +11,118 @@ const buttonTypes = [
     key: "0",
     id: "bold-text",
     text: "** **",
-    label: "Bold",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Bold Text"
+        src="https://img.icons8.com/metro/26/000000/bold.png"
+      />
+    ),
   },
   {
     key: "1",
     id: "italicize-text",
     text: "_ _",
-    label: "Italicize",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Italicize Text"
+        src="https://img.icons8.com/metro/26/000000/italic.png"
+      />
+    ),
   },
   {
     key: "2",
-    id: "link-image",
+    id: "attach-image",
     text: "![image]()",
-    label: "Image",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Attach Image"
+        src="https://img.icons8.com/metro/26/000000/xlarge-icons.png"
+      />
+    ),
   },
   {
     key: "3",
-    id: "link-link",
+    id: "attach-link",
     text: "[Link]()",
-    label: "Link",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Attach LInk"
+        src="https://img.icons8.com/metro/26/000000/add-link.png"
+      />
+    ),
   },
   {
     key: "4",
     id: "blockquote",
     text: "> ",
-    label: "Quote",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Block Quote"
+        src="https://img.icons8.com/metro/26/000000/quote.png"
+      />
+    ),
   },
   {
     key: "5",
     id: "bullet-list",
     text: "* ",
-    label: "UL",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Bullet List"
+        src="https://img.icons8.com/metro/26/000000/list.png"
+      />
+    ),
   },
   {
     key: "6",
     id: "numbered-list",
     text: "1. ",
-    label: "OL",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Numbered List"
+        src="https://img.icons8.com/metro/26/000000/numbered-list.png"
+      />
+    ),
   },
   {
     key: "7",
     id: "line-break",
     text: "---",
-    label: "Line Break",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Line Break"
+        src="https://img.icons8.com/metro/26/000000/horizontal-line.png"
+      />
+    ),
   },
   {
     key: "8",
     id: "inline-code",
     text: "` `",
-    label: "Inline Code",
-  },
-  {
-    key: "9",
-    id: "code-block",
-    text: "``` ```",
-    label: "Code Block",
+    label: (
+      <img
+        height="20px"
+        width="20px"
+        alt="Inline Code"
+        src="https://img.icons8.com/metro/26/000000/code.png"
+      />
+    ),
   },
 ];
 
@@ -132,10 +189,15 @@ function Journal() {
   // The overall journal interface.
   return (
     <div id="main-interface">
-      <MarkdownToolbar onClick={toolbarClick} buttons={buttonTypes} />
+      <div id="mdtb-block">
+        <MarkdownToolbar onClick={toolbarClick} buttons={buttonTypes} />
+      </div>
       <div id="modetb-with-area">
         <ModeToolbar onClick={toggleMode} />
         <span>{isEditing ? editingMode : previewMode}</span>
+      </div>
+      <div id="docs-link">
+        <a href="https://spec.commonmark.org/0.29/">Commonmark Docs</a>
       </div>
     </div>
   );

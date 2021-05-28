@@ -4,10 +4,10 @@ import React from "react";
 function ModeToolbar({ onClick }) {
   return (
     <div id="mode-toolbar">
-      <button className="modetb-bt" onClick={() => onClick(true)}>
+      <button id="mdtb-1" className="modetb-bt" onClick={() => onClick(true)}>
         Editing Mode
       </button>
-      <button className="modetb-bt" onClick={() => onClick(false)}>
+      <button id="mdtb-2" className="modetb-bt" onClick={() => onClick(false)}>
         Preview Mode
       </button>
     </div>

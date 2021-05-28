@@ -1,35 +1,44 @@
 /* General styling of the main-interface */
 #main-interface {
   float: right;
+  width: 45vw;
 }
 
 #modetb-with-area {
   float: right;
+  margin-top: 15px;
 }
 
 /* Styling of the journal and preview area */
-#journal-area, #preview-area {
-  font-size: 1.5em;
+#journal-area,
+#preview-area {
+  font-size: 1.2em;
   border: 5px solid #cccccc;
   outline: none;
-  border-radius: 30px;
   width: 45vw;
   height: 70vh;
   padding: 20px;
   resize: none;
   float: right;
+  font-family: "Exo 2", sans-serif;
+}
+
+#mdtb-block {
+  width: 50vw;
+  text-align: center;
+  transform: translateX(-8.5%);
 }
 
 /* Styling of the markdown toolbar */
 #markdown-toolbar {
   display: inline;
   list-style-type: none;
+  padding: 20px;
 }
 
 /* Styling of the markdown toolbar buttons */
 .markdowntb-bt {
-  padding: 10px;
-  margin: 5px;
+  padding: 3px 15px;
   cursor: pointer;
 }
 
@@ -37,6 +46,8 @@
 #mode-toolbar {
   display: flex;
   margin: 0 auto;
+  position: relative;
+  top: 5px;
 }
 
 /* Styling of the mode toolbar buttons */
@@ -45,8 +56,28 @@
   margin: 5px;
   cursor: pointer;
   margin: 0;
+  border: 5px solid #cccccc;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 15px;
+  border-bottom: 5px solid #cccccc;
+  font-family: "Exo 2", sans-serif;
+  font-size: 1em;
+}
+
+.modetb-bt:hover {
+  background-color: lightgrey;
+}
+
+.modetb-bt:focus {
+  background-color: white;
+  border-bottom: 10px white;
+}
+
+#docs-link {
+  text-align: center;
+  font-family: "Pacifico", cursive;
+  font-size: 1em;
 }
 
 #bold-text {
-
 }
