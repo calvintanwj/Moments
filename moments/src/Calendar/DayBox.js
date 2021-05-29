@@ -1,3 +1,5 @@
+import getDate from "date-fns/getDate";
+
 /*
     Box for each individual day in a calendar
     props: 
@@ -7,7 +9,7 @@
 */
 function DayBox(props) {
     // date label for dayBox
-    const label = props.label;
+    const date = props.date;
     // events for dayBox
     const events = props.events;
 
@@ -26,7 +28,7 @@ function DayBox(props) {
             <table>
                 <thead>
                     <tr>
-                        <th>{label}</th>
+                        <th>{getDate(date)}</th>
                     </tr>
 
                 </thead>

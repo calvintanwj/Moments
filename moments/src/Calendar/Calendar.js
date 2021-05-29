@@ -107,12 +107,13 @@ function Calendar() {
         for (let i = 0; i < 6; i++) {
             const row = new Array(6);
             for (let j = 0; j < 7; j++) {
+                const currDate = addDays(dateOfFirstDay, currentDifference);
                 const dayObject = {
                     events: [],
                     key: boxKey,
                     row: i,
                     col: j,
-                    label: getDate(addDays(dateOfFirstDay, currentDifference))
+                    date: currDate
                 }
                 row[j] = dayObject;
 

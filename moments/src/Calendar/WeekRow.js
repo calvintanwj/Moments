@@ -20,7 +20,7 @@ function WeekRow(props) {
             />
         } else {
             return <DayBox
-                label={day["label"]}
+                date={day["date"]}
                 dayHandler={() =>
                     props.dayHandler(day["label"], day["row"], day["col"])
                 }
