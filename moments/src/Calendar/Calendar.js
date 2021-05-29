@@ -3,6 +3,15 @@ import WeekRow from './WeekRow.js';
 import DayHeaderRow from './DayHeaderRow';
 import React, { useState } from 'react';
 
+import {
+    getDay,
+    getDate,
+    format,
+    startOfMonth,
+    endOfMonth
+} from 'date-fns'
+
+
 /*
     Calendar template for one month
     props:
@@ -12,11 +21,18 @@ import React, { useState } from 'react';
         e.g if day starts on Monday, offset is 0
 */
 function Calendar(props) {
+    // Date of current day
+    const [date, setDate] = useState(new Date());
 
     // keep track of the day that is currently selected
-    const [selectedDay, setDay] = useState(null); // for debugging
+    const [selectedDay, setDay] = useState(getDate(date)); // for debugging
     const [formEventName, setFormEventName] = useState("");
-    const [dayData, setDayData] = useState(createEmptyCalendar());
+    // generate calendar body data
+    const [dayData, setDayData] = useState(
+        createEmptyCalendar(getDate(endOfMonth(date)),  // get last day of month
+            getDay(startOfMonth(date)))); // gets offset (the difference between first day of month and sunday)
+
+    // index of current selected day in dayData array
     const [row, setRow] = useState(null);
     const [col, setCol] = useState(null);
 
@@ -61,7 +77,7 @@ function Calendar(props) {
     /* 
         Helper function to create the body of an empty calendar
     */
-    function createEmptyCalendar() {
+    function createEmptyCalendar(numDays, offset) {
         const dayData = [];
         let day = 1;
         let offsetCounter = 0;
@@ -77,14 +93,14 @@ function Calendar(props) {
                     row: i,
                     col: j
                 }
-                if (offsetCounter < props.offset) { // offset the first day of the month
+                if (offsetCounter < offset) { // offset the first day of the month
                     row[j] = {
                         ...dayObject,
                         label: ""
                     }
                     offsetCounter += 1;
 
-                } else if (day <= props.days) { // normal calendar days
+                } else if (day <= numDays) { // normal calendar days
                     row[j] = {
                         ...dayObject,
                         label: day,
@@ -115,7 +131,7 @@ function Calendar(props) {
             <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input>
 
             <table id="Outer-Calendar">
-                <caption>{props.calendarCaption}</caption>
+                <caption>{format(date, 'MMM y')}</caption>
                 <thead>
                     <DayHeaderRow key="DayHeaderRow" />
                 </thead>
