@@ -75,11 +75,13 @@ function Calendar(props) {
         setFormEventName("");
     }
 
+    /*
+        Change the current month that is being rendered
+    */
     function gotoMonth(offset) {
         const newDate = addMonths(date, offset);
         setDate(newDate);
-        setDayData(createEmptyCalendar(getDate(endOfMonth(newDate)),  // get last day of month
-            getDay(startOfMonth(newDate))))
+        setDayData(createEmptyCalendar(newDate));
     }
 
 
