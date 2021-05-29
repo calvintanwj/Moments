@@ -75,13 +75,20 @@ function Calendar(props) {
         setFormEventName("");
     }
 
+
+    /*
+        function to handle states when changing of calendar dates
+    */
+    function changeDate(newDate) {
+        setDate(newDate);
+        setDayData(createEmptyCalendar(newDate));
+    }
+
     /*
         Change the current month that is being rendered
     */
-    function gotoMonth(offset) {
-        const newDate = addMonths(date, offset);
-        setDate(newDate);
-        setDayData(createEmptyCalendar(newDate));
+    function changeMonth(offset) {
+        changeDate(addMonths(date, offset));
     }
 
 
@@ -126,8 +133,8 @@ function Calendar(props) {
             </input>
             <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input>
 
-            <button onClick={() => { gotoMonth(-1) }}>Previous Month</button>
-            <button onClick={() => { gotoMonth(1) }}>Next Month</button>
+            <button onClick={() => { changeMonth(-1) }}>Previous Month</button>
+            <button onClick={() => { changeMonth(1) }}>Next Month</button>
 
             <table id="Outer-Calendar">
                 <caption>{format(date, 'MMM y')}</caption>
