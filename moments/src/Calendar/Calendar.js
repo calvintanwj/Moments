@@ -4,6 +4,7 @@ import DayHeaderRow from './DayHeaderRow';
 import React, { useState } from 'react';
 
 import {
+    addMonths,
     getDay,
     getDate,
     format,
@@ -74,6 +75,14 @@ function Calendar(props) {
         setFormEventName("");
     }
 
+    function gotoMonth(offset) {
+        const newDate = addMonths(date, offset);
+        setDate(newDate);
+        setDayData(createEmptyCalendar(getDate(endOfMonth(newDate)),  // get last day of month
+            getDay(startOfMonth(newDate))))
+    }
+
+
     /* 
         Helper function to create the body of an empty calendar
     */
@@ -129,6 +138,9 @@ function Calendar(props) {
                 }>
             </input>
             <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input>
+
+            <button onClick={() => { gotoMonth(-1) }}>Previous Month</button>
+            <button onClick={() => { gotoMonth(1) }}>Next Month</button>
 
             <table id="Outer-Calendar">
                 <caption>{format(date, 'MMM y')}</caption>
