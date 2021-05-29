@@ -4,6 +4,7 @@ import DayHeaderRow from './DayHeaderRow';
 import React, { useState } from 'react';
 
 import {
+    addDays,
     addMonths,
     getDay,
     getDate,
@@ -28,10 +29,9 @@ function Calendar(props) {
     // keep track of the day that is currently selected
     const [selectedDay, setDay] = useState(getDate(date)); // for debugging
     const [formEventName, setFormEventName] = useState("");
-    // generate calendar body data
-    const [dayData, setDayData] = useState(
-        createEmptyCalendar(getDate(endOfMonth(date)),  // get last day of month
-            getDay(startOfMonth(date)))); // gets offset (the difference between first day of month and sunday)
+
+    // generate calendar body data - default is current calendar month
+    const [dayData, setDayData] = useState(createEmptyCalendar(date));
 
     // index of current selected day in dayData array
     const [row, setRow] = useState(null);
@@ -86,11 +86,11 @@ function Calendar(props) {
     /* 
         Helper function to create the body of an empty calendar
     */
-    function createEmptyCalendar(numDays, offset) {
+    function createEmptyCalendar(calendarDate) {
         const dayData = [];
-        let day = 1;
-        let offsetCounter = 0;
         let boxKey = 0;
+        const dateOfFirstDay = startOfMonth(calendarDate);
+        let currentDifference = -getDay(dateOfFirstDay);
 
         // Create a 5 row by 7 col calendar body to fill with numbers 
         for (let i = 0; i < 6; i++) {
@@ -100,27 +100,12 @@ function Calendar(props) {
                     events: [],
                     key: boxKey,
                     row: i,
-                    col: j
+                    col: j,
+                    label: getDate(addDays(dateOfFirstDay, currentDifference))
                 }
-                if (offsetCounter < offset) { // offset the first day of the month
-                    row[j] = {
-                        ...dayObject,
-                        label: ""
-                    }
-                    offsetCounter += 1;
+                row[j] = dayObject;
 
-                } else if (day <= numDays) { // normal calendar days
-                    row[j] = {
-                        ...dayObject,
-                        label: day,
-                    }
-                    day += 1;
-                } else { // Calendar month has been labelled and remainer of cells should be empty
-                    row[j] = {
-                        ...dayObject,
-                        label: ""
-                    }
-                }
+                currentDifference += 1;
                 boxKey += 1;
                 // ["Goto the barber", "Go workout"]
             }
