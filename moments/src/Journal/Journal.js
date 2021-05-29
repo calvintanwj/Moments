@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
 import ReactMarkdown from "react-markdown";
 import ModeToolbar from "./ModeToolbar";
@@ -139,7 +139,15 @@ function Journal() {
   // Contains the main logic when text is written in the journal
   function inputText(e) {
     setInput(e.target.value);
+    // Because useState is asynchronous, I set using e.target.value instead of input.
+    window.localStorage.setItem("entry", e.target.value);
   }
+  
+  // Fetch journal entry from localStorage when it is loaded.
+  useEffect(() => {
+    const savedEntry = window.localStorage.getItem("entry");
+    setInput(savedEntry ?? "");
+  }, []);
 
   // Contains the main logic when tab is pressed
   function clickTab(e) {
@@ -164,7 +172,6 @@ function Journal() {
         buttonTypes[key].text +
         input.substring(txtarea.selectionStart + buttonTypes[key].text.length)
     );
-    console.log(txtarea.selectionStart);
     txtarea.setSelectionRange(0, 3);
   }
 

@@ -21,6 +21,9 @@
   resize: none;
   float: right;
   font-family: "Exo 2", sans-serif;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 #mdtb-block {
