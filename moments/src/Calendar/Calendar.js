@@ -16,13 +16,8 @@ import {
 
 /*
     Calendar template for one month
-    props:
-        calendarCaption: String caption for calendar e.g Month-Year
-        days: Integer, number of days in the calendar month
-        offset: Number of days to shift start of month by, excluding current day
-        e.g if day starts on Monday, offset is 0
 */
-function Calendar(props) {
+function Calendar() {
     // Date of current day
     const [date, setDate] = useState(new Date());
 
