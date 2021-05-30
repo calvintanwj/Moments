@@ -14,11 +14,9 @@ import {
     Calendar template for one month
 */
 function Calendar() {
-    // Date of current day
+    // Date of date that is selected
     const [date, setDate] = useState(new Date());
 
-    // keep track of the day that is currently selected
-    const [selectedDay, setDay] = useState(getDate(date)); // for debugging
     const [formEventName, setFormEventName] = useState("");
 
     // // generate calendar body data - default is current calendar month
@@ -70,10 +68,9 @@ function Calendar() {
     /*
         function to handle states when changing of calendar dates
     */
-    // function changeDate(newDate) {
-    //     setDate(newDate);
-    //     setDayData(CalendarBody(newDate));
-    // }
+    function changeDate(newDate) {
+        setDate(newDate);
+    }
 
     /*
         function to handle state change when going to today
@@ -85,16 +82,16 @@ function Calendar() {
     /*
         Change the current month that is being rendered
     */
-    //  function changeMonth(offset) {
-    //      changeDate(addMonths(date, offset));
-    //  }
+    function changeMonth(offset) {
+        changeDate(addMonths(date, offset));
+    }
 
 
 
 
     return (
         <>
-            <h1>Focused Day: {selectedDay}</h1>
+            <h1>Focused Day: {getDate(date)}</h1>
 
             <input type="text" value={formEventName}
                 onChange={handleChangeFormEventName
@@ -102,11 +99,9 @@ function Calendar() {
             </input>
             {/* <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input> */}
             <input type="submit" value="Create Event"></input>
-            {/* <button onClick={() => { changeMonth(-1) }}>Previous Month</button>
+            <button onClick={() => { changeMonth(-1) }}>Previous Month</button>
             <button onClick={() => { changeMonth(1) }}>Next Month</button>
-            <button onClick={gotoToday}>Today</button> */}
-            <button>Previous Month</button>
-            <button>Next Month</button>
+            {/* <button onClick={gotoToday}>Today</button> */}
             <button>Today</button>
 
             <table id="Outer-Calendar">
