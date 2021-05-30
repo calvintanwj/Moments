@@ -75,9 +75,9 @@ function Calendar() {
     /*
         function to handle state change when going to today
     */
-    //  function gotoToday() {
-    //      changeDate(new Date());
-    //  }
+    function gotoToday() {
+        changeDate(new Date());
+    }
 
     /*
         Change the current month that is being rendered
@@ -85,9 +85,6 @@ function Calendar() {
     function changeMonth(offset) {
         changeDate(addMonths(date, offset));
     }
-
-
-
 
     return (
         <>
@@ -101,8 +98,7 @@ function Calendar() {
             <input type="submit" value="Create Event"></input>
             <button onClick={() => { changeMonth(-1) }}>Previous Month</button>
             <button onClick={() => { changeMonth(1) }}>Next Month</button>
-            {/* <button onClick={gotoToday}>Today</button> */}
-            <button>Today</button>
+            <button onClick={gotoToday}>Today</button>
 
             <table id="Outer-Calendar">
                 <caption>{format(date, 'MMM y')}</caption>
