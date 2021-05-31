@@ -73,6 +73,7 @@ function Calendar() {
     */
     function changeDate(newDate) {
         setDate(newDate);
+        setDayData(CalendarBody(newDate));
     }
 
     /*
