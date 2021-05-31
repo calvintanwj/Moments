@@ -10,7 +10,7 @@ const buttonTypes = [
   {
     key: "0",
     id: "bold-text",
-    text: "** **",
+    text: "****",
     label: (
       <img
         height="20px"
@@ -23,7 +23,7 @@ const buttonTypes = [
   {
     key: "1",
     id: "italicize-text",
-    text: "_ _",
+    text: "__",
     label: (
       <img
         height="20px"
@@ -41,7 +41,7 @@ const buttonTypes = [
       <img
         height="20px"
         width="20px"
-        alt="Attach Image"
+        alt="Attach Img"
         src="https://img.icons8.com/metro/26/000000/xlarge-icons.png"
       />
     ),
@@ -128,13 +128,29 @@ const buttonTypes = [
 
 // Journal component
 function Journal() {
+
+  // Just a quick little template for a journal entry.
+  var today = new Date();
+  var date =
+    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  const templateEntry =
+    "# Moments\n## Past, Present, and Future\n\nToday's date: _" +
+    date +
+    "_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :)";
+
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(templateEntry);
 
   // Controls the state of whether the user is in editing or preview mode.
   // User starts out in editing mode.
   const [isEditing, setEditing] = useState(true);
+
+  // State of the cursor position
+  const [cursor, setCursor] = useState({
+    start: 0,
+    end: 0,
+  });
 
   // Contains the main logic when text is written in the journal
   function inputText(e) {
@@ -142,18 +158,32 @@ function Journal() {
     // Because useState is asynchronous, I set using e.target.value instead of input.
     window.localStorage.setItem("entry", e.target.value);
   }
-  
+
+  // Keep track of position of cursor
+  function handleCursor(e) {
+    setCursor({ start: e.target.selectionStart, end: e.target.selectionEnd });
+  }
+
   // Fetch journal entry from localStorage when it is loaded.
   useEffect(() => {
     const savedEntry = window.localStorage.getItem("entry");
-    setInput(savedEntry ?? "");
+    setInput(savedEntry ?? templateEntry);
   }, []);
 
   // Contains the main logic when tab is pressed
   function clickTab(e) {
     if (e.keyCode === 9) {
       e.preventDefault();
-      setInput(input + "    ");
+      const start = cursor.start;
+      setInput(
+        input.substring(0, cursor.start) +
+          "    " +
+          input.substring(cursor.end, input.length),
+        setTimeout(() => {
+          const txtarea = document.getElementById("journal-area");
+          txtarea.selectionStart = txtarea.selectionEnd = start + 4;
+        }, 1)
+      );
     }
   }
 
@@ -164,25 +194,40 @@ function Journal() {
 
   // Contains the main logic to handle a toolbar button being clicked
   // Puts the respective markdown in the journal
+  // Moves the cursor to the right place
   function toolbarClick(key) {
     const txtarea = document.getElementById("journal-area");
     txtarea.focus();
+    const start = cursor.start;
     setInput(
-      input.substring(0, txtarea.selectionStart) +
+      input.substring(0, cursor.start) +
         buttonTypes[key].text +
-        input.substring(txtarea.selectionStart + buttonTypes[key].text.length)
+        input.substring(cursor.end, input.length),
+      setTimeout(() => {
+        if (key == 0 || key == 4 || key == 5) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 2;
+        } else if (key == 1 || key == 8) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 1;
+        } else if (key == 2) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 9;
+        } else if (key == 3) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 7;
+        } else if (key == 7 || key == 6) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 3;
+        }
+      }, 1)
     );
-    txtarea.setSelectionRange(0, 3);
   }
 
   // Editing mode
   const editingMode = (
     <textarea
       id="journal-area"
-      placeholder="Write here"
       value={input}
+      // placeholder="Write here"
       onChange={inputText}
       onKeyDown={(e) => clickTab(e)}
+      onSelect={(e) => handleCursor(e)}
     />
   );
 
