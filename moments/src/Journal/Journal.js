@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
 import ReactMarkdown from "react-markdown";
 import ModeToolbar from "./ModeToolbar";
+import './Journal.css'
 
 // Global Variables
 

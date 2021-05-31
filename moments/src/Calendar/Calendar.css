@@ -1,0 +1,126 @@
+/*
+======================================================================================
+Table styling
+*/
+
+/* Format Table contents */
+
+/*
+  Row in innertable containing date
+*/
+.dateRow {
+  text-align: left;
+  vertical-align: top;
+  padding-bottom: 80%;
+}
+
+.innerTable {
+  width: 100%;
+}
+
+.innerTable > thead > tr > td,
+.innerTable > tbody > tr > td {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Border Styling */
+
+/*
+  Outer table
+*/
+/* table {
+  table-layout: fixed;
+  border: 1px solid black;
+  border-collapse: collapse;
+} */
+
+#calendar-interface{
+  float: left;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-family: "Exo 2", sans-serif;
+  width: 50vw;
+  text-align: center;
+}
+
+#calendar-toolbar {
+  width: 45vw;
+}
+
+#calendar-toolbar button, input {
+  font-family: "Exo 2", sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 5px;
+  margin: 2px;
+  border: 5px solid #cccccc;
+  border-radius: 20px;
+  outline: none;
+}
+
+#calendar-toolbar button:hover, input:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+#date-header {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 15px;
+}
+
+#day-header {
+  font-family: "Exo 2", sans-serif;
+  width: 45vw;
+}
+
+/*
+  Header row containing the days of the week 
+*/
+.dayRow > th {
+  border: 5px solid #cccccc;
+}
+
+/*
+  Nested table containing the date and the events
+*/
+.innerTable {
+  border: none;
+}
+
+#Outer-Calendar > tbody > tr > td {
+  padding: 0px;
+  border-left: 5px solid #cccccc;
+}
+
+#Outer-Calendar > tbody > tr > td:last-child {
+  border-right: 5px solid #cccccc;
+}
+
+/*
+  Date and inner columns
+*/
+.innerTable > thead > tr,
+.innerTable > tbody > tr {
+  border-bottom: 5px solid #cccccc;
+}
+
+/*
+  First col in calendar
+*/
+/* {
+  border: 1px solid #000000;
+} */
+
+/*
+  Last col in calendar
+*/
+/* tr:last-child) {
+  border: 1px solid #000000;
+} */
