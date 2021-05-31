@@ -17,7 +17,7 @@ function DayHeaderRow() {
         <th scope="col" key={day}>{day}</th>);
 
     return (
-        <tr>
+        <tr className="dayRow">
             {days}
         </tr>
     );

@@ -20,7 +20,11 @@ function CalendarBody(props) {
         for (let j = 0; j < 7; j++) {
             const currDate = addDays(dateOfFirstDay, currentDifference);
             const dayObject = {
-                events: [],
+                events: ["Goto barber",
+                    "Walk the dog",
+                    "Take out the trash",
+                    "Do homework",
+                    "This is meant ot represent a very long task name, such that it doesn't affect the table"],
                 key: boxKey,
                 row: i,
                 col: j,

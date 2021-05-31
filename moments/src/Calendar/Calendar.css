@@ -1,26 +1,87 @@
-/* #Outer-Calendar {
-  border: solid;
-  border-collapse: collapse;
-}
+/*
+======================================================================================
+Table styling
+*/
 
-#Outer-Calendar > tbody > tr,
-#Outer-Calendar > thead > th {
-  border: solid;
-  text-align: center;
-  width: 80px;
-  height: 80px;
-} */
+/* Format Table contents */
 
-table {
-  border: solid;
-  border-collapse: collapse;
-}
-
-tr,
-th {
-  border: solid;
+/*
+  Row in innertable containing date
+*/
+.dateRow {
   text-align: left;
   vertical-align: top;
-  width: 80px;
-  height: 80px;
+  padding-bottom: 80%;
 }
+
+.innerTable {
+  width: 100%;
+}
+
+.innerTable > thead > tr > td,
+.innerTable > tbody > tr > td {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Border Styling */
+
+/*
+  Outer table
+*/
+/* table {
+  table-layout: fixed;
+  border: 1px solid black;
+  border-collapse: collapse;
+} */
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/*
+  Header row containing the days of the week 
+*/
+.dayRow > th {
+  border: 1px solid #000000;
+}
+
+/*
+  Nested table containing the date and the events
+*/
+.innerTable {
+  border: none;
+}
+
+#Outer-Calendar > tbody > tr > td {
+  padding: 0px;
+  border-left: 1px solid #000000;
+}
+
+#Outer-Calendar > tbody > tr > td:last-child {
+  border-right: 1px solid #000000;
+}
+
+/*
+  Date and inner columns
+*/
+.innerTable > thead > tr,
+.innerTable > tbody > tr {
+  border-bottom: 1px solid #000000;
+}
+
+/*
+  First col in calendar
+*/
+/* {
+  border: 1px solid #000000;
+} */
+
+/*
+  Last col in calendar
+*/
+/* tr:last-child) {
+  border: 1px solid #000000;
+} */

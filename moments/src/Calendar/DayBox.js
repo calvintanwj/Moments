@@ -25,10 +25,10 @@ function DayBox(props) {
         : <tr><td>No Events</td></tr>;
     return (
         <td onClick={props.dayHandler}>
-            <table>
+            <table className="innerTable">
                 <thead>
                     <tr>
-                        <th>{getDate(date)}</th>
+                        <th className="dateRow">{getDate(date)}</th>
                     </tr>
 
                 </thead>
