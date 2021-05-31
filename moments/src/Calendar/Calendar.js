@@ -1,12 +1,16 @@
 import './Calendar.css';
 import DayHeaderRow from './DayHeaderRow';
-import CalendarBody from './CalendarBody';
 import React, { useState } from 'react';
+
+import WeekRow from './WeekRow';
 
 import {
     addMonths,
     getDate,
     format,
+    startOfMonth,
+    getDay,
+    addDays
 } from 'date-fns'
 
 
@@ -20,20 +24,20 @@ function Calendar() {
     const [formEventName, setFormEventName] = useState("");
 
     // // generate calendar body data - default is current calendar month
-    // const [dayData, setDayData] = useState(CalendarBody(date));
+    const [dayData, setDayData] = useState(CalendarBody(date));
 
     // index of current selected day in dayData array
-    // const [row, setRow] = useState(null);
-    // const [col, setCol] = useState(null);
+    const [row, setRow] = useState(null);
+    const [col, setCol] = useState(null);
 
     /*
         Handler to focus cell in calendar when clicked
     */
-    // function dayHandler(label, row, col) {
-    //     setRow(row);
-    //     setCol(col);
-    //     setDay(label);
-    // }
+    function dayHandler(date, row, col) {
+        setRow(row);
+        setCol(col);
+        setDate(date);
+    }
 
     /*
         Handler for change in temporary input field, used to make name a new event
@@ -46,23 +50,22 @@ function Calendar() {
     /*
         Handler for button to submit details from temporary input field to make a new event
     */
-    // function handleSubmitEvent() {
-    //     // shallow copy columns dayData
-    //     const newDayData = [...dayData]
-    //     // deep copy the dayData -> dayData is a 2-d array containig objects
-    //     newDayData.map((row) => { // copy row
-    //         return [row.map((day) => {
-    //             return { ...day }  // copy object
-    //         })]
-    //     });
+    function handleSubmitEvent() {
+        // shallow copy columns dayData
+        const newDayData = [...dayData]
+        // deep copy the dayData -> dayData is a 2-d array containig objects
+        newDayData.map((row) => { // copy row
+            return [row.map((day) => {
+                return { ...day }  // copy object
+            })]
+        });
+        // add new event to day
+        newDayData[row][col]["events"].push(formEventName)
+        setDayData(newDayData);
 
-    //     // add new event to day
-    //     newDayData[row][col]["events"].push(formEventName)
-    //     setDayData(newDayData);
-
-    //     //clear form
-    //     setFormEventName("");
-    // }
+        //clear form
+        setFormEventName("");
+    }
 
 
     /*
@@ -86,6 +89,34 @@ function Calendar() {
         changeDate(addMonths(date, offset));
     }
 
+    function CalendarBody(calendarDate) {
+        const dayData = [];
+        let boxKey = 0;
+        const dateOfFirstDay = startOfMonth(calendarDate);
+        let currentDifference = -getDay(dateOfFirstDay);
+
+        // Create a 5 row by 7 col calendar body to fill with numbers 
+        for (let i = 0; i < 6; i++) {
+            const row = new Array(6);
+            for (let j = 0; j < 7; j++) {
+                const currDate = addDays(dateOfFirstDay, currentDifference);
+                const dayObject = {
+                    events: [],
+                    key: boxKey,
+                    row: i,
+                    col: j,
+                    date: currDate
+                }
+                row[j] = dayObject;
+
+                currentDifference += 1;
+                boxKey += 1;
+            }
+            dayData.push(row);
+        }
+        return dayData;
+    }
+
     return (
         <>
             <h1>Focused Day: {getDate(date)}</h1>
@@ -95,7 +126,7 @@ function Calendar() {
                 }>
             </input>
             {/* <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input> */}
-            <input type="submit" value="Create Event"></input>
+            <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input>
             <button onClick={() => { changeMonth(-1) }}>Previous Month</button>
             <button onClick={() => { changeMonth(1) }}>Next Month</button>
             <button onClick={gotoToday}>Today</button>
@@ -107,7 +138,9 @@ function Calendar() {
                 </thead>
                 <tbody>
                     {/* <CalendarBody dayhandler={dayHandler} calendarDate={date} /> */}
-                    <CalendarBody calendarDate={date} />
+                    {dayData.map((row, index) =>
+                        <WeekRow key={"row-" + index} days={row} dayHandler={dayHandler} />)
+                    }
                 </tbody>
             </table>
         </>

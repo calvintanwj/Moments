@@ -9,27 +9,15 @@ import DayBox from './DayBox.js'
 function WeekRow(props) {
     // const array = Array(7).fill(NaN); // range to get 7 numbers
     const row = props.days.map((day) => {
-        if (day["label"] === "") {
-            return <DayBox
-                label={day["label"]}
-                dayHandler={() => null} // empty dayHandler for blank calendar days
-                events={day["events"]}
-                key={day["key"]}
-                row={day["row"]}
-                col={day["col"]}
-            />
-        } else {
-            return <DayBox
-                date={day["date"]}
-                dayHandler={() =>
-                    props.dayHandler(day["label"], day["row"], day["col"])
-                }
-                events={day["events"]}
-                key={day["key"]}
-                row={day["row"]}
-                col={day["col"]}
-            />
-        }
+        return <DayBox
+            date={day["date"]}
+            dayHandler={() =>
+                props.dayHandler(day["date"], day["row"], day["col"])
+            }
+            events={day["events"]}
+            key={day["key"]}
+            row={day["row"]}
+            col={day["col"]} />
     }
 
     );
