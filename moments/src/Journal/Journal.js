@@ -9,7 +9,7 @@ import './Journal.css'
 // Consists of all the button types within the journal toolbar.
 const buttonTypes = [
   {
-    key: "0",
+    key: 0,
     id: "bold-text",
     text: "****",
     label: (
@@ -22,7 +22,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "1",
+    key: 1,
     id: "italicize-text",
     text: "__",
     label: (
@@ -35,7 +35,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "2",
+    key: 2,
     id: "attach-image",
     text: "![image]()",
     label: (
@@ -48,7 +48,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "3",
+    key: 3,
     id: "attach-link",
     text: "[Link]()",
     label: (
@@ -61,7 +61,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "4",
+    key: 4,
     id: "blockquote",
     text: "> ",
     label: (
@@ -74,7 +74,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "5",
+    key: 5,
     id: "bullet-list",
     text: "* ",
     label: (
@@ -87,7 +87,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "6",
+    key: 6,
     id: "numbered-list",
     text: "1. ",
     label: (
@@ -100,7 +100,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "7",
+    key: 7,
     id: "line-break",
     text: "---",
     label: (
@@ -113,7 +113,7 @@ const buttonTypes = [
     ),
   },
   {
-    key: "8",
+    key: 8,
     id: "inline-code",
     text: "` `",
     label: (
@@ -169,7 +169,7 @@ function Journal() {
   useEffect(() => {
     const savedEntry = window.localStorage.getItem("entry");
     setInput(savedEntry ?? templateEntry);
-  }, []);
+  }, [templateEntry]);
 
   // Contains the main logic when tab is pressed
   function clickTab(e) {
@@ -205,15 +205,15 @@ function Journal() {
         buttonTypes[key].text +
         input.substring(cursor.end, input.length),
       setTimeout(() => {
-        if (key == 0 || key == 4 || key == 5) {
+        if (key === 0 || key === 4 || key === 5) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 2;
-        } else if (key == 1 || key == 8) {
+        } else if (key === 1 || key === 8) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 1;
-        } else if (key == 2) {
+        } else if (key === 2) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 9;
-        } else if (key == 3) {
+        } else if (key === 3) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 7;
-        } else if (key == 7 || key == 6) {
+        } else if (key === 7 || key === 6) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 3;
         }
       }, 1)
