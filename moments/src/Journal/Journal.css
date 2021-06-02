@@ -1,86 +1,189 @@
 /* General styling of the main-interface */
 #main-interface {
-  float: right;
-  width: 45vw;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  border: 3px solid grey;
+  padding: 5px;
+  border-radius: 5px;
+  font-family: "Exo 2", sans-serif;
 }
 
-#modetb-with-area {
-  float: right;
-  margin-top: 15px;
+/* Styling for top header of journal */
+#journal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+/* Styling for the back-button */
+#back-button {
+  height: 40px;
+  width: 70px;
+  margin-left: 10px;
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5),
+    10px 10px 15px rgba(70, 70, 70, 0.12);
+  border-radius: 35%;
+  border: 4px solid #ececec;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#back-button:after {
+  font-family: FontAwesome;
+  content: "\f053";
+  font-size: 25px;
+  color: #7a7a7a;
+}
+
+#back-button:hover {
+  box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(70, 70, 70, 0.12);
+  cursor: pointer;
+}
+
+#back-button:active {
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5),
+    10px 10px 15px rgba(70, 70, 70, 0.12),
+    inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(70, 70, 70, 0.12);
+}
+
+#back-button:active:after {
+  color: #365fe6a1;
+}
+
+/* Styling for the mode toolbar */
+#mode-switch {
+  visibility: hidden;
+}
+
+/* The mode switch background */
+#mode-switch + label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 90px;
+  height: 40px;
+  display: block;
+  border-radius: 100px;
+  position: relative;
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5),
+    10px 10px 15px rgba(70, 70, 70, 0.12);
+}
+
+#mode-switch + label:hover {
+  box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(70, 70, 70, 0.12);
+  cursor: pointer;
+}
+
+/* The circle of the mode switch */
+#mode-switch + label:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 90px;
+  background: grey;
+  transition: 0.3s;
+}
+
+/* The mode switch to change background color */
+#mode-switch:checked + label {
+  background: #244fdfa1;
+  transition: 0.9s;
+}
+
+/* The movement of the circle after checked */
+#mode-switch:checked + label:after {
+  left: calc(100% - 5px);
+  /* Moves the circle in the opposite direction of the previous iteration each time
+  the switch is toggled */
+  transform: translateX(-100%);
+  background: white;
+}
+
+/* Makes circle wider when clicked */
+#mode-switch + label:active:after {
+  width: 50px;
+}
+
+#journal-title {
+  padding-left: 15%;
+}
+
+/* Styling for second header of journal */
+#date-with-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid rgba(168, 161, 161, 0.507);
+  border-top: 3px solid rgba(168, 161, 161, 0.507);
+}
+
+/* Styling for date */
+#journal-date {
+  padding-left: 3%;
+  font-weight: bold;
+}
+
+#text-area {
+  align-self: center;
 }
 
 /* Styling of the journal and preview area */
 #journal-area,
 #preview-area {
   font-size: 1.2em;
-  border: 5px solid #cccccc;
-  outline: none;
-  width: 45vw;
-  height: 70vh;
+  border: 3px solid rgba(168, 161, 161, 0.507);
+  border-radius: 20px;
   padding: 20px;
+  margin-top: 10px;
+  outline: none;
+  width: 40vw;
+  height: 70vh;
+  align-self: center;
+  justify-content: center;
   resize: none;
-  float: right;
   font-family: "Exo 2", sans-serif;
-  border-top-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-#mdtb-block {
-  width: 50vw;
-  text-align: center;
-  transform: translateX(-8.5%);
+  background: white;
 }
 
 /* Styling of the markdown toolbar */
 #markdown-toolbar {
-  display: inline;
   list-style-type: none;
-  padding: 20px;
+  padding-right: 2%;
 }
 
 /* Styling of the markdown toolbar buttons */
 .markdowntb-bt {
   padding: 3px 15px;
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5),
+    10px 10px 15px rgba(70, 70, 70, 0.12);
+  border: 4px solid #ececec;
+  border-radius: 10px;
+}
+
+.markdowntb-bt:hover {
   cursor: pointer;
+  box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(70, 70, 70, 0.12);
 }
 
-/* Styling of the mode toolbar */
-#mode-toolbar {
-  display: flex;
-  margin: 0 auto;
-  position: relative;
-  top: 5px;
-}
-
-/* Styling of the mode toolbar buttons */
-.modetb-bt {
-  padding: 10px;
-  margin: 5px;
-  cursor: pointer;
-  margin: 0;
-  border: 5px solid #cccccc;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 15px;
-  border-bottom: 5px solid #cccccc;
-  font-family: "Exo 2", sans-serif;
-  font-size: 1em;
-}
-
-.modetb-bt:hover {
-  background-color: lightgrey;
-}
-
-.modetb-bt:focus {
-  background-color: white;
-  border-bottom: 10px white;
+.markdowntb-bt:active {
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5),
+    10px 10px 15px rgba(70, 70, 70, 0.12),
+    inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(70, 70, 70, 0.12);
 }
 
 #docs-link {
-  text-align: center;
+  align-self: center;
   font-family: "Pacifico", cursive;
   font-size: 1em;
-}
-
-#bold-text {
 }
