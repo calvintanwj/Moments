@@ -8,13 +8,15 @@
   padding: 5px;
   border-radius: 5px;
   font-family: "Exo 2", sans-serif;
+  position: relative;
+  width: 48vw;
 }
 
 /* Styling for top header of journal */
 #journal-header {
   display: flex;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
 }
 
 /* Styling for the back-button */
@@ -118,22 +120,116 @@
 }
 
 /* Styling for second header of journal */
-#date-with-toolbar {
+/* Editing mode */
+#date-with-toolbar-editing {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 3px solid rgba(168, 161, 161, 0.507);
   border-top: 3px solid rgba(168, 161, 161, 0.507);
+  height: 50px;
+  animation-name: pop;
+  animation-duration: 2s;
+}
+
+/* Animation for showing date with toolbar */
+@keyframes pop {
+  from {
+    height: 0px;
+    visibility: hidden;
+    opacity: 0;
+  }
+  to {
+    height: 50px;
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+/* Preview Mode */
+#date-with-toolbar-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0px;
+  border-bottom: 3px solid rgba(168, 161, 161, 0.507);
+  border-top: 3px solid rgba(168, 161, 161, 0.507);
+  animation-name: collapse;
+  animation-duration: 3s;
+  visibility: hidden;
+}
+
+/* Animaton for hiding date with toolbar */
+@keyframes collapse {
+  from {
+    height: 50px;
+    visibility: visible;
+    opacity: 1;
+  }
+  to {
+    height: 0px;
+    visibility: hidden;
+    opacity: 0;
+  }
 }
 
 /* Styling for date */
-#journal-date {
+/* Editing mode */
+#journal-date-editing {
   padding-left: 3%;
   font-weight: bold;
+  animation-name: appear;
+  animation-duration: 2s;
 }
 
-#text-area {
-  align-self: center;
+/* Preview mode */
+#journal-date-preview {
+  padding-left: 3%;
+  font-weight: bold;
+  animation-name: hide;
+  animation-duration: 3s;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Styling for markdown toolbar */
+/* Editing mode */
+#markdown-toolbar-editing {
+  animation-name: appear;
+  animation-duration: 2s;
+}
+
+/* Animation for hiding markdown toolbar */
+/* Preview mode */
+#markdown-toolbar-preview {
+  animation-name: hide;
+  animation-duration: 3s;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Animation for hiding markdown toolbar and date */
+@keyframes hide {
+  from {
+    visibility: visible;
+    opacity: 1;
+  }
+  to {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+/* Animation for showing markdown toolbar and date */
+@keyframes appear {
+  from {
+    opacity: 0;
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 /* Styling of the journal and preview area */
@@ -141,17 +237,84 @@
 #preview-area {
   font-size: 1.2em;
   border: 3px solid rgba(168, 161, 161, 0.507);
-  border-radius: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
   padding: 20px;
   margin-top: 10px;
   outline: none;
-  width: 40vw;
-  height: 70vh;
   align-self: center;
   justify-content: center;
   resize: none;
   font-family: "Exo 2", sans-serif;
   background: white;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+}
+
+/* General styling for the scrollbar */
+#journal-area::-webkit-scrollbar-track,
+#preview-area::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(143, 139, 139, 0.3);
+  border-radius: 20px;
+  background-color: #f5f5f5;
+}
+
+#journal-area::-webkit-scrollbar,
+#preview-area::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f5f5f5;
+}
+
+#journal-area::-webkit-scrollbar-thumb,
+#preview-area::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: rgb(80, 78, 78);
+  box-shadow: inset 0px 0px 6px rgba(58, 57, 57, 0.3);
+}
+
+/* Styling for journal area */
+#journal-area {
+  animation-name: contract;
+  animation-duration: 2s;
+  width: 40vw;
+  height: 70vh;
+}
+
+/* Animation for journal area */
+@keyframes contract {
+  from {
+    height: 75vh;
+    width: 90%;
+    opacity: 0.4;
+  }
+  to {
+    height: 70vh;
+    width: 40vw;
+    opacity: 1;
+  }
+}
+
+/* Styling for preview area */
+#preview-area {
+  animation-name: expand;
+  animation-duration: 3s;
+  height: 75vh;
+  width: 90%;
+}
+
+/* Animation for the preview-area */
+@keyframes expand {
+  from {
+    height: 70vh;
+    width: 40vw;
+    opacity: 0.4;
+  }
+  to {
+    height: 75vh;
+    width: 90%;
+    opacity: 1;
+  }
 }
 
 /* Styling of the markdown toolbar */

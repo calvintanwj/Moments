@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
 import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
+import {prism} from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ModeToolbar from "./ModeToolbar";
 import "./Journal.css";
 
@@ -58,8 +61,8 @@ const buttonTypes = [
   },
   {
     key: 8,
-    id: "inline-code",
-    text: "` `",
+    id: "block-code",
+    text: "~~~java\n\n~~~",
     label: <i class="fas fa-code"></i>,
   },
 ];
@@ -73,7 +76,7 @@ function Journal() {
   const templateEntry =
     "# Moments\n## Past, Present, and Future\n\nToday's date: _" +
     date +
-    "_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :)";
+"_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :) \n\n~Does~ Now supports strikethroughs, task lists, link literals, and **custom** code blocks\n\nhttps://moments-flax.vercel.app/\n\n* [ ] to do\n\n* [x] done\n\n ~~~java\n function foo() {\n  return;\n}\n ~~~";
 
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
@@ -88,6 +91,18 @@ function Journal() {
     start: 0,
     end: 0,
   });
+
+  // Renderer for custom code blocks
+  const components = {
+    code({node, inline, className, children, ...props}) {
+      const match = /language-(\w+)/.exec(className || '')
+      return match ? (
+        <SyntaxHighlighter style={prism} language={match[1]} PreTag="div" children={String(children).replace(/\n$/, '')} {...props} />
+      ) : (
+        <code className={className} {...props} />
+      )
+    }
+  }
 
   // Contains the main logic when text is written in the journal
   function inputText(e) {
@@ -143,7 +158,7 @@ function Journal() {
       setTimeout(() => {
         if (key === 0 || key === 4 || key === 5) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 2;
-        } else if (key === 1 || key === 8) {
+        } else if (key === 1) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 1;
         } else if (key === 2) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 9;
@@ -151,6 +166,8 @@ function Journal() {
           txtarea.selectionStart = txtarea.selectionEnd = start + 7;
         } else if (key === 7 || key === 6) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 3;
+        } else if (key === 8) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 8;
         }
       }, 1)
     );
@@ -158,21 +175,41 @@ function Journal() {
 
   // Editing mode
   const editingMode = (
-    <textarea
-      id="journal-area"
-      value={input}
-      // placeholder="Write here"
-      onChange={inputText}
-      onKeyDown={(e) => clickTab(e)}
-      onSelect={(e) => handleCursor(e)}
-    />
+    <>
+      <div id="date-with-toolbar-editing">
+        <p id="journal-date-editing">{date}</p>
+        <MarkdownToolbar
+          id="markdown-toolbar-editing"
+          onClick={toolbarClick}
+          buttons={buttonTypes}
+        />
+      </div>
+      <textarea
+        id="journal-area"
+        value={input}
+        // placeholder="Write here"
+        onChange={inputText}
+        onKeyDown={(e) => clickTab(e)}
+        onSelect={(e) => handleCursor(e)}
+      />
+    </>
   );
 
   // Preview mode (makes use of the ReactMarkdown dependency)
   const previewMode = (
-    <div id="preview-area">
-      <ReactMarkdown>{input}</ReactMarkdown>
-    </div>
+    <>
+      <div id="date-with-toolbar-preview">
+        <p id="journal-date-preview">{date}</p>
+        <MarkdownToolbar
+          id="markdown-toolbar-preview"
+          onClick={toolbarClick}
+          buttons={buttonTypes}
+        />
+      </div>
+      <div id="preview-area">
+        <ReactMarkdown components={components} remarkPlugins={[gfm]}>{input}</ReactMarkdown>
+      </div>
+    </>
   );
 
   // The overall journal interface.
@@ -183,11 +220,7 @@ function Journal() {
         <h2 id="journal-title">Journal Title</h2>
         <ModeToolbar onClick={toggleMode} />
       </div>
-      <div id="date-with-toolbar">
-        <p id="journal-date">{date}</p>
-        <MarkdownToolbar onClick={toolbarClick} buttons={buttonTypes} />
-      </div>
-      <div id="text-area">{isEditing ? editingMode : previewMode}</div>
+      {isEditing ? editingMode : previewMode}
       <div id="docs-link">
         <a href="https://spec.commonmark.org/0.29/">Commonmark Docs</a>
       </div>

@@ -2,9 +2,9 @@ import React from "react";
 import MDToolbarButton from "./MDToolbarButton";
 
 // Markdown toolbar component
-function MarkdownToolbar({ onClick, buttons }) {
+function MarkdownToolbar({ id, onClick, buttons }) {
   return (
-    <div id="markdown-toolbar">
+    <div id={id}>
       {buttons.map((button) => {
         return <MDToolbarButton onClick={onClick} button={button} />;
       })}
