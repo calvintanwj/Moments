@@ -1,6 +1,6 @@
 /* General styling of the main-interface */
-#main-interface {
-  grid-column: 3;
+#journal-interface {
+  grid-column: 2;
   grid-row: 1 / 3;
   display: flex;
   flex-direction: column;
@@ -9,7 +9,6 @@
   border-radius: 5px;
   font-family: "Exo 2", sans-serif;
   position: relative;
-  width: 45vw;
 }
 
 /* Styling for top header of journal */

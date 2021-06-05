@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
-import {prism} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ModeToolbar from "./ModeToolbar";
 import "./Journal.css";
 
@@ -76,7 +76,7 @@ function Journal() {
   const templateEntry =
     "# Moments\n## Past, Present, and Future\n\nToday's date: _" +
     date +
-"_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :) \n\n~Does~ Now supports strikethroughs, task lists, link literals, and **custom** code blocks\n\nhttps://moments-flax.vercel.app/\n\n* [ ] to do\n\n* [x] done\n\n ~~~java\n function foo() {\n  return;\n}\n ~~~";
+    "_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :) \n\n~Does~ Now supports strikethroughs, task lists, link literals, and **custom** code blocks\n\nhttps://moments-flax.vercel.app/\n\n* [ ] to do\n\n* [x] done\n\n ~~~java\n function foo() {\n  return;\n}\n ~~~";
 
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
@@ -94,15 +94,21 @@ function Journal() {
 
   // Renderer for custom code blocks
   const components = {
-    code({node, inline, className, children, ...props}) {
-      const match = /language-(\w+)/.exec(className || '')
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
       return match ? (
-        <SyntaxHighlighter style={prism} language={match[1]} PreTag="div" children={String(children).replace(/\n$/, '')} {...props} />
+        <SyntaxHighlighter
+          style={prism}
+          language={match[1]}
+          PreTag="div"
+          children={String(children).replace(/\n$/, "")}
+          {...props}
+        />
       ) : (
         <code className={className} {...props} />
-      )
-    }
-  }
+      );
+    },
+  };
 
   // Contains the main logic when text is written in the journal
   function inputText(e) {
@@ -207,14 +213,16 @@ function Journal() {
         />
       </div>
       <div id="preview-area">
-        <ReactMarkdown components={components} remarkPlugins={[gfm]}>{input}</ReactMarkdown>
+        <ReactMarkdown components={components} remarkPlugins={[gfm]}>
+          {input}
+        </ReactMarkdown>
       </div>
     </>
   );
 
   // The overall journal interface.
   return (
-    <div id="main-interface">
+    <div id="journal-interface">
       <div id="journal-header">
         <button id="back-button"></button>
         <h2 id="journal-title">Journal Title</h2>
