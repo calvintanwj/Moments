@@ -8,6 +8,12 @@ Table styling
 /*
   Row in innertable containing date
 */
+
+#calendar-container {
+  height: 100%;
+  overflow: scroll;
+}
+
 .dateRow {
   text-align: left;
   vertical-align: top;
@@ -37,47 +43,56 @@ Table styling
   border-collapse: collapse;
 } */
 
-#calendar-interface{
+#calendar-interface {
   float: left;
+  border: 3px solid grey;
+  grid-column: 1;
+  grid-row: 1;
+  height: 43vh;
+  display: grid;
 }
 
 table {
   table-layout: fixed;
+  height: 100%;
   border-collapse: collapse;
   font-family: "Exo 2", sans-serif;
-  width: 50vw;
+  width: 100%;
   text-align: center;
 }
 
 #calendar-toolbar {
-  width: 45vw;
+  width: 100%;
+  display: flex;
 }
 
-#calendar-toolbar button, input {
+.calendar-toolbar-buttons {
   font-family: "Exo 2", sans-serif;
   font-weight: bold;
-  font-size: 15px;
-  padding: 5px;
-  margin: 2px;
-  border: 5px solid #cccccc;
+  font-size: 0.8em;
+  padding: 1%;
+  margin: 1%;
+  border: 3px solid #cccccc;
   border-radius: 20px;
+  width: 20%;
   outline: none;
 }
 
-#calendar-toolbar button:hover, input:hover {
+.calendar-toolbar-buttons:hover {
   background-color: lightgrey;
   cursor: pointer;
 }
 
 #date-header {
-  font-size: 25px;
+  font-size: 1em;
   font-weight: bold;
-  margin: 15px;
+  margin: 2%;
 }
 
 #day-header {
+  font-size: 1.3em;
+  margin-left: 3%;
   font-family: "Exo 2", sans-serif;
-  width: 45vw;
 }
 
 /*
@@ -92,6 +107,8 @@ table {
 */
 .innerTable {
   border: none;
+  table-layout: fixed;
+  height: 100%;
 }
 
 #Outer-Calendar > tbody > tr > td {

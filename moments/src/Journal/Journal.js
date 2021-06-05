@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
 import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ModeToolbar from "./ModeToolbar";
-import './Journal.css'
+import "./Journal.css";
 
 // Global Variables
 
@@ -12,124 +15,60 @@ const buttonTypes = [
     key: 0,
     id: "bold-text",
     text: "****",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Bold Text"
-        src="https://img.icons8.com/metro/26/000000/bold.png"
-      />
-    ),
+    label: <i class="fas fa-bold"></i>,
   },
   {
     key: 1,
     id: "italicize-text",
     text: "__",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Italicize Text"
-        src="https://img.icons8.com/metro/26/000000/italic.png"
-      />
-    ),
+    label: <i class="fas fa-italic"></i>,
   },
   {
     key: 2,
     id: "attach-image",
     text: "![image]()",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Attach Img"
-        src="https://img.icons8.com/metro/26/000000/xlarge-icons.png"
-      />
-    ),
+    label: <i class="far fa-images"></i>,
   },
   {
     key: 3,
     id: "attach-link",
     text: "[Link]()",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Attach LInk"
-        src="https://img.icons8.com/metro/26/000000/add-link.png"
-      />
-    ),
+    label: <i class="fas fa-link"></i>,
   },
   {
     key: 4,
     id: "blockquote",
     text: "> ",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Block Quote"
-        src="https://img.icons8.com/metro/26/000000/quote.png"
-      />
-    ),
+    label: <i class="fas fa-quote-right"></i>,
   },
   {
     key: 5,
     id: "bullet-list",
     text: "* ",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Bullet List"
-        src="https://img.icons8.com/metro/26/000000/list.png"
-      />
-    ),
+    label: <i class="fas fa-list"></i>,
   },
   {
     key: 6,
     id: "numbered-list",
     text: "1. ",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Numbered List"
-        src="https://img.icons8.com/metro/26/000000/numbered-list.png"
-      />
-    ),
+    label: <i class="fas fa-list-ol"></i>,
   },
   {
     key: 7,
     id: "line-break",
     text: "---",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Line Break"
-        src="https://img.icons8.com/metro/26/000000/horizontal-line.png"
-      />
-    ),
+    label: <i class="fas fa-grip-lines"></i>,
   },
   {
     key: 8,
-    id: "inline-code",
-    text: "` `",
-    label: (
-      <img
-        height="20px"
-        width="20px"
-        alt="Inline Code"
-        src="https://img.icons8.com/metro/26/000000/code.png"
-      />
-    ),
+    id: "block-code",
+    text: "~~~java\n\n~~~",
+    label: <i class="fas fa-code"></i>,
   },
 ];
 
 // Journal component
 function Journal() {
-
   // Just a quick little template for a journal entry.
   var today = new Date();
   var date =
@@ -137,7 +76,7 @@ function Journal() {
   const templateEntry =
     "# Moments\n## Past, Present, and Future\n\nToday's date: _" +
     date +
-    "_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :)";
+    "_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :) \n\n~Does~ Now supports strikethroughs, task lists, link literals, and **custom** code blocks\n\nhttps://moments-flax.vercel.app/\n\n* [ ] to do\n\n* [x] done\n\n ~~~java\n function foo() {\n  return;\n}\n ~~~";
 
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
@@ -152,6 +91,24 @@ function Journal() {
     start: 0,
     end: 0,
   });
+
+  // Renderer for custom code blocks
+  const components = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
+      return match ? (
+        <SyntaxHighlighter
+          style={prism}
+          language={match[1]}
+          PreTag="div"
+          children={String(children).replace(/\n$/, "")}
+          {...props}
+        />
+      ) : (
+        <code className={className} {...props} />
+      );
+    },
+  };
 
   // Contains the main logic when text is written in the journal
   function inputText(e) {
@@ -207,7 +164,7 @@ function Journal() {
       setTimeout(() => {
         if (key === 0 || key === 4 || key === 5) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 2;
-        } else if (key === 1 || key === 8) {
+        } else if (key === 1) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 1;
         } else if (key === 2) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 9;
@@ -215,6 +172,8 @@ function Journal() {
           txtarea.selectionStart = txtarea.selectionEnd = start + 7;
         } else if (key === 7 || key === 6) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 3;
+        } else if (key === 8) {
+          txtarea.selectionStart = txtarea.selectionEnd = start + 8;
         }
       }, 1)
     );
@@ -222,33 +181,54 @@ function Journal() {
 
   // Editing mode
   const editingMode = (
-    <textarea
-      id="journal-area"
-      value={input}
-      // placeholder="Write here"
-      onChange={inputText}
-      onKeyDown={(e) => clickTab(e)}
-      onSelect={(e) => handleCursor(e)}
-    />
+    <>
+      <div id="date-with-toolbar-editing">
+        <p id="journal-date-editing">{date}</p>
+        <MarkdownToolbar
+          id="markdown-toolbar-editing"
+          onClick={toolbarClick}
+          buttons={buttonTypes}
+        />
+      </div>
+      <textarea
+        id="journal-area"
+        value={input}
+        // placeholder="Write here"
+        onChange={inputText}
+        onKeyDown={(e) => clickTab(e)}
+        onSelect={(e) => handleCursor(e)}
+      />
+    </>
   );
 
   // Preview mode (makes use of the ReactMarkdown dependency)
   const previewMode = (
-    <div id="preview-area">
-      <ReactMarkdown>{input}</ReactMarkdown>
-    </div>
+    <>
+      <div id="date-with-toolbar-preview">
+        <p id="journal-date-preview">{date}</p>
+        <MarkdownToolbar
+          id="markdown-toolbar-preview"
+          onClick={toolbarClick}
+          buttons={buttonTypes}
+        />
+      </div>
+      <div id="preview-area">
+        <ReactMarkdown components={components} remarkPlugins={[gfm]}>
+          {input}
+        </ReactMarkdown>
+      </div>
+    </>
   );
 
   // The overall journal interface.
   return (
-    <div id="main-interface">
-      <div id="mdtb-block">
-        <MarkdownToolbar onClick={toolbarClick} buttons={buttonTypes} />
-      </div>
-      <div id="modetb-with-area">
+    <div id="journal-interface">
+      <div id="journal-header">
+        <button id="back-button"></button>
+        <h2 id="journal-title">Journal Title</h2>
         <ModeToolbar onClick={toggleMode} />
-        <span>{isEditing ? editingMode : previewMode}</span>
       </div>
+      {isEditing ? editingMode : previewMode}
       <div id="docs-link">
         <a href="https://spec.commonmark.org/0.29/">Commonmark Docs</a>
       </div>

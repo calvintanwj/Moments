@@ -125,17 +125,20 @@ function Calendar() {
 
       <div id="calendar-toolbar">
         <input
+          className="calendar-toolbar-buttons"
           type="text"
           value={formEventName}
           onChange={handleChangeFormEventName}
         ></input>
         {/* <input type="submit" value="Create Event" onClick={handleSubmitEvent}></input> */}
         <input
+          className="calendar-toolbar-buttons"
           type="submit"
           value="Create Event"
           onClick={handleSubmitEvent}
         ></input>
         <button
+          className="calendar-toolbar-buttons"
           onClick={() => {
             changeMonth(-1);
           }}
@@ -143,27 +146,35 @@ function Calendar() {
           Previous Month
         </button>
         <button
+          className="calendar-toolbar-buttons"
           onClick={() => {
             changeMonth(1);
           }}
         >
           Next Month
         </button>
-        <button onClick={gotoToday}>Today</button>
+        <button className="calendar-toolbar-buttons" onClick={gotoToday}>
+          Today
+        </button>
       </div>
-
-      <table id="Outer-Calendar">
-        <caption id="date-header">{format(date, "MMM y")}</caption>
-        <thead>
-          <DayHeaderRow key="DayHeaderRow" />
-        </thead>
-        <tbody>
-          {/* <CalendarBody dayhandler={dayHandler} calendarDate={date} /> */}
-          {dayData.map((row, index) => (
-            <WeekRow key={"row-" + index} days={row} dayHandler={dayHandler} />
-          ))}
-        </tbody>
-      </table>
+      <div id="calendar-container">
+        <table id="Outer-Calendar">
+          <caption id="date-header">{format(date, "MMM y")}</caption>
+          <thead>
+            <DayHeaderRow key="DayHeaderRow" />
+          </thead>
+          <tbody>
+            {/* <CalendarBody dayhandler={dayHandler} calendarDate={date} /> */}
+            {dayData.map((row, index) => (
+              <WeekRow
+                key={"row-" + index}
+                days={row}
+                dayHandler={dayHandler}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
