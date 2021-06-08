@@ -127,12 +127,29 @@ function Scheduler() {
     closeEditForm();
   };
 
+  const [view, setNewView] = useState(true);
+
+  // Keeps track of the date desired/clicked
+  const [dateDesired, setdateDesired] = useState(new Date());
+
+  function handleNavClick(date) {
+    setNewView(false);
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(date);
+    calendarApi.changeView("timeGridDay");
+    setdateDesired(date);
+  }
+
   // Scheduler interface component
   return (
     <div id="scheduler-interface">
       <SchedulerToolbar
         calendarRef={calendarRef}
         openEventForm={openEventForm}
+        view={view}
+        dateDesired={dateDesired}
+        setdateDesired={setdateDesired}
+        setNewView={setNewView}
       />
       <Modal
         isOpen={eventFormIsOpen}
@@ -226,9 +243,11 @@ function Scheduler() {
           headerToolbar={headerToolbar}
           initialDate={new Date()}
           plugins={calendarPlugins}
-          initialView="timeGridDay"
-          dayHeaders={false}
+          initialView="dayGridMonth"
+          dayHeaders={true}
           eventClick={(event) => handleEventClick(event)}
+          navLinks={true}
+          navLinkDayClick={(date) => handleNavClick(date)}
         />
       </div>
     </div>
