@@ -1,9 +1,9 @@
-#App {
-   display: grid;
-   grid-template-columns: repeat(2, 1fr);
-   gap: 20px;
+#workspace {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
 html {
-   background-color: #ececec;
+  background-color: #ececec;
 }

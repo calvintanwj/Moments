@@ -1,18 +1,45 @@
-import Journal from "./Journal/Journal.js";
-import Scheduler from "./Scheduler/Scheduler.js";
-import "./index.css";
-import Modal from "react-modal";
+import React from "react";
+import {
+	BrowserRouter,
+	Switch,
+	Route,
+	Link
+} from "react-router-dom";
 
-Modal.setAppElement('#root');
+import Workspace from "./Workspace"
+import LandingPage from "./LandingPage"
+import LoginPage from "./LoginPage"
+import SignUpPage from "./SignUpPage"
+
 
 function App() {
-  return (
-    <div id="App">
-      <Scheduler />
-      <Journal />
-    </div>
-  );
-  
+	return (
+		<BrowserRouter>
+			<ul>
+				<li><Link to="/">Homepage</Link></li>
+				<li><Link to="/login">Login</Link></li>
+				<li><Link to="/sign-up">Sign-Up</Link></li>
+				<li><Link to="/workspace">Workspace</Link></li>
+			</ul>
+
+			<Switch>
+				<Route exact path="/">
+					<LandingPage />
+				</Route>
+				<Route exact path="/login">
+					<LoginPage />
+				</Route>
+				<Route exact path="/sign-up">
+					<SignUpPage />
+				</Route>
+				<Route exact path="/workspace">
+					<Workspace />
+				</Route>
+
+			</Switch>
+		</BrowserRouter>
+
+	);
 }
 
 export default App;
