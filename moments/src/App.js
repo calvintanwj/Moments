@@ -15,12 +15,15 @@ import SignUpPage from "./SignUpPage"
 function App() {
 	return (
 		<BrowserRouter>
-			<ul>
-				<li><Link to="/">Homepage</Link></li>
-				<li><Link to="/login">Login</Link></li>
-				<li><Link to="/sign-up">Sign-Up</Link></li>
-				<li><Link to="/workspace">Workspace</Link></li>
-			</ul>
+			<nav>
+				<ul>
+					<li><Link to="/">Homepage</Link></li>
+					<li><Link to="/login">Login</Link></li>
+					<li><Link to="/sign-up">Sign-Up</Link></li>
+					<li><Link to="/workspace">Workspace</Link></li>
+				</ul>
+			</nav>
+
 
 			<Switch>
 				<Route exact path="/">
