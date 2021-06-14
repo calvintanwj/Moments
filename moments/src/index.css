@@ -29,19 +29,20 @@ body {
   width: 2em;
   height: 2em;
   justify-content: center;
-  position: fixed;
-  margin-top: 1.2%;
-  margin-left: 1.2%;
+  position: absolute;
+  margin-top: 14px;
+  margin-left: 3.2em;
   border-radius: 50%;
 }
 
 #navbar-title {
-  margin-left: 2.9em;
+  margin-left: 5em;
   color: rgb(71, 70, 70);
 }
 
 .navbar-links {
-  width: 30%;
+  width: 20%;
+  margin-right: 5%;
   display: flex;
   justify-content: space-around;
   list-style: none;
@@ -81,7 +82,7 @@ body {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 20%;
+  margin: 150px 20%;
 }
 
 #login-page-header {
@@ -136,7 +137,7 @@ input[type="password"] {
 #login-page-footer {
   display: flex;
   justify-content: space-around;
-  margin: 3%;
+  margin: 3.5%;
 }
 
 #login-page-footer button {
@@ -161,7 +162,7 @@ input[type="password"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 20%;
+  margin: 150px 20%;
 }
 
 #signup-page-header {
@@ -239,6 +240,7 @@ input[type="password"] {
 #home-page-left-container {
   grid-column: 1;
   text-align: center;
+  margin-left: 20px;
 }
 
 #home-page-link {
@@ -286,6 +288,7 @@ input[type="password"] {
   width: 600px;
   height: 600px;
   margin-top: 11%;
+  margin-right: 50px;
   overflow: hidden;
   right: 3%;
   border-radius: 10%;
