@@ -3,7 +3,7 @@ import Scheduler from "./Scheduler/Scheduler.js";
 import "./index.css";
 import Modal from "react-modal";
 
-Modal.setAppElement('#root');
+Modal.setAppElement("#root");
 
 function Workspace() {
   return (
@@ -12,7 +12,6 @@ function Workspace() {
       <Journal />
     </div>
   );
-
 }
 
 export default Workspace;

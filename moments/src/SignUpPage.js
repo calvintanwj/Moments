@@ -1,24 +1,29 @@
-function SignUpPage() {
-	return (
-		<div>
-			<h1>This is the sign-up page</h1>
-			<form>
-				<div>
-					<label for="username">Username:</label>
-					<input type="text" id="username" />
-				</div>
-				<div>
-					<label for="password">Password:</label>
-					<input type="password" id="password" />
-				</div>
-				<div>
-					<label for="email">Email Address:</label>
-					<input type="emai" id="emai" />
-				</div>
-				<input type="submit" value="Sign Up" />
-			</form>
-		</div>)
+import React from "react";
+import { Link } from "react-router-dom";
 
+function SignUpPage() {
+  return (
+    <form id="signup-page-container" action="" method="">
+      <h1 id="signup-page-header">Sign-up</h1>
+      <div>
+        <label for="name">Name</label>
+        <input type="text" name="name" required />
+        <label for="email">Email</label>
+        <input type="text" name="email" required />
+        <label for="password">Password</label>
+        <input type="password" name="password" required />
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" name="confirm-password" required />
+        <button type="submit">Join Now</button>
+      </div>
+      <div id="signup-page-footer">
+        <Link to="/">
+          <button>Home</button>
+        </Link>
+      </div>
+      <div></div>
+    </form>
+  );
 }
 
 export default SignUpPage;

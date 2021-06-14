@@ -1,9 +1,353 @@
+/* General styling */
+html {
+  background-color: #ececec;
+  font-family: "Exo 2", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+/* Styling for the workspace */
 #workspace {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+  margin-top: 2%;
 }
 
-html {
-  background-color: #ececec;
+/* Styling for the navigation bar */
+#navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgb(180, 178, 178);
+  box-shadow: 0px 5px 10px rgb(182, 177, 177);
+}
+
+#navbar img {
+  width: 2em;
+  height: 2em;
+  justify-content: center;
+  position: fixed;
+  margin-top: 1.2%;
+  margin-left: 1.2%;
+  border-radius: 50%;
+}
+
+#navbar-title {
+  margin-left: 2.9em;
+  color: rgb(71, 70, 70);
+}
+
+.navbar-links {
+  width: 30%;
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  font-weight: bold;
+}
+
+.navbar-links #login-bt,
+#signup-bt {
+  border: 1px solid grey;
+  border-radius: 30px;
+  color: black;
+}
+
+.navbar-routes {
+  text-decoration: none;
+}
+
+.navbar-links #login-bt {
+  padding: 0.6em 2.5em;
+}
+
+.navbar-links #signup-bt {
+  padding: 0.6em 2em;
+  white-space: nowrap;
+}
+
+.navbar-links li:hover {
+  background-color: lightgrey;
+}
+
+.navbar-links li:active {
+  background-color: grey;
+}
+
+/* Styling for the login page */
+#login-page-container {
+  border: 3px solid grey;
+  width: 55%;
+  border-radius: 10%;
+  margin: 20%;
+}
+
+#login-page-header {
+  text-align: center;
+  font-size: 3.5em;
+}
+
+#login-page-img {
+  height: 9em;
+}
+
+#login-page-container input[type="text"],
+input[type="password"] {
+  box-sizing: border-box;
+  display: block;
+  margin: 10px 0px;
+  width: 85%;
+  padding: 10px 20px;
+  border: 1px solid lightgrey;
+  margin-left: 7%;
+}
+
+#login-page-container label {
+  margin-left: 7%;
+  font-weight: bold;
+}
+
+#remember-me {
+  display: block;
+  margin-top: 2%;
+}
+
+#login-page-container button[type="submit"] {
+  margin: 5% 0;
+  margin-left: 39%;
+  padding: 0.7em 3.4em;
+  border: 1px solid grey;
+  border-radius: 30px;
+  font-family: "Exo 2", sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+#login-page-container button[type="submit"]:hover {
+  background-color: lightgrey;
+}
+
+#login-page-container button[type="submit"]:active {
+  background-color: grey;
+}
+
+#login-page-footer {
+  display: flex;
+  justify-content: space-around;
+  margin: 3%;
+}
+
+#login-page-footer button {
+  padding: 0.5em 2.5em;
+  border-radius: 20px;
+  border: 1px solid grey;
+  font-family: "Exo 2", sans-serif;
+  font-weight: bold;
+  background: rgb(255, 60, 60);
+}
+
+#login-page-footer button:hover {
+  background-color: lightgrey;
+}
+
+#login-page-footer button:active {
+  background-color: grey;
+}
+
+/* Styling for the signup page */
+#signup-page-container {
+  border: 3px solid grey;
+  width: 55%;
+  border-radius: 10%;
+  margin: 20%;
+}
+
+#signup-page-header {
+  text-align: center;
+  font-size: 3.5em;
+  margin-bottom: 11%;
+}
+
+#signup-page-container input[type="text"],
+input[type="password"] {
+  box-sizing: border-box;
+  display: block;
+  margin: 10px 0px;
+  width: 85%;
+  padding: 10px 20px;
+  border: 1px solid lightgrey;
+  margin-left: 7%;
+}
+
+#signup-page-container label {
+  margin-left: 7%;
+  font-weight: bold;
+}
+
+#signup-page-container button[type="submit"] {
+  margin: 4% 0;
+  margin-left: 37%;
+  padding: 0.7em 3.4em;
+  border: 1px solid grey;
+  border-radius: 30px;
+  font-family: "Exo 2", sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+#signup-page-container button[type="submit"]:hover {
+  background-color: lightgrey;
+}
+
+#signup-page-container button[type="submit"]:active {
+  background-color: grey;
+}
+
+#signup-page-footer {
+  display: flex;
+  justify-content: space-around;
+  margin: 3%;
+  margin-top: 2%;
+}
+
+#signup-page-footer button {
+  padding: 0.5em 2.5em;
+  border-radius: 20px;
+  border: 1px solid grey;
+  font-family: "Exo 2", sans-serif;
+  font-weight: bold;
+  background: rgb(255, 60, 60);
+}
+
+#signup-page-footer button:hover {
+  background-color: lightgrey;
+}
+
+#signup-page-footer button:active {
+  background-color: grey;
+}
+
+/* Styling for the home page */
+#home-page-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2%;
+}
+
+#home-page-left-container {
+  grid-column: 1;
+  text-align: center;
+}
+
+#home-page-link {
+  grid-column: 1;
+}
+
+#home-page-left-container h1 {
+  font-size: 3em;
+  margin-top: 25%;
+}
+
+#home-page-left-container h3 {
+  font-size: 1.3em;
+}
+
+#home-page-left-container h2 {
+  font-size: 2em;
+  margin: 5%;
+  margin-top: 40%;
+}
+
+#home-page-left-container button {
+  width: 25%;
+  padding: 1em 2em;
+  font-size: 1em;
+  font-weight: bold;
+  font-family: "Exo 2", sans-serif;
+  border: 1px solid grey;
+  border-radius: 25px;
+  margin-left: 2%;
+  cursor: pointer;
+}
+
+#home-page-container button:hover {
+  background-color: lightblue;
+}
+
+#home-page-container button:active {
+  background-color: rgb(162, 162, 255);
+}
+
+#home-page-slideshow {
+  grid-column: 2;
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  margin-top: 11%;
+  overflow: hidden;
+  right: 3%;
+  border-radius: 10%;
+}
+
+#home-page-slider-nav {
+  display: flex;
+  position: absolute;
+  right: 16%;
+  bottom: 4%;
+}
+
+.home-page-bar {
+  width: 4em;
+  height: 0.6em;
+  border: 2px solid white;
+  margin: 6px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.home-page-bar:hover {
+  background: white;
+}
+
+#home-page-slides input[name="r"] {
+  position: absolute;
+  visibility: hidden;
+}
+
+#home-page-slides {
+  width: 500%;
+  height: 100%;
+  display: flex;
+}
+
+.home-page-slide {
+  width: 20%;
+  transition: 0.6s;
+}
+
+.home-page-slide img{
+  width: 100%;
+  height: 100%;
+}
+
+#r1:checked ~ .s1 {
+  margin-left: 0%;
+}
+
+#r2:checked ~ .s1 {
+  margin-left: -20%;
+}
+
+#r3:checked ~ .s1 {
+  margin-left: -40%;
+}
+
+#r4:checked ~ .s1 {
+  margin-left: -60%;
+}
+
+#r5:checked ~ .s1 {
+  margin-left: -80%;
 }
