@@ -12,10 +12,15 @@ db.once('open', function () {
 	console.log('connected to db')
 })
 
-app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 
 app.get('/', (req, res) => {
 	res.send('This is the homepage')
+})
+
+app.post('/', (req, res) => {
+	console.log(req.body)
+	res.status(200).send('Got it')
 })
 
 app.listen(port, () => {
