@@ -1,28 +1,39 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
-const mongoose = require('mongoose')
-const { mongoURI } = require('./key')
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+const app = express();
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}`);
+});
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', function () {
-	console.log('connected to db')
-})
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 
-app.use(express.json())
+// Connecting MongoDB
+// =========================================================================================================
+mongoose.connect(
+  process.env.MDB_CONNECT,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  (err) => {
+    if (err) return console.error(err);
+    console.log("Connected to DB");
+  }
+);
 
-app.get('/', (req, res) => {
-	res.send('This is the homepage')
-})
+// User Authentication Route
+// =========================================================================================================
+app.use("/auth", require("./routers/userRouter"));
 
-app.post('/', (req, res) => {
-	console.log(req.body)
-	res.status(200).send('Got it')
-})
-
-app.listen(port, () => {
-	console.log(`Server listening at http://localhost:${port}`)
-})
