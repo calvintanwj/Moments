@@ -45,10 +45,18 @@ router.post("/resend", async (req, res) => {
   const url = `http://localhost:5000/confirmation/${emailToken}`;
 
   transporter.sendMail({
-    from: "Moments",
+    from: "Moments <momentsorbital@gmail.com>",
     to: email,
-    subject: "Confirm Email",
-    html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
+    subject: "Confirmation Email",
+    html: `Almost done! To complete your Moments registration, we just need you to verify your email address: <br><br>
+
+    Please click the following link to verify your email address: <a href="${url}">${url}</a> <br><br>
+
+    Once verified, you can start using all of Moment's features. <br><br>
+    
+    You’re receiving this email because you recently created a new Moments account. If this wasn’t you, please ignore this email. <br><br>
+    Thanks, <br>
+    The Moments Team`,
   });
 
   res.send("");

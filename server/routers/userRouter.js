@@ -71,10 +71,18 @@ router.post("/", async (req, res) => {
     const url = `http://localhost:5000/confirmation/${emailToken}`;
 
     transporter.sendMail({
-      from: "Moments",
+      from: "Moments <momentsorbital@gmail.com>",
       to: email,
-      subject: "Confirm Email",
-      html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
+      subject: "Confirmation Email",
+      html: `Almost done, ${name}! To complete your Moments registration, we just need you to verify your email address: <br><br>
+
+      Please click the following link to verify your email address: <a href="${url}">${url}</a> <br><br>
+
+      Once verified, you can start using all of Moment's features. <br><br>
+      
+      You’re receiving this email because you recently created a new Moments account. If this wasn’t you, please ignore this email. <br><br>
+      Thanks, <br>
+      The Moments Team`,
     });
 
     res.send("");
@@ -195,11 +203,21 @@ router.post("/forgot-password", async (req, res) => {
 
     const url = `http://localhost:3000/reset-password/${emailToken}`;
 
+    const forgotpass = "http://localhost:3000/forgot-password";
+
     transporter.sendMail({
-      from: "Moments",
+      from: "Moments <momentsorbital@gmail.com>",
       to: email,
       subject: "Reset Password Email",
-      html: `Please click this email to reset your password: <a href="${url}">${url}</a>`,
+      html: `We heard that you lost your Moments password. Sorry about that! <br><br>
+
+      But don’t worry! You can use the following link to reset your password: <br><br>
+
+      Please click this email to reset your password: <a href="${url}">${url}</a> <br><br>
+      If you don’t use this link within 20 minutes, it will expire. To get a new password reset link, visit <a href="${forgotpass}">${forgotpass}</a> <br><br>
+
+      Thanks, <br>
+      The Moments Team`,
     });
 
     await User.updateOne({ email: email }, { resetToken: emailToken });
@@ -218,9 +236,9 @@ router.post("/reset-password", async (req, res) => {
     jwt.verify(token, process.env.JWT_RESET_PASS, (err, decodedData) => {
       if (err) {
         res.redirect("http://localhost:3000/forgot-password");
-        return res
-          .status(401)
-          .json({ errorMessage: "Email has expired, please resend again" });
+        return res.status(401).json({
+          errorMessage: "Reset Link has expired, please resend email again",
+        });
       }
     });
 

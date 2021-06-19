@@ -15,7 +15,7 @@ function ForgotPasswordPage() {
         "http://localhost:5000/auth/forgot-password/",
         emailData
       );
-      history.push("/confirmation");
+      history.push("/resetemail");
     } catch (err) {
       console.error(err);
       alert(err.response.data.errorMessage);
@@ -23,9 +23,9 @@ function ForgotPasswordPage() {
   }
 
   return (
-    <div>
-      <h1>Forgot your password?</h1>
-      <form onSubmit={sendPasswordEmail}>
+      <form onSubmit={sendPasswordEmail} id="forgot-password-container">
+        <h1>Forgot your password?</h1>
+        <h3>Don't worry. Happens to the best of us.</h3>
         <label for="email">Email</label>
         <input
           type="email"
@@ -35,7 +35,6 @@ function ForgotPasswordPage() {
         />
         <button type="submit">Send</button>
       </form>
-    </div>
   );
 }
 

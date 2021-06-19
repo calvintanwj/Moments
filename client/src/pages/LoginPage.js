@@ -30,27 +30,25 @@ function LoginPage() {
     <form id="login-page-container" onSubmit={login}>
       <h1 id="login-page-header">Login</h1>
       <div id="login-page-img"></div>
-      <div>
-        <label for="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label for="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <label id="remember-me" for="remember">
-          <input type="checkbox" name="remember" />
-          Remember me
-        </label>
-        <button type="submit">Login</button>
-      </div>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        name="email"
+        required
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <label for="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        required
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <label id="remember-me" for="remember">
+        <input type="checkbox" name="remember" />
+        Remember me
+      </label>
+      <button type="submit">Login</button>
       <div id="login-page-footer">
         <Link to="/">
           <button>Home</button>

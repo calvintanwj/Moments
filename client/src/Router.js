@@ -9,6 +9,7 @@ import VerifiedPage from "./pages/VerifiedPage";
 import ExpiredPage from "./pages/ExpiredPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ResetEmailPage from "./pages/ResetEmailPage";
 import NavBar from "./components/NavBar";
 import AuthContext from "./context/AuthContext";
 import PasswordChangeSuccessPage from "./pages/PasswordChangeSuccessPage";
@@ -43,6 +44,7 @@ function Router() {
               path="/success"
               component={PasswordChangeSuccessPage}
             />
+            <Route exact path="/resetemail" component={ResetEmailPage} />
           </>
         )}
         {loggedIn === true && (

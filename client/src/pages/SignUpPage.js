@@ -31,7 +31,6 @@ function SignUpPage() {
   return (
     <form id="signup-page-container" onSubmit={signup}>
       <h1 id="signup-page-header">Sign-up</h1>
-      <div>
         <label for="name">Name</label>
         <input
           type="text"
@@ -61,7 +60,6 @@ function SignUpPage() {
           onChange={(e) => setPasswordVerify(e.target.value)}
         />
         <button type="submit">Join Now</button>
-      </div>
       <div id="signup-page-footer">
         <Link to="/">
           <button>Home</button>

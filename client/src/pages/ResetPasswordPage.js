@@ -24,19 +24,17 @@ function ResetPasswordPage() {
   }
 
   return (
-    <div>
-      <h1>Reset your password</h1>
-      <form onSubmit={changePassword}>
-        <label for="password">Change password</label>
+      <form onSubmit={changePassword} id="reset-password-container">
+        <h1>Reset your password</h1>
+        <label for="password">Enter your new password</label>
         <input
           type="text"
           name="password"
           required
           onChange={(e) => setNewPassword(e.target.value)}
         />
-        <button type="submit">Send</button>
+        <button type="submit">Change password</button>
       </form>
-    </div>
   );
 }
 

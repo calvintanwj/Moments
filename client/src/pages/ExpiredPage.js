@@ -20,19 +20,18 @@ function ExpiredPage() {
   }
 
   return (
-    <div>
-      <h1>Sorry, the confirmation email has expired.</h1>
-      <form onSubmit={resendEmail}>
-        <label for="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button type="submit">Resend</button>
-      </form>
-    </div>
+    <form onSubmit={resendEmail} id="expired-page-container">
+      <h1>Sorry, your confirmation link has expired.</h1>
+      <h2>Please enter your email again to get a new link</h2>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        name="email"
+        required
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <button type="submit">Resend</button>
+    </form>
   );
 }
 
