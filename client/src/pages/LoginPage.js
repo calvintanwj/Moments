@@ -17,12 +17,12 @@ function LoginPage() {
         email,
         password,
       };
-
       await axios.post("http://localhost:5000/auth/login", loginData);
       await getLoggedIn();
-      history.push("/workspace")
+      history.push("/workspace");
     } catch (err) {
       console.error(err);
+      alert(err.response.data.errorMessage);
     }
   }
 
@@ -55,7 +55,7 @@ function LoginPage() {
         <Link to="/">
           <button>Home</button>
         </Link>
-        <a href="/">Forgot password?</a>
+        <Link to="/forgot-password">Forgot password?</Link>
       </div>
       <div></div>
     </form>

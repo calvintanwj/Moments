@@ -26,6 +26,7 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   },
   (err) => {
     if (err) return console.error(err);
@@ -37,3 +38,6 @@ mongoose.connect(
 // =========================================================================================================
 app.use("/auth", require("./routers/userRouter"));
 
+// Confirmation Route
+// =========================================================================================================
+app.use("/confirmation", require("./routers/confirmationRouter"));

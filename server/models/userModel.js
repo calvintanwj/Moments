@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
   },
+  confirmed: {
+    type: Boolean,
+    defaultValue: false,
+  },
+  resetToken: {
+    data: String,
+    default: "",
+  },
 });
 
 const User = mongoose.model("user", userSchema);

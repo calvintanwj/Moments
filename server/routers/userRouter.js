@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 // registration
 router.post("/", async (req, res) => {
@@ -15,25 +16,9 @@ router.post("/", async (req, res) => {
         .json({ errorMessage: "Please enter all required fields." });
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailPattern.test(email)) {
-      return res
-        .status(400)
-        .json({ errorMessage: "Please enter a valid email." });
-    }
-
     if (password.length < 8) {
       return res.status(400).json({
         errorMessage: "Please enter a password of at least 8 characters",
-      });
-    }
-
-    const passwordPattern =
-      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
-    if (passwordPattern.test(password)) {
-      return res.status(400).json({
-        errorMessage:
-          "Please enter a password with at least one upper, one lower, one number, and one special character",
       });
     }
 
@@ -64,20 +49,35 @@ router.post("/", async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    // sign token (log the user in after registering)
-    const token = jwt.sign(
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_SENDER, // generated ethereal user
+        pass: process.env.EMAIL_PASS, // generated ethereal password
+      },
+    });
+
+    const emailToken = jwt.sign(
       {
         user: savedUser._id,
       },
-      process.env.JWT_SECRET
+      process.env.JWT_ACTIVATE_ACC,
+      {
+        expiresIn: "1d",
+      }
     );
 
-    // send token in a HTTP-only cookie
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-      })
-      .send();
+    const url = `http://localhost:5000/confirmation/${emailToken}`;
+
+    transporter.sendMail({
+      from: "Moments",
+      to: email,
+      subject: "Confirm Email",
+      html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
+    });
+
+    res.send("");
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -100,6 +100,12 @@ router.post("/login", async (req, res) => {
 
     if (!existingUser) {
       return res.status(401).json({ errorMessage: "Wrong email or password." });
+    }
+
+    if (!existingUser.confirmed) {
+      return res
+        .status(401)
+        .json({ errorMessage: "Please verify your email to login" });
     }
 
     const passwordCorrect = await bcrypt.compare(
@@ -152,6 +158,93 @@ router.get("/loggedIn", (req, res) => {
     res.send(true);
   } catch (err) {
     res.json(false);
+  }
+});
+
+// send reset-password link
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      return res
+        .status(401)
+        .json({ errorMessage: "User with this email does not exist" });
+    }
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_SENDER, // generated ethereal user
+        pass: process.env.EMAIL_PASS, // generated ethereal password
+      },
+    });
+
+    const emailToken = jwt.sign(
+      {
+        user: existingUser._id,
+      },
+      process.env.JWT_RESET_PASS,
+      {
+        expiresIn: "20m",
+      }
+    );
+
+    const url = `http://localhost:3000/reset-password/${emailToken}`;
+
+    transporter.sendMail({
+      from: "Moments",
+      to: email,
+      subject: "Reset Password Email",
+      html: `Please click this email to reset your password: <a href="${url}">${url}</a>`,
+    });
+
+    await User.updateOne({ email: email }, { resetToken: emailToken });
+
+    res.send("");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
+
+// Deal with reset-password link
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { newPassword, token } = req.body;
+    jwt.verify(token, process.env.JWT_RESET_PASS, (err, decodedData) => {
+      if (err) {
+        res.redirect("http://localhost:3000/forgot-password");
+        return res
+          .status(401)
+          .json({ errorMessage: "Email has expired, please resend again" });
+      }
+    });
+
+    const changedUser = await User.findOne({ resetToken: token });
+
+    if (!changedUser) {
+      return res
+        .status(401)
+        .json({ errorMessage: "User with this token does not exist" });
+    }
+
+    // encrypt (hash) password
+    const salt = await bcrypt.genSalt();
+    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+    await User.updateOne(
+      { resetToken: token },
+      { passwordHash: newPasswordHash, resetToken: "" }
+    );
+
+    res.send("");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
   }
 });
 

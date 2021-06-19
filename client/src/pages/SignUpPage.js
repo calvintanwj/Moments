@@ -1,7 +1,6 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
 
 function SignUpPage() {
   const [name, setName] = useState("");
@@ -9,7 +8,6 @@ function SignUpPage() {
   const [password, setPassword] = useState("");
   const [passwordVerify, setPasswordVerify] = useState("");
 
-  const { getLoggedIn } = useContext(AuthContext);
   const history = useHistory();
 
   async function signup(e) {
@@ -23,10 +21,10 @@ function SignUpPage() {
       };
 
       await axios.post("http://localhost:5000/auth/", signupData);
-      await getLoggedIn();
-      history.push("/workspace")
+      history.push("/confirmation");
     } catch (err) {
       console.error(err);
+      alert(err.response.data.errorMessage);
     }
   }
 
