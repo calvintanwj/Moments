@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import Error from "../components/Error";
 
 function ExpiredPage() {
   const [email, setEmail] = useState("");
-
+  const [errorMessage, setErrorMessage] = useState("");
+  
   const history = useHistory();
 
   async function resendEmail(e) {
@@ -15,12 +17,14 @@ function ExpiredPage() {
       history.push("/confirmation");
     } catch (err) {
       console.error(err);
-      alert(err.response.data.errorMessage);
+      setErrorMessage(err.response.data.errorMessage);
+      document.getElementById("expired-alert").style.display = "block";
     }
   }
 
   return (
     <form onSubmit={resendEmail} id="expired-page-container">
+      <Error id="expired-alert" errorMessage={errorMessage}/>
       <h1>Sorry, your confirmation link has expired.</h1>
       <h2>Please enter your email again to get a new link</h2>
       <label for="email">Email</label>

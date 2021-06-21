@@ -2,10 +2,12 @@ import React, { useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
+import Error from "../components/Error";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { getLoggedIn } = useContext(AuthContext);
   const history = useHistory();
@@ -22,12 +24,14 @@ function LoginPage() {
       history.push("/workspace");
     } catch (err) {
       console.error(err);
-      alert(err.response.data.errorMessage);
+      setErrorMessage(err.response.data.errorMessage);
+      document.getElementById("login-alert").style.display = "block";
     }
   }
 
   return (
     <form id="login-page-container" onSubmit={login}>
+      <Error id="login-alert" errorMessage={errorMessage}/>
       <h1 id="login-page-header">Login</h1>
       <div id="login-page-img"></div>
       <label for="email">Email</label>

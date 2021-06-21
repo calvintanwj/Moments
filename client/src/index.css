@@ -100,7 +100,7 @@ body {
   justify-content: space-between;
 }
 
-#user-nav-container img{
+#user-nav-container img {
   width: 55px;
   height: 55px;
   position: fixed;
@@ -124,7 +124,7 @@ body {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -196,7 +196,7 @@ body {
   border: 1px solid grey;
   font-family: "Exo 2", sans-serif;
   font-weight: bold;
-  background: rgb(255, 60, 60);
+  background: rgb(250, 106, 106);
 }
 
 #login-page-footer button:hover {
@@ -212,7 +212,7 @@ body {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -291,7 +291,7 @@ input[type="email"] {
   border: 1px solid grey;
   font-family: "Exo 2", sans-serif;
   font-weight: bold;
-  background: rgb(255, 60, 60);
+  background: rgb(250, 106, 106);
 }
 
 #signup-page-footer button:hover {
@@ -434,7 +434,7 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -490,8 +490,8 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
-  height: 40em;  
+  margin: 150px auto;
+  height: 40em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -535,8 +535,8 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
-  height: 35em;  
+  margin: 150px auto;
+  height: 35em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -579,7 +579,7 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -637,7 +637,7 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -674,7 +674,7 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -711,7 +711,7 @@ input[type="email"] {
   border: 3px solid grey;
   width: 55%;
   border-radius: 10%;
-  margin: 150px 20%;
+  margin: 150px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -756,4 +756,65 @@ input[type="email"] {
 
 #reset-password-container button:active {
   background-color: grey;
+}
+
+/* Styling for alert messages*/
+.alert-message {
+  font-weight: bold;
+  color: white;
+  font-size: 1.2em;
+  background: rgb(255, 97, 97);
+  margin: 0 auto;
+  position: fixed;
+  top: 7%;
+  box-sizing: border-box;
+  width: 50%;
+  left: 0px;
+  right: 0px;
+  padding: 20px 40px;
+  border-radius: 5px;
+  border-left: 10px solid red;
+  text-align: center;
+  animation-name: appear;
+  animation-duration: 1.5s;
+}
+
+@keyframes appear {
+  0% {
+    transform: translateX(100%);
+  }
+  40% {
+    transform: translateX(-5%);
+  }
+  60% {
+    transform: translateX(0%);
+  }
+  80% {
+    transform: translateX(-10px);
+  } 
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.alert-message .fas {
+  position: absolute;
+  color: black;
+  right: 0px;
+  top: 0px;
+  padding: 22px 18px;
+  font-size: 20px;
+  display: inline;
+  background: rgb(250, 250, 250);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+}
+
+.alert-message .fas:hover {
+  background: rgb(212, 211, 211);
+}
+
+.alert-message .fas:active {
+  background: rgb(156, 153, 153);
 }

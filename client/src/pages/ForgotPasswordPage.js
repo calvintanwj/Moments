@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import Error from "../components/Error";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const history = useHistory();
 
@@ -18,23 +20,25 @@ function ForgotPasswordPage() {
       history.push("/resetemail");
     } catch (err) {
       console.error(err);
-      alert(err.response.data.errorMessage);
+      setErrorMessage(err.response.data.errorMessage);
+      document.getElementById("forgotpw-alert").style.display = "block";
     }
   }
 
   return (
-      <form onSubmit={sendPasswordEmail} id="forgot-password-container">
-        <h1>Forgot your password?</h1>
-        <h3>Don't worry. Happens to the best of us.</h3>
-        <label for="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
+    <form onSubmit={sendPasswordEmail} id="forgot-password-container">
+      <Error id="forgotpw-alert" errorMessage={errorMessage} />
+      <h1>Forgot your password?</h1>
+      <h3>Don't worry. Happens to the best of us.</h3>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        name="email"
+        required
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <button type="submit">Send</button>
+    </form>
   );
 }
 
