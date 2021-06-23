@@ -41,3 +41,7 @@ app.use("/auth", require("./routers/userRouter"));
 // Confirmation Route
 // =========================================================================================================
 app.use("/confirmation", require("./routers/confirmationRouter"));
+
+// Confirmation Route
+// =========================================================================================================
+app.use("/update", require("./routers/updateRouter"));

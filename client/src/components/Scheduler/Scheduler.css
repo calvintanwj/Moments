@@ -150,11 +150,7 @@
 }
 
 #event-close-button:hover {
-  background: lightgrey;
-}
-
-#event-close-button:active {
-  background: grey;
+  background: none;
 }
 
 #event-form {
@@ -245,11 +241,7 @@
 }
 
 #edit-close-button:hover {
-  background: lightgrey;
-}
-
-#edit-close-button:active {
-  background: grey;
+  background: none;
 }
 
 #edit-form {

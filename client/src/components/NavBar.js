@@ -1,13 +1,41 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/navbar-icon.png";
 import AuthContext from "../context/AuthContext";
 import LogOutBtn from "./LogOutBtn";
-import profilepic from "../images/profilepic.jpg";
+import EditProfileBtn from "./EditProfileBtn";
+import pic1 from "../images/profilepics/default.jpg";
+import pic2 from "../images/profilepics/pic1.jpg";
+import pic3 from "../images/profilepics/pic2.jpg";
+import pic4 from "../images/profilepics/pic3.jpg";
+import pic5 from "../images/profilepics/pic4.jpg";
+import axios from "axios";
 
 function NavBar() {
   const { loggedIn } = useContext(AuthContext);
-  console.log(loggedIn);
+  const [name, setName] = useState("Name Here");
+  const [profilePic, setprofilePic] = useState(pic1);
+  const imageChoices = [
+    { key: 0, name: pic1 },
+    { key: 1, name: pic2 },
+    { key: 2, name: pic3 },
+    { key: 3, name: pic4 },
+    { key: 4, name: pic5 },
+  ];
+
+  useEffect(() => {
+    try {
+      axios
+        .get("http://localhost:5000/update/retrieveDetails/")
+        .then((response) => {
+          const { name, profilePicID } = response.data;
+          setName(name);
+          setprofilePic(imageChoices[profilePicID]);
+        });
+    } catch (err) {
+      console.error(err);
+    }
+  });
 
   return (
     <nav id="navbar">
@@ -34,9 +62,12 @@ function NavBar() {
             <h3 id="navbar-title">Moments</h3>
           </div>
           <div id="user-nav-container">
-            <img src={profilepic} alt="profile-pic" /> 
-            <i id="setting-icon" class="fas fa-cog"></i>
-            <LogOutBtn />
+            <h5 id="navbar-profile-name">Welcome back, {name}</h5>
+            <img src={profilePic.name} alt="profile-pic" />
+            <div id="settings-menu">
+              <LogOutBtn />
+              <EditProfileBtn images={imageChoices} />
+            </div>
           </div>
         </>
       )}

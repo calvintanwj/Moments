@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     data: String,
     default: "",
   },
+  profilePicID: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const User = mongoose.model("user", userSchema);
