@@ -48,10 +48,10 @@ function LoginPage() {
         required
         onChange={(e) => setPassword(e.target.value)}
       />
-      <label id="remember-me" for="remember">
+      {/* <label id="remember-me" for="remember">
         <input type="checkbox" name="remember" />
         Remember me
-      </label>
+      </label> */}
       <button type="submit">Login</button>
       <div id="login-page-footer">
         <Link to="/">
