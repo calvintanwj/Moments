@@ -7,14 +7,15 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`Server listening on port: ${PORT}`);
 });
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://moments-flax.vercel.app/"],
+    // origin: ["http://localhost:3000"],
+    origin: ["https://moments-flax.vercel.app/"],
     credentials: true,
   })
 );
