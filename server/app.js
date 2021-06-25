@@ -45,3 +45,7 @@ app.use("/confirmation", require("./routers/confirmationRouter"));
 // Confirmation Route
 // =========================================================================================================
 app.use("/update", require("./routers/updateRouter"));
+
+app.get("/", (req, res) => {
+  res.send("Hello from Express!");
+});
