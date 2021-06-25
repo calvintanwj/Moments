@@ -12,6 +12,14 @@ app.listen(PORT, () => {
 
 app.use(express.json());
 app.use(cookieParser());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://moments-flax.vercel.app/");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 app.use(
   cors({
     // origin: ["http://localhost:3000"],
