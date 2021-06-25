@@ -13,8 +13,12 @@ function ForgotPasswordPage() {
     e.preventDefault();
     try {
       const emailData = { email };
+      // await axios.post(
+      //   "http://localhost:5000/auth/forgot-password/",
+      //   emailData
+      // );
       await axios.post(
-        "http://localhost:5000/auth/forgot-password/",
+        "https://momentsorbital.herokuapp.com/auth/forgot-password/",
         emailData
       );
       history.push("/resetemail");

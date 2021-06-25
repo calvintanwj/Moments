@@ -31,8 +31,12 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newUserData = { newName, newPicID };
+      // await axios.post(
+      //   "http://localhost:5000/update/userDetails/",
+      //   newUserData
+      // );
       await axios.post(
-        "http://localhost:5000/update/userDetails/",
+        "https://momentsorbital.herokuapp.com/update/userDetails/",
         newUserData
       );
       closeEditProfile();

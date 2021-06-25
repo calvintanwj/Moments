@@ -8,9 +8,11 @@ router.get("/:token", async (req, res) => {
   try {
     const verify = jwt.verify(req.params.token, process.env.JWT_ACTIVATE_ACC);
     await User.findOneAndUpdate({ _id: verify.user }, { confirmed: true });
-    res.redirect("http://localhost:3000/verified");
+    // res.redirect("http://localhost:3000/verified");
+    res.redirect("https://moments-flax.vercel.app/verified");
   } catch (err) {
-    res.redirect("http://localhost:3000/expired");
+    // res.redirect("http://localhost:3000/expired");
+    res.redirect("https://moments-flax.vercel.app/expired");
   }
 });
 
@@ -27,7 +29,6 @@ router.post("/resend", async (req, res) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     service: "Gmail",
-    
   });
 
   const existingUser = await User.findOne({ email });
@@ -42,7 +43,8 @@ router.post("/resend", async (req, res) => {
     }
   );
 
-  const url = `http://localhost:5000/confirmation/${emailToken}`;
+  // const url = `http://localhost:5000/confirmation/${emailToken}`;
+  const url = `https://momentsorbital.herokuapp.com/${emailToken}`;
 
   transporter.sendMail({
     from: "Moments <momentsorbital@gmail.com>",

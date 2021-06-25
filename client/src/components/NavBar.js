@@ -26,7 +26,8 @@ function NavBar() {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:5000/update/retrieveDetails/")
+        // .get("http://localhost:5000/update/retrieveDetails/")
+        .get("https://momentsorbital.herokuapp.com/update/retrieveDetails/")
         .then((response) => {
           const { name, profilePicID } = response.data;
           setName(name);

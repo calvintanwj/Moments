@@ -13,8 +13,12 @@ function ResetPasswordPage() {
     e.preventDefault();
     try {
       const verifyData = { newPassword, token };
+      // await axios.post(
+      //   "http://localhost:5000/auth/reset-password/",
+      //   verifyData
+      // );
       await axios.post(
-        "http://localhost:5000/auth/reset-password/",
+        "https://momentsorbital.herokuapp.com/auth/reset-password/",
         verifyData
       );
       history.push("/success");
