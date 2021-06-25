@@ -1,7 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
+  "engines": {
+    "node": "16.x",
+    "yarn": "1.22.10"
+  },
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
