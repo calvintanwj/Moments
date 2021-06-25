@@ -18,6 +18,11 @@ router.post("/userDetails", async (req, res) => {
 
 router.get("/retrieveDetails", async (req, res) => {
   try {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
     const loggedInUserID = jwt.decode(req.cookies.token).user;
     const loggedInUser = await User.findById(loggedInUserID);
     res.send(loggedInUser);

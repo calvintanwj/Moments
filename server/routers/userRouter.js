@@ -69,7 +69,7 @@ router.post("/", async (req, res) => {
     );
 
     // const url = `http://localhost:5000/confirmation/${emailToken}`;
-    const url = `https://momentsorbital.herokuapp.com/${emailToken}`;
+    const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",
