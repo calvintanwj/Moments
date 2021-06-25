@@ -22,8 +22,7 @@ app.use((req, res, next) => {
 });
 app.use(
   cors({
-    // origin: ["http://localhost:3000"],
-    origin: ["https://moments-flax.vercel.app"],
+    origin: ["http://localhost:3000", "https://moments-flax.vercel.app"],
     credentials: true,
   })
 );
