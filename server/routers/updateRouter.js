@@ -2,15 +2,6 @@ const router = require("express").Router();
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
-router.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-
 router.post("/userDetails", async (req, res) => {
   try {
     const { newName, newPicID } = req.body;
