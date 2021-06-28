@@ -35,7 +35,7 @@ function NavBar() {
     } catch (err) {
       console.error(err);
     }
-  });
+  }, [loggedIn, name, profilePic]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <nav id="navbar">
@@ -62,8 +62,8 @@ function NavBar() {
             <h3 id="navbar-title">Moments</h3>
           </div>
           <div id="user-nav-container">
-            <h5 id="navbar-profile-name">Welcome back, {name}</h5>
-            <img src={profilePic.name} alt="profile-pic" />
+            <h5 key={name} id="navbar-profile-name">Welcome back, {name}</h5>
+            <img key={profilePic.key} src={profilePic.name} alt="profile-pic" cache={false}/>
             <div id="settings-menu">
               <LogOutBtn />
               <EditProfileBtn images={imageChoices} />

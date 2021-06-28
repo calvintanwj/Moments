@@ -17,6 +17,7 @@ router.get("/:token", async (req, res) => {
 // Deal with Expired Email
 router.post("/resend", async (req, res) => {
   const { email } = req.body;
+  const lowerCaseEmail = email.toLowerCase();
 
   if (!email) {
     return res
@@ -30,7 +31,7 @@ router.post("/resend", async (req, res) => {
     
   });
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email: lowerCaseEmail });
 
   const emailToken = jwt.sign(
     {
@@ -46,7 +47,7 @@ router.post("/resend", async (req, res) => {
 
   transporter.sendMail({
     from: "Moments <momentsorbital@gmail.com>",
-    to: email,
+    to: lowerCaseEmail,
     subject: "Confirmation Email",
     html: `Almost done! To complete your Moments registration, we just need you to verify your email address: <br><br>
 

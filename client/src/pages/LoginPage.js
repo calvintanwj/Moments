@@ -22,6 +22,7 @@ function LoginPage() {
       await axios.post("http://localhost:5000/auth/login", loginData);
       await getLoggedIn();
       history.push("/workspace");
+      window.location.reload();
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.errorMessage);
@@ -31,7 +32,7 @@ function LoginPage() {
 
   return (
     <form id="login-page-container" onSubmit={login}>
-      <Error id="login-alert" errorMessage={errorMessage}/>
+      <Error id="login-alert" errorMessage={errorMessage} />
       <h1 id="login-page-header">Login</h1>
       <div id="login-page-img"></div>
       <label for="email">Email</label>
