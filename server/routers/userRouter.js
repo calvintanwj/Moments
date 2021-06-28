@@ -8,6 +8,8 @@ const nodemailer = require("nodemailer");
 router.post("/", async (req, res) => {
   try {
     const { name, email, password, passwordVerify } = req.body;
+    
+    const lowerCaseEmail = email.toLowerCase();
 
     // validate
     if (!name || !email || !password || !passwordVerify) {
@@ -28,7 +30,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ lowerCaseEmail });
 
     if (existingUser) {
       return res.status(400).json({
@@ -43,7 +45,7 @@ router.post("/", async (req, res) => {
     // register a new user account to db
     const newUser = new User({
       name,
-      email,
+      email: lowerCaseEmail,
       passwordHash,
     });
 
@@ -73,7 +75,7 @@ router.post("/", async (req, res) => {
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",
-      to: email,
+      to: lowerCaseEmail,
       subject: "Confirmation Email",
       html: `Almost done, ${name}! To complete your Moments registration, we just need you to verify your email address: <br><br>
 
@@ -97,6 +99,7 @@ router.post("/", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    const lowerCaseEmail = email.toLowerCase();
 
     // validate
     if (!email || !password) {
@@ -105,7 +108,7 @@ router.post("/login", async (req, res) => {
         .json({ errorMessage: "Please enter all required fields." });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: lowerCaseEmail });
 
     if (!existingUser) {
       return res.status(401).json({ errorMessage: "Wrong email or password." });
@@ -178,8 +181,9 @@ router.get("/loggedIn", (req, res) => {
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
+    const lowerCaseEmail = email.toLowerCase();
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: lowerCaseEmail });
 
     if (!existingUser) {
       return res
@@ -214,7 +218,7 @@ router.post("/forgot-password", async (req, res) => {
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",
-      to: email,
+      to: lowerCaseEmail,
       subject: "Reset Password Email",
       html: `We heard that you lost your Moments password. Sorry about that! <br><br>
 
@@ -227,7 +231,7 @@ router.post("/forgot-password", async (req, res) => {
       The Moments Team`,
     });
 
-    await User.updateOne({ email: email }, { resetToken: emailToken });
+    await User.updateOne({ email: lowerCaseEmail }, { resetToken: emailToken });
 
     res.send("");
   } catch (err) {

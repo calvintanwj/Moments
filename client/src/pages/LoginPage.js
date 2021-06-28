@@ -26,6 +26,7 @@ function LoginPage() {
       );
       await getLoggedIn();
       history.push("/workspace");
+      window.location.reload();
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.errorMessage);
