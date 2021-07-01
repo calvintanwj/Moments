@@ -23,11 +23,10 @@ function NavBar() {
     { key: 4, name: pic5 },
   ];
 
-  useEffect(() => {
+  async function renderUserProfile() {
     try {
       axios
-        // .get("http://localhost:5000/update/retrieveDetails/")
-        .get("https://momentsorbital.herokuapp.com/update/retrieveDetails/")
+        .get("http://localhost:5000/update/retrieveDetails/")
         .then((response) => {
           const { name, profilePicID } = response.data;
           setName(name);
@@ -36,7 +35,11 @@ function NavBar() {
     } catch (err) {
       console.error(err);
     }
-  }, [loggedIn, name, profilePic]) // eslint-disable-line react-hooks/exhaustive-deps
+  }
+
+  useEffect(() => {
+    renderUserProfile();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <nav id="navbar">
@@ -67,7 +70,7 @@ function NavBar() {
             <img key={profilePic.key} src={profilePic.name} alt="profile-pic" cache={false}/>
             <div id="settings-menu">
               <LogOutBtn />
-              <EditProfileBtn images={imageChoices} />
+              <EditProfileBtn images={imageChoices} renderUserProfile={renderUserProfile}/>
             </div>
           </div>
         </>
