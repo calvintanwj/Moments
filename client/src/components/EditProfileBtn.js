@@ -36,6 +36,7 @@ function EditProfileBtn(prop) {
         newUserData
       );
       closeEditProfile();
+      prop.renderUserProfile();
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.errorMessage);

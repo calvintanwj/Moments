@@ -21,7 +21,6 @@ function SignUpPage() {
         password,
         passwordVerify,
       };
-
       await axios.post("http://localhost:5000/auth/", signupData);
       history.push("/confirmation");
     } catch (err) {

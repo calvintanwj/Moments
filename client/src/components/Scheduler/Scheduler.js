@@ -1,5 +1,5 @@
 import "./Scheduler.css";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -9,6 +9,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import Modal from "react-modal";
 import SchedulerToolbar from "./SchedulerToolbar.js";
 import AddEventForm from "./AddEventForm.js";
+import axios from "axios";
 
 // Scheduler component
 function Scheduler() {
@@ -29,7 +30,23 @@ function Scheduler() {
   };
 
   // Array of events
-  const events = [];
+  const [events, setEvents] = useState([]);
+
+  async function renderEvents() {
+    try {
+      await axios
+        .get("http://localhost:5000/events/retrieve")
+        .then((response) => {
+          setEvents(response.data);
+        });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    renderEvents();
+  }, []);
 
   // styling for Edit Form
   const customStylesForEdit = {
@@ -87,17 +104,21 @@ function Scheduler() {
 
   // Logic to handle an event click
   function handleEventClick(event) {
-    setEditingEvent(
-      event.event,
-      setTimeout(() => {
-        setNewTitle(event.event.title);
-        setNewStart(event.event.startStr);
-        setNewEnd(event.event.endStr);
-        setNewAllDay(event.event.allDay);
-        setNewColor(event.event.backgroundColor);
-        openEditForm();
-      }, 1)
-    );
+    setEditingEvent(event.event);
+    setNewTitle(event.event.title);
+    setNewStart(event.event.startStr);
+    setNewEnd(event.event.endStr);
+    setNewAllDay(event.event.allDay);
+    setNewColor(event.event.backgroundColor);
+    openEditForm();
+  }
+
+  async function handleEventResize(event) {
+    await axios.put("http://localhost:5000/events/resize", event.event);
+  }
+
+  async function handleEventDrop(event) {
+    await axios.put("http://localhost:5000/events/drop", event.event);
   }
 
   // States to keep track of new attributes of event edited.
@@ -108,29 +129,42 @@ function Scheduler() {
   const [newColor, setNewColor] = useState("#0000FF");
 
   // Logic to handle when remove button is clicked
-  function handleRemoveEvent() {
-    editingEvent.remove();
+  async function handleRemoveEvent() {
+    await axios.post("http://localhost:5000/events/delete", editingEvent);
     setEditingEvent(null);
     closeEditForm();
   }
 
   // Logic to handle when submit button is pushed in edit form
-  const onSubmit = (event) => {
+  async function onSubmit(event) {
     event.preventDefault();
+    const eventData = {
+      color: newColor,
+      title: newTitle,
+      start: newStartStr,
+      end: newEndStr,
+      allDay: newAllDay,
+      editingEvent: editingEvent,
+    };
+    console.log(eventData);
 
-    editingEvent.setProp("color", newColor);
-    editingEvent.setProp("title", newTitle);
-    editingEvent.setStart(newStartStr);
-    editingEvent.setEnd(newEndStr);
-    editingEvent.setAllDay(newAllDay);
-
+    await axios.put("http://localhost:5000/events/edit", eventData);
     closeEditForm();
-  };
+    await renderEvents();
+  }
 
   const [view, setNewView] = useState(true);
 
   // Keeps track of the date desired/clicked
   const [dateDesired, setdateDesired] = useState(new Date());
+
+  function handleDayClick(cell) {
+    setNewView(false);
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(cell.date);
+    calendarApi.changeView("timeGridDay");
+    setdateDesired(cell.date);
+  }
 
   function handleNavClick(date) {
     setNewView(false);
@@ -159,6 +193,7 @@ function Scheduler() {
         <AddEventForm
           closeEventForm={closeEventForm}
           calendarRef={calendarRef}
+          renderEvents={renderEvents}
         />
       </Modal>
       <Modal
@@ -209,6 +244,7 @@ function Scheduler() {
               id="edit-form-allday"
               type="checkbox"
               name="all-day"
+              checked={newAllDay}
               value={newAllDay}
               onChange={(e) => setNewAllDay(e.target.checked)}
             />
@@ -238,6 +274,7 @@ function Scheduler() {
           nowIndicator={true}
           eventResizableFromStart={true}
           editable={true}
+          droppable={true}
           events={events}
           height="100%"
           headerToolbar={headerToolbar}
@@ -247,7 +284,10 @@ function Scheduler() {
           dayHeaders={true}
           eventClick={(event) => handleEventClick(event)}
           navLinks={true}
+          dateClick={(cell) => handleDayClick(cell)}
           navLinkDayClick={(date) => handleNavClick(date)}
+          eventResize={(event) => handleEventResize(event)}
+          eventDrop={(event) => handleEventDrop(event)}
         />
       </div>
     </div>
