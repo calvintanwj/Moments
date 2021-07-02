@@ -13,6 +13,10 @@ var getUser = function (req, res, next) {
 }
 
 router.use(getUser);
+router.use(function (req, res, next) {
+	console.log(req.body);
+	next();
+})
 
 // Create journal entry
 // JSON should be formatted as {
@@ -63,8 +67,7 @@ router.put("/:id", async (req, res) => {
 		const { id } = req.params;
 		const { entry } = req.body;
 		const user_id = req.user;
-
-		matchedEntries = await journalEntry.findOneAndUpdate({ id, user_id }, { entry });
+		let matchedEntries = await journalEntry.findOneAndUpdate({ _id: id, user_id }, { entry }, { new: true });
 		return res.status(200).json({ message: "Entry has been updated" });
 
 
@@ -79,7 +82,7 @@ router.delete("/:id", async (req, res) => {
 		const { id } = req.params;
 		const user_id = req.user;
 
-		matchedEntries = await journalEntry.findOneAndDelete({ id, user_id });
+		matchedEntries = await journalEntry.findOneAndDelete({ _id: id, user_id });
 		return res.status(200).json({ message: "Entry has been deleted" });
 
 

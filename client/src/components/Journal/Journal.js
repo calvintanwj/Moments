@@ -5,6 +5,7 @@ import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ModeToolbar from "./ModeToolbar";
+import axios from "axios";
 import "./Journal.css";
 
 // Global Variables
@@ -82,6 +83,9 @@ function Journal() {
   // Text should be blank. May add a template in the future
   const [input, setInput] = useState(templateEntry);
 
+  // TO CHANGE - Hardcoded value
+  const [id, setId] = useState("60de8d60dfcfeb0d8a62593d");
+
   // Controls the state of whether the user is in editing or preview mode.
   // User starts out in editing mode.
   const [isEditing, setEditing] = useState(true);
@@ -111,10 +115,10 @@ function Journal() {
   };
 
   // Contains the main logic when text is written in the journal
-  function inputText(e) {
+  async function inputText(e) {
     setInput(e.target.value);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    window.localStorage.setItem("entry", e.target.value);
+    await axios.put(`http://localhost:5000/journal/${id}`, { entry: e.target.value })
   }
 
   // Keep track of position of cursor
@@ -124,8 +128,14 @@ function Journal() {
 
   // Fetch journal entry from localStorage when it is loaded.
   useEffect(() => {
-    const savedEntry = window.localStorage.getItem("entry");
-    setInput(savedEntry ?? templateEntry);
+    async function fetchData() {
+      const queryObject = await axios.get("http://localhost:5000/journal/2021-04-20");
+      console.log(queryObject);
+      const savedEntry = queryObject.data.entries[0].entry;
+      console.log(savedEntry);
+      setInput(savedEntry ?? templateEntry);
+    }
+    fetchData();
   }, [templateEntry]);
 
   // Contains the main logic when tab is pressed
@@ -135,8 +145,8 @@ function Journal() {
       const start = cursor.start;
       setInput(
         input.substring(0, cursor.start) +
-          "    " +
-          input.substring(cursor.end, input.length),
+        "    " +
+        input.substring(cursor.end, input.length),
         setTimeout(() => {
           const txtarea = document.getElementById("journal-area");
           txtarea.selectionStart = txtarea.selectionEnd = start + 4;
@@ -159,8 +169,8 @@ function Journal() {
     const start = cursor.start;
     setInput(
       input.substring(0, cursor.start) +
-        buttonTypes[key].text +
-        input.substring(cursor.end, input.length),
+      buttonTypes[key].text +
+      input.substring(cursor.end, input.length),
       setTimeout(() => {
         if (key === 0 || key === 4 || key === 5) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 2;
