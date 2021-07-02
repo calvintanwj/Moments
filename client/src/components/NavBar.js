@@ -73,13 +73,14 @@ function NavBar() {
               key={profilePic.key}
               src={profilePic.name}
               alt="profile-pic"
-              cache={false}
-            />
+             />
             <div id="settings-menu">
               <LogOutBtn />
               <EditProfileBtn
                 images={imageChoices}
+                profilePic={profilePic}
                 renderUserProfile={renderUserProfile}
+                name={name}
               />
             </div>
           </div>

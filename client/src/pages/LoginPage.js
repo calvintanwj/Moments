@@ -32,7 +32,11 @@ function LoginPage() {
 
   return (
     <form id="login-page-container" onSubmit={login}>
-      <Error id="login-alert" errorMessage={errorMessage} />
+      <Error
+        id="login-alert"
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <h1 id="login-page-header">Login</h1>
       <div id="login-page-img"></div>
       <label for="email">Email</label>

@@ -6,7 +6,7 @@ import Error from "../components/Error";
 function ExpiredPage() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  
+
   const history = useHistory();
 
   async function resendEmail(e) {
@@ -24,7 +24,11 @@ function ExpiredPage() {
 
   return (
     <form onSubmit={resendEmail} id="expired-page-container">
-      <Error id="expired-alert" errorMessage={errorMessage}/>
+      <Error
+        id="expired-alert"
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <h1>Sorry, your confirmation link has expired.</h1>
       <h2>Please enter your email again to get a new link</h2>
       <label for="email">Email</label>

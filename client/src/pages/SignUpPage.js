@@ -32,7 +32,11 @@ function SignUpPage() {
 
   return (
     <form id="signup-page-container" onSubmit={signup}>
-      <Error id="signup-alert" errorMessage={errorMessage} />
+      <Error
+        id="signup-alert"
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <h1 id="signup-page-header">Sign-up</h1>
       <label for="name">Name</label>
       <input

@@ -369,8 +369,8 @@ body {
 }
 
 #signup-page-container input[type="text"],
-input[type="password"],
-input[type="email"] {
+#signup-page-container input[type="password"],
+#signup-page-container input[type="email"] {
   box-sizing: border-box;
   display: block;
   margin: 10px 0px;

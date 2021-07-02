@@ -27,7 +27,11 @@ function ResetPasswordPage() {
 
   return (
     <form onSubmit={changePassword} id="reset-password-container">
-      <Error id="resetpw-alert" errorMessage={errorMessage} />
+      <Error
+        id="resetpw-alert"
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <h1>Reset your password</h1>
       <label for="password">Enter your new password</label>
       <input

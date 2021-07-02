@@ -28,7 +28,10 @@ router.post("/resend", async (req, res) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     service: "Gmail",
-    
+    auth: {
+      user: process.env.EMAIL_SENDER, // generated ethereal user
+      pass: process.env.EMAIL_PASS, // generated ethereal password
+    },
   });
 
   const existingUser = await User.findOne({ email: lowerCaseEmail });

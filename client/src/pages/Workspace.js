@@ -5,13 +5,9 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
-function onLoad() {
-  console.log("Hello");
-}
-
 function Workspace() {
   return (
-    <div id="workspace" onLoad={onLoad}>
+    <div id="workspace" >
       <Scheduler />
       <Journal />
     </div>

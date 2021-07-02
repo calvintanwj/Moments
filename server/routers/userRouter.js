@@ -33,7 +33,6 @@ router.post("/", async (req, res) => {
     const existingUser = await User.findOne({ lowerCaseEmail });
 
     if (existingUser) {
-      res.send("hello");
       return res.status(400).json({
         errorMessage: "An account with this email already exists",
       });

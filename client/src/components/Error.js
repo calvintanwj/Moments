@@ -4,6 +4,7 @@ function Error(props) {
   function hideElement() {
     var x = document.getElementById(props.id);
     x.style.display = "none";
+    props.setErrorMessage("");
   }
 
   function renderAlert(message) {
