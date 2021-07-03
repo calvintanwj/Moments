@@ -8,6 +8,8 @@ import ModeToolbar from "./ModeToolbar";
 import axios from "axios";
 import "./Journal.css";
 
+import { format } from 'date-fns';
+
 // Global Variables
 
 // Consists of all the button types within the journal toolbar.
@@ -71,9 +73,9 @@ const buttonTypes = [
 // Journal component
 function Journal(props) {
   // Just a quick little template for a journal entry.
+  var entry = props.entry;
   var today = new Date();
-  var date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  var date = format(Date.parse(entry.date), 'dd-MM-yyyy');
   const templateEntry =
     "# Moments\n## Past, Present, and Future\n\nToday's date: _" +
     date +
@@ -81,10 +83,10 @@ function Journal(props) {
 
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
-  const [input, setInput] = useState(props.entry ?? templateEntry);
+  const [input, setInput] = useState(entry.entry ?? templateEntry);
 
   // TO CHANGE - Hardcoded value
-  const [id, setId] = useState(props.id);
+  const [id, setId] = useState(entry._id);
 
   // Controls the state of whether the user is in editing or preview mode.
   // User starts out in editing mode.
