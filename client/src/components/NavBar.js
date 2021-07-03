@@ -4,33 +4,23 @@ import logo from "../images/navbar-icon.png";
 import AuthContext from "../context/AuthContext";
 import LogOutBtn from "./LogOutBtn";
 import EditProfileBtn from "./EditProfileBtn";
-import pic1 from "../images/profilepics/default.jpg";
-import pic2 from "../images/profilepics/pic1.jpg";
-import pic3 from "../images/profilepics/pic2.jpg";
-import pic4 from "../images/profilepics/pic3.jpg";
-import pic5 from "../images/profilepics/pic4.jpg";
 import axios from "axios";
+import Success from "./Success";
 
 function NavBar() {
   const { loggedIn } = useContext(AuthContext);
   const [name, setName] = useState("Name Here");
-  const [profilePic, setprofilePic] = useState(pic1);
-  const imageChoices = [
-    { key: 0, name: pic1 },
-    { key: 1, name: pic2 },
-    { key: 2, name: pic3 },
-    { key: 3, name: pic4 },
-    { key: 4, name: pic5 },
-  ];
+  const [profilePic, setprofilePic] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   async function renderUserProfile() {
     try {
       axios
         .get("http://localhost:5000/update/retrieveDetails/")
         .then((response) => {
-          const { name, profilePicID } = response.data;
+          const { name, profilePic } = response.data;
           setName(name);
-          setprofilePic(imageChoices[profilePicID]);
+          setprofilePic(profilePic);
         });
     } catch (err) {
       console.error(err);
@@ -61,6 +51,11 @@ function NavBar() {
       )}
       {loggedIn === true && (
         <>
+          <Success
+            id="edit-profile-success"
+            successMessage={successMessage}
+            setSuccessMessage={setSuccessMessage}
+          />
           <div>
             <img src={logo} alt="icon" />
             <h3 id="navbar-title">Moments</h3>
@@ -70,17 +65,16 @@ function NavBar() {
               Welcome back, {name}
             </h5>
             <img
-              key={profilePic.key}
-              src={profilePic.name}
+              src={`http://localhost:5000/images/${profilePic}`}
               alt="profile-pic"
-             />
+            />
             <div id="settings-menu">
               <LogOutBtn />
               <EditProfileBtn
-                images={imageChoices}
                 profilePic={profilePic}
                 renderUserProfile={renderUserProfile}
                 name={name}
+                setSuccessMessage={setSuccessMessage}
               />
             </div>
           </div>

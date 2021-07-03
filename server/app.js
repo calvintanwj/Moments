@@ -18,6 +18,7 @@ app.use(
     credentials: true,
   })
 );
+app.use("/images", express.static("./uploads"))
 
 // Connecting MongoDB
 // =========================================================================================================

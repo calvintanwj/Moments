@@ -8,13 +8,16 @@ function EditProfileBtn(prop) {
   const [emailPageIsOpen, setEmailPageIsOpen] = useState(false);
   const [passwordPageIsOpen, setPasswordPageIsOpen] = useState(false);
   const [newName, setNewName] = useState(prop.name);
+  const [newPicture, setNewPicture] = useState("");
   const [newEmail, setNewEmail] = useState("");
-  const [newPicID, setNewPicID] = useState(0);
   const [editPicture, setEditPicture] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordVerify, setNewPasswordVerify] = useState("");
+  const [button2Class, setbutton2Class] = useState("activePage");
+  const [button3Class, setbutton3Class] = useState("");
+  const [button4Class, setbutton4Class] = useState("");
 
   const editProfileStyle = {
     overlay: { zIndex: 9999 },
@@ -36,13 +39,17 @@ function EditProfileBtn(prop) {
     setOldPassword("");
     setNewPassword("");
     setNewPasswordVerify("");
+    prop.setSuccessMessage("");
+    setbutton2Class("activePage");
+    setbutton3Class("");
+    setbutton4Class("");
   }
 
   function closeEditProfile() {
     setEditProfileIsOpen(false);
   }
 
-  function openEmailPage() {
+  function openEmailPage(e) {
     setEmailPageIsOpen(true);
     closeEditProfile();
     closePasswordPage();
@@ -52,6 +59,11 @@ function EditProfileBtn(prop) {
     setOldPassword("");
     setNewPassword("");
     setNewPasswordVerify("");
+    prop.setSuccessMessage("");
+    console.log("Hello");
+    setbutton2Class("");
+    setbutton3Class("activePage");
+    setbutton4Class("");
   }
 
   function closeEmailPage() {
@@ -68,6 +80,10 @@ function EditProfileBtn(prop) {
     setOldPassword("");
     setNewPassword("");
     setNewPasswordVerify("");
+    prop.setSuccessMessage("");
+    setbutton2Class("");
+    setbutton3Class("");
+    setbutton4Class("activePage");
   }
 
   function closePasswordPage() {
@@ -77,17 +93,23 @@ function EditProfileBtn(prop) {
   async function submitProfile(e) {
     try {
       e.preventDefault();
-      const newUserData = { newName, newPicID };
-      await axios.post(
-        "http://localhost:5000/update/userDetails/",
-        newUserData
-      );
+      const newUserData = new FormData();
+      if (newPicture !== "") {
+        newUserData.append("image", newPicture.target.files[0]);
+      }
+      newUserData.append("name", newName);
+      await axios
+        .post("http://localhost:5000/update/userDetails/", newUserData)
+        .then((response) => {
+          prop.setSuccessMessage(response.data.successMessage);
+        });
       closeEditProfile();
       prop.renderUserProfile();
+      document.getElementById("edit-profile-success").style.display = "block";
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.errorMessage);
-      document.getElementById("edit-profile-alert").style.display = "block";
+      document.getElementById("edit-profile-error").style.display = "block";
     }
   }
 
@@ -95,8 +117,13 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newEmailData = { newEmail };
-      await axios.post("http://localhost:5000/update/email", newEmailData);
+      await axios
+        .post("http://localhost:5000/update/email", newEmailData)
+        .then((response) => {
+          prop.setSuccessMessage(response.data.successMessage);
+        });
       closeEmailPage();
+      document.getElementById("edit-profile-success").style.display = "block";
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.errorMessage);
@@ -108,11 +135,13 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newPasswordData = { oldPassword, newPassword, newPasswordVerify };
-      await axios.post(
-        "http://localhost:5000/update/password",
-        newPasswordData
-      );
+      await axios
+        .post("http://localhost:5000/update/password", newPasswordData)
+        .then((response) => {
+          prop.setSuccessMessage(response.data.successMessage);
+        });
       closePasswordPage();
+      document.getElementById("edit-profile-success").style.display = "block";
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.errorMessage);
@@ -120,13 +149,24 @@ function EditProfileBtn(prop) {
     }
   }
 
-  function handleClick(key) {
-    setNewPicID(key);
-    for (var i = 0; i < prop.images.length; i++) {
-      document.getElementById(i).style.border = "none";
-    }
-    document.getElementById(key).style.border = "2px solid black";
-  }
+  const navSideBar = (
+    <div id="edit-profile-page-navbar">
+      <button id="button1">Account Settings</button>
+      <button id="button2" className={button2Class} onClick={openEditProfile}>
+        Profile
+      </button>
+      <button
+        id="button3"
+        className={button3Class}
+        onClick={(e) => openEmailPage(e)}
+      >
+        Email
+      </button>
+      <button id="button4" className={button4Class} onClick={openPasswordPage}>
+        Password
+      </button>
+    </div>
+  );
 
   return (
     <>
@@ -139,58 +179,45 @@ function EditProfileBtn(prop) {
         style={editProfileStyle}
       >
         <Error
-          id="edit-profile-alert"
+          id="edit-profile-error"
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
-        <div>
-          <button onClick={openEditProfile}>Profile</button>
-          <button onClick={openEmailPage}>Email</button>
-          <button onClick={openPasswordPage}>Password</button>
-        </div>
-        <form onSubmit={submitProfile} id="edit-profile-form">
-          <h2 id="edit-profile-header">Public Profile</h2>
+        {navSideBar}
+        <form onSubmit={submitProfile} id="public-profile-form">
+          <h2>Public Profile</h2>
           <button id="edit-close-button" onClick={closeEditProfile}></button>
-          <div id="edit-name-container">
+          <div id="public-name-container">
             <label className="edit-labels" for="change-name">
               Name
             </label>
             <input
-              id="edit-name-input"
+              id="public-name-input"
               name="change-name"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
           </div>
           <h5 className="edit-labels">Profile Picture</h5>
-          <div id="profile-images-list">
-            {/* {prop.images.map((image) => {
-              return (
-                <img
-                  id={image.key}
-                  src={image.name}
-                  key={image.key}
-                  alt="Profile Pic Option"
-                  onClick={() => handleClick(image.key)}
-                />
-              );
-            })} */}
+          <div id="image-preview" onClick={() => setEditPicture(true)}>
             <img
-              src={prop.profilePic.name}
+              src={`http://localhost:5000/images/${prop.profilePic}`}
               alt="profile-pic"
-              onClick={() => setEditPicture(true)}
             />
-            {editPicture && (
-              <div>
-                <label> Public URL </label>
-                <input></input>
-                <input value="Upload an image" />
-                <input type="submit" onClick={() => setEditPicture(false)} />
-              </div>
-            )}
+            <i class="fas fa-edit" />
           </div>
+          {editPicture && (
+            <div id="upload-image">
+              <input
+                type="file"
+                name="image"
+                accept=".png, .jpg, .jpeg"
+                onChange={(e) => setNewPicture(e)}
+              />
+            </div>
+          )}
           <input
-            id="edit-profile-submit-btn"
+            id="public-profile-submit-btn"
             type="submit"
             value="Update Profile"
           />
@@ -206,16 +233,12 @@ function EditProfileBtn(prop) {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
-        <div>
-          <button onClick={openEditProfile}>Profile</button>
-          <button onClick={openEmailPage}>Email</button>
-          <button onClick={openPasswordPage}>Password</button>
-        </div>
-        <form onSubmit={submitEmail}>
-          <h2 id="edit-profile-header">Emails</h2>
+        {navSideBar}
+        <form onSubmit={submitEmail} id="email-form">
+          <h2>Emails</h2>
           <button id="edit-close-button" onClick={closeEmailPage}></button>
           <div>
-            <label for="change-email">Change Email: </label>
+            <label for="change-email">Change Email </label>
             <input
               name="change-email"
               type="email"
@@ -235,13 +258,9 @@ function EditProfileBtn(prop) {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
-        <div>
-          <button onClick={openEditProfile}>Profile</button>
-          <button onClick={openEmailPage}>Email</button>
-          <button onClick={openPasswordPage}>Password</button>
-        </div>
-        <form onSubmit={submitPassword}>
-          <h2 id="edit-profile-header">Change password</h2>
+        {navSideBar}
+        <form onSubmit={submitPassword} id="password-form">
+          <h2>Change password</h2>
           <button id="edit-close-button" onClick={closePasswordPage}></button>
           <div>
             <label for="old-pass">Old password</label>

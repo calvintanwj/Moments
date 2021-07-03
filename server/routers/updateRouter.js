@@ -3,16 +3,49 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
 
-router.post("/userDetails", async (req, res) => {
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+  if (allowedFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+
+// Upload user details
+router.post("/userDetails", upload.single("image"), async (req, res) => {
   try {
-    const { newName, newPicID } = req.body;
     const loggedInUserID = jwt.decode(req.cookies.token).user;
-    if (newName !== "") {
+    const loggedInUser = await User.findById(loggedInUserID);
+    let image = loggedInUser.profilePic;
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    const newName = req.body.name;
+
+    if (newName !== loggedInUser.name) {
       await User.updateOne({ _id: loggedInUserID }, { name: newName });
     }
-    await User.updateOne({ _id: loggedInUserID }, { profilePicID: newPicID });
-    res.send("");
+
+    if (image !== loggedInUser.profilePic) {
+      await User.updateOne({ _id: loggedInUserID }, { profilePic: image });
+    }
+
+    res.json({ successMessage: "Profile updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -76,7 +109,7 @@ router.post("/email", async (req, res) => {
       The Moments Team`,
     });
 
-    res.send("");
+    res.json({ successMessage: "Email updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -146,7 +179,7 @@ router.post("/password", async (req, res) => {
       The Moments Team`,
     });
 
-    res.send("");
+    res.json({ successMessage: "Password changed successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).send();

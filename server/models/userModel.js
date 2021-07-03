@@ -18,9 +18,9 @@ const userSchema = new mongoose.Schema({
     data: String,
     default: "",
   },
-  profilePicID: {
-    type: Number,
-    default: 0,
+  profilePic: {
+    type: String,
+    defaultValue: "defaultprofile.jpg"
   },
 });
 
