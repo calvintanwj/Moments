@@ -69,7 +69,7 @@ const buttonTypes = [
 ];
 
 // Journal component
-function Journal() {
+function Journal(props) {
   // Just a quick little template for a journal entry.
   var today = new Date();
   var date =
@@ -81,10 +81,10 @@ function Journal() {
 
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
-  const [input, setInput] = useState(templateEntry);
+  const [input, setInput] = useState(props.entry ?? templateEntry);
 
   // TO CHANGE - Hardcoded value
-  const [id, setId] = useState("60de8d60dfcfeb0d8a62593d");
+  const [id, setId] = useState(props.id);
 
   // Controls the state of whether the user is in editing or preview mode.
   // User starts out in editing mode.
@@ -127,16 +127,16 @@ function Journal() {
   }
 
   // Fetch journal entry from localStorage when it is loaded.
-  useEffect(() => {
-    async function fetchData() {
-      const queryObject = await axios.get("http://localhost:5000/journal/2021-04-20");
-      console.log(queryObject);
-      const savedEntry = queryObject.data.entries[0].entry;
-      console.log(savedEntry);
-      setInput(savedEntry ?? templateEntry);
-    }
-    fetchData();
-  }, [templateEntry]);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const queryObject = await axios.get("http://localhost:5000/journal/2021-04-20");
+  //     console.log(queryObject);
+  //     const savedEntry = queryObject.data.entries[0].entry;
+  //     console.log(savedEntry);
+  //     setInput(savedEntry ?? templateEntry);
+  //   }
+  //   fetchData();
+  // }, [templateEntry]);
 
   // Contains the main logic when tab is pressed
   function clickTab(e) {
