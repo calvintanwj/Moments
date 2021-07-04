@@ -232,11 +232,10 @@ function Journal(props) {
     </>
   );
 
-  // The overall journal interface.
-  return (
+  const selectedEntry = (
     <div id="journal-interface">
       <div id="journal-header">
-        <button id="back-button"></button>
+        <button id="back-button" onClick={props.unselectHandler}></button>
         <h2 id="journal-title">Journal Title</h2>
         <ModeToolbar onClick={toggleMode} />
       </div>
@@ -245,6 +244,21 @@ function Journal(props) {
         <a href="https://spec.commonmark.org/0.29/">Commonmark Docs</a>
       </div>
     </div>
+  )
+
+  const MarkedupEntry = (
+    <div id="preview-area" onClick={props.selectHandler}>
+      <ReactMarkdown components={components} remarkPlugins={[gfm]}>
+        {input}
+      </ReactMarkdown>
+    </div>
+  );
+
+  // The overall journal interface.
+  return (
+    <>
+      {props.selected ? selectedEntry : MarkedupEntry}
+    </>
   );
 }
 
