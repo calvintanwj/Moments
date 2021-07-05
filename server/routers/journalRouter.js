@@ -28,9 +28,10 @@ router.post("/", async (req, res) => {
 		const { date, entry } = req.body;
 		const user_id = req.user;
 
-		const newJournalEntry = new journalEntry({ date: Date.parse(date), entry, user_id });
+		reqData = { date, entry, user_id }
+		const newJournalEntry = new journalEntry({ ...reqData, date: Date.parse(date) });
 		const savedJournalEntry = await newJournalEntry.save();
-		return res.status(201).json({ message: "Journal entry has been created" });
+		return res.status(201).json({ message: "Journal entry has been created", data: savedJournalEntry });
 	} catch (err) {
 		return res.status(400).json({ error: "Could not post journal entry" });
 		console.log(err);

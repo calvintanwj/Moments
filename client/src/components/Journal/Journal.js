@@ -257,6 +257,7 @@ function Journal(props) {
   // The overall journal interface.
   return (
     <>
+      <button onClick={props.deleteHandler}>Delete Post</button>
       {props.selected ? selectedEntry : MarkedupEntry}
     </>
   );
