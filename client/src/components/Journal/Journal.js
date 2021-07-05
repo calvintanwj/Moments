@@ -232,6 +232,8 @@ function Journal(props) {
     </>
   );
 
+  // Only one journal entry can be selected at a time
+  // the selected entry can be edited
   const selectedEntry = (
     <div id="journal-interface">
       <div id="journal-header">
@@ -246,6 +248,7 @@ function Journal(props) {
     </div>
   )
 
+  // Parsed markdown entry with no toolbar
   const MarkedupEntry = (
     <div id="preview-area" onClick={props.selectHandler}>
       <ReactMarkdown components={components} remarkPlugins={[gfm]}>
