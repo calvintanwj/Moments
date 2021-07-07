@@ -23,7 +23,11 @@ function AddEventForm(props) {
     // let calendarApi = props.calendarRef.current.getApi();
     // calendarApi.addEvent(event);
     try {
-      await axios.post("http://localhost:5000/events/add", event);
+      // await axios.post("http://localhost:5000/events/add", event);
+      await axios.post(
+        "https://momentsorbital.herokuapp.com/events/add/",
+        event
+      );
       setTitle("");
       setStart("");
       setEnd("");
