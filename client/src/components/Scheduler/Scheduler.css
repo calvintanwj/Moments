@@ -121,6 +121,7 @@
 /* General styling for scheduler */
 #scheduler {
   height: 93%;
+  cursor: pointer;
 }
 
 /* General styling for event form */

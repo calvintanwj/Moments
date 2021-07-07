@@ -7,7 +7,7 @@ Modal.setAppElement("#root");
 
 function Workspace() {
   return (
-    <div id="workspace">
+    <div id="workspace" >
       <Scheduler />
       <Journal />
     </div>

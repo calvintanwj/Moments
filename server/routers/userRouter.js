@@ -8,7 +8,7 @@ const nodemailer = require("nodemailer");
 router.post("/", async (req, res) => {
   try {
     const { name, email, password, passwordVerify } = req.body;
-    
+
     const lowerCaseEmail = email.toLowerCase();
 
     // validate

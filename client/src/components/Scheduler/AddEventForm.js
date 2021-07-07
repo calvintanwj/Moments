@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 // Event Form Modal
 function AddEventForm(props) {
@@ -18,20 +19,26 @@ function AddEventForm(props) {
   const [color, setColor] = useState("#0000FF");
 
   // logic to handle an event add
-  const onEventAdded = (event) => {
-    let calendarApi = props.calendarRef.current.getApi();
-    calendarApi.addEvent(event);
-    setTitle("");
-    setStart("");
-    setEnd("");
-    setallDay(false);
-    setColor("0000FF");
-    props.closeEventForm();
-  };
+  async function onEventAdded(event) {
+    // let calendarApi = props.calendarRef.current.getApi();
+    // calendarApi.addEvent(event);
+    try {
+      await axios.post("http://localhost:5000/events/add", event);
+      setTitle("");
+      setStart("");
+      setEnd("");
+      setallDay(false);
+      setColor("0000FF");
+      props.closeEventForm();
+      props.renderEvents();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   // logic when submit button is clicked for event form.
-  const onSubmit = (event) => {
-    event.preventDefault();
+  function onSubmit(e) {
+    e.preventDefault();
 
     if (title === "") {
       alert("Please key in a title");
@@ -53,14 +60,13 @@ function AddEventForm(props) {
 
     props.closeEventForm();
     onEventAdded({
-      // id
       title,
       start: startStr,
       end: endStr,
       allDay,
       color,
     });
-  };
+  }
 
   // The Event Form
   return (

@@ -1,10 +1,10 @@
 import React from "react";
 
-function Error(props) {
+function Success(props) {
   function hideElement() {
     var x = document.getElementById(props.id);
     x.style.display = "none";
-    props.setErrorMessage("");
+    props.setSuccessMessage("");
   }
 
   function renderAlert(message) {
@@ -12,15 +12,15 @@ function Error(props) {
       return null;
     } else {
       return (
-        <div class="error-message" id={props.id}>
-          <span>Error: {props.errorMessage}</span>
+        <div class="success-message" id={props.id}>
+          <span>Success: {props.successMessage}</span>
           <span class="fas fa-times" onClick={hideElement}></span>
         </div>
       );
     }
   }
 
-  return <>{renderAlert(props.errorMessage)}</>;
+  return <>{renderAlert(props.successMessage)}</>;
 }
 
-export default Error;
+export default Success;

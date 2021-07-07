@@ -31,7 +31,11 @@ function ForgotPasswordPage() {
 
   return (
     <form onSubmit={sendPasswordEmail} id="forgot-password-container">
-      <Error id="forgotpw-alert" errorMessage={errorMessage} />
+      <Error
+        id="forgotpw-alert"
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <h1>Forgot your password?</h1>
       <h3>Don't worry. Happens to the best of us.</h3>
       <label for="email">Email</label>

@@ -6,7 +6,7 @@ const Event = require("../models/eventModel");
 router.get("/retrieve", async (req, res) => {
   try {
     const loggedInUserID = jwt.decode(req.cookies.token).user;
-    const arrayOfEvents = await Event.find({authorId: loggedInUserID});
+    const arrayOfEvents = await Event.find({ authorId: loggedInUserID });
     res.json(arrayOfEvents);
   } catch (err) {
     console.error(err);
@@ -48,12 +48,87 @@ router.post("/add", async (req, res) => {
 
 // edit Event
 router.put("/edit", async (req, res) => {
-  
+  try {
+    const { title, start, end, color, allDay, editingEvent } = req.body;
+    const eventId = editingEvent.extendedProps._id;
+
+    await Event.findOneAndUpdate(
+      { _id: eventId },
+      {
+        title,
+        start,
+        end,
+        backgroundColor: color,
+        allDay,
+      }
+    );
+
+    res.send("");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
 });
 
 // delete Event
-router.delete("/delete", async (req, res) => {
+router.post("/delete", async (req, res) => {
+  try {
+    const eventId = req.body.extendedProps._id;
+    await Event.findOneAndDelete({ _id: eventId });
 
+    res.send("");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
+
+// resize Event
+router.put("/resize", async (req, res) => {
+  try {
+    const { start, end, extendedProps } = req.body;
+    const eventId = extendedProps._id;
+    await Event.findOneAndUpdate(
+      { _id: eventId },
+      {
+        start,
+        end,
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
+
+// event drop
+router.put("/drop", async (req, res) => {
+  try {
+    const { start, end, extendedProps } = req.body;
+    const eventId = extendedProps._id;
+    if (start.indexOf("T") === -1) {
+      await Event.findOneAndUpdate(
+        { _id: eventId },
+        {
+          start,
+          end,
+          allDay: true,
+        }
+      );
+    } else {
+      await Event.findOneAndUpdate(
+        { _id: eventId },
+        {
+          start,
+          end,
+	  allDay: false,
+        }
+      );
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
 });
 
 module.exports = router;

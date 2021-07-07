@@ -26,6 +26,7 @@ app.use(
     credentials: true,
   })
 );
+app.use("/images", express.static("./uploads"))
 
 // Connecting MongoDB
 // =========================================================================================================
@@ -54,6 +55,6 @@ app.use("/confirmation", require("./routers/confirmationRouter"));
 // =========================================================================================================
 app.use("/update", require("./routers/updateRouter"));
 
-app.get("/", (req, res) => {
-  res.send("Hello from Express!");
-});
+// Event Route
+// =========================================================================================================
+app.use("/events", require("./routers/eventRouter"));

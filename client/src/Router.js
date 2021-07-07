@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Workspace from "./pages/Workspace";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -21,9 +21,9 @@ function Router() {
     <BrowserRouter>
       <NavBar />
       <Switch>
-        <Route exact path="/" component={LandingPage} />
         {loggedIn === false && (
           <>
+            <Route exact path="/" component={LandingPage} />
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/sign-up" component={SignUpPage} />
             <Route exact path="/confirmation" component={ConfirmationPage} />
@@ -50,6 +50,7 @@ function Router() {
         {loggedIn === true && (
           <>
             <Route exact path="/workspace" component={Workspace} />
+            <Redirect from="/" to ="/workspace" />
           </>
         )}
       </Switch>
