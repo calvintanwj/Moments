@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const randtoken = require("rand-token");
 
 // registration
 router.post("/", async (req, res) => {
@@ -135,6 +136,11 @@ router.post("/login", async (req, res) => {
       },
       process.env.JWT_SECRET
     );
+
+    // generate a random tele code
+    const teleCode = randtoken.generate(16);
+
+    await User.updateOne({ email: lowerCaseEmail }, { teleCode: teleCode });
 
     // send token in a HTTP-only cookie
     res

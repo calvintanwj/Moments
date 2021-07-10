@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     defaultValue: "defaultprofile.jpg"
   },
+  teleCode: {
+    type: String,
+  },
+  chat_id: {
+    type: Number,
+  }
 });
 
 const User = mongoose.model("user", userSchema);
