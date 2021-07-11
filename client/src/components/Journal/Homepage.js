@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Journal from "./Journal";
+import MarkdownEntry from "./MarkdownEntry";
 import axios from "axios";
-
+import "./Homepage.css";
 import { format } from 'date-fns';
 
 function HomePage() {
-	const [date, setDate] = useState(new Date('2021-04-20'));
+	const [date, setDate] = useState(new Date("2020-04-20"));
+	// const [date, setDate] = useState(new Date());
 	const [entries, setEntries] = useState([]);
 	const [selectedID, setSelectedID] = useState(-1);
 
-	function handleSelectEntry(entry) {
-		console.log(`Setting selected to ${entry._id}`)
-		setSelectedID(entry._id)
+	function handleSelectEntry(index) {
+		console.log(`Selecting to ${index}`)
+		setSelectedID(index)
 	}
 
 	function handleUnselectEntry(entry) {
@@ -20,7 +22,8 @@ function HomePage() {
 
 	async function handleAddEntry() {
 		const res = await axios.post('http://localhost:5000/journal/', {
-			date: "2021-04-20",
+			date: format(date, 'yyyy-MM-dd'),
+			title: "Journal Title",
 			entry: ""
 		});
 		const newEntries = [
@@ -31,12 +34,22 @@ function HomePage() {
 	}
 
 	async function handleDeleteEntry(entry, index) {
+		console.log("Deleting entry")
 		await axios.delete(`http://localhost:5000/journal/${entry._id}`)
 		const newEntries = [
 			...entries.slice(0, index),
 			...entries.slice(index + 1,)
 		]
 		console.log(newEntries)
+		setEntries(newEntries)
+	}
+
+	function handleEditEntry(entry, index) {
+		const newEntries = [
+			...entries.slice(0, index),
+			entry,
+			...entries.slice(index + 1,)
+		]
 		setEntries(newEntries)
 	}
 
@@ -53,21 +66,37 @@ function HomePage() {
 		setDate(Date.parse(e.target.value));
 		console.log(e.target.value);
 	}
+
 	return (
 		<div>
-			<h1>{format(date, 'yyyy-MM-dd')}</h1>
 			<input type="date" value={format(date, 'yyyy-MM-dd')} onChange={dateHandler} />
-			{
-				entries.map((entryObject, index) => {
-					console.log(entryObject._id === selectedID)
-					return <Journal entry={entryObject} selected={entryObject._id === selectedID ? true : false}
-						selectHandler={() => handleSelectEntry(entryObject)}
-						unselectHandler={() => handleUnselectEntry(entryObject)}
-						deleteHandler={() => handleDeleteEntry(entryObject, index)}
-					/>
-				})
+			{selectedID === -1
+				? <div id="entries-container">
+					{entries.map((entryObject, index) => {
+						return (
+							<>
+								<MarkdownEntry
+									entry={entryObject.entry}
+									clickHandler={() => handleSelectEntry(index)}
+									deleteHandler={() => handleDeleteEntry(entryObject, index)}
+								/>
+							</>
+						)
+					})}
+					<button id="AddButton" onClick={handleAddEntry}>
+						<i class="fas fa-plus-circle fa-3x"></i>
+						<span>Add new entry</span>
+					</button>
+				</div>
+
+				: <Journal entry={entries[selectedID]}
+					editHandler={(entryData) => handleEditEntry(entryData, selectedID)}
+					unselectHandler={() => handleUnselectEntry(entries[selectedID])}
+					deleteHandler={() => handleDeleteEntry(entries[selectedID], selectedID)}
+				/>
+
 			}
-			<button onClick={handleAddEntry}> Add new entry</button>
+
 		</div >
 	)
 }

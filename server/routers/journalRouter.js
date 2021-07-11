@@ -30,10 +30,10 @@ router.use(function (req, res, next) {
 // }
 router.post("/", async (req, res) => {
 	try {
-		const { date, entry } = req.body;
+		const { date, title, entry } = req.body;
 		const user_id = req.user;
 
-		reqData = { date, entry, user_id }
+		reqData = { title, entry, user_id }
 		const newJournalEntry = new journalEntry({ ...reqData, date: Date.parse(date) });
 		const savedJournalEntry = await newJournalEntry.save();
 		return res.status(201).json({ message: "Journal entry has been created", data: savedJournalEntry });
@@ -70,9 +70,9 @@ router.get("/:date", async (req, res) => {
 router.put("/:id", async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { entry } = req.body;
+		const { date, title, entry } = req.body;
 		const user_id = req.user;
-		let matchedEntries = await journalEntry.findOneAndUpdate({ _id: id, user_id }, { entry }, { new: true });
+		let matchedEntries = await journalEntry.findOneAndUpdate({ _id: id, user_id }, { date, title, entry }, { new: true });
 		// findOneAndDelete returns null, if a post with the conditions is not found
 		if (matchedEntries == null) {
 			return res.status(404).json({ message: "Post does not exist" });
