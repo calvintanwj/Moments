@@ -182,6 +182,15 @@ function EditProfileBtn(prop) {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
+        <a
+          href={`https://telegram.me/MomentsOrbBot?start=${prop.teleCode}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          id="telegram-bot-bt"
+        >
+          <i class="fab fa-telegram-plane"></i>
+          <span>Link to Telegram Bot</span>
+        </a>
         {navSideBar}
         <form onSubmit={submitProfile} id="public-profile-form">
           <h2>Public Profile</h2>
@@ -233,13 +242,6 @@ function EditProfileBtn(prop) {
           setErrorMessage={setErrorMessage}
         />
         {navSideBar}
-        <a
-          href={`https://telegram.me/MomentsOrbBot?start=${prop.teleCode}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Link to Telegram Bot
-        </a>
         <form onSubmit={submitEmail} id="email-form">
           <h2>Emails</h2>
           <button id="edit-close-button" onClick={closeEmailPage}></button>

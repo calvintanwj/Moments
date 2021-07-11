@@ -344,6 +344,32 @@ body {
   left: 52%;
 }
 
+#telegram-bot-bt i {
+  font-size: 25px;
+  padding-right: 10px;
+}
+
+#telegram-bot-bt {
+  border: none;
+  border-radius: 25px;
+  padding: 10px 0px;
+  font-size: 17px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: rgb(84, 169, 235);
+  text-decoration: none;
+  position: fixed;
+  top: 53%;
+  left: 14%;
+  padding-left: 15px;
+  padding-right: 20px;
+}
+
+#telegram-bot-bt span{
+  position: relative;
+  bottom: 3px;
+}
+
 #email-form h2 {
   text-decoration: underline;
   position: fixed;
