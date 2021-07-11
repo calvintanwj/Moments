@@ -102,7 +102,7 @@ function Journal(props) {
 
   // Contains the main logic when text is written in the journal
   async function inputTextHandler(e) {
-    const newEntry = { title, entry: e.target.value, date };
+    const newEntry = { title, entry: e.target.value, date, _id: entry._id };
     setInput(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
@@ -110,7 +110,7 @@ function Journal(props) {
   }
 
   async function titleHandler(e) {
-    const newEntry = { title: e.target.value, entry, date };
+    const newEntry = { title: e.target.value, entry: input, date, _id: entry._id };
     setTitle(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
@@ -118,7 +118,7 @@ function Journal(props) {
   }
 
   async function dateHandler(e) {
-    const newEntry = { title, entry, date: e.target.value };
+    const newEntry = { title, entry: input, date: e.target.value, _id: entry._id };
     setDate(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
