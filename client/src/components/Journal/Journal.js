@@ -104,7 +104,8 @@ function Journal(props) {
     setInput(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    // await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
   async function titleHandler(e) {
@@ -112,7 +113,8 @@ function Journal(props) {
     setTitle(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    // await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
   async function dateHandler(e) {
@@ -120,7 +122,8 @@ function Journal(props) {
     setDate(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    // await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
   // Keep track of position of cursor
