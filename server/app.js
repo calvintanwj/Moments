@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const auth = require("./middleware/auth");
+
 require("dotenv").config();
 
 const app = express();
@@ -58,3 +60,7 @@ app.use("/update", require("./routers/updateRouter"));
 // Event Route
 // =========================================================================================================
 app.use("/events", require("./routers/eventRouter"));
+
+// Journal CRUD Route
+// =========================================================================================================
+app.use("/journal", auth, require("./routers/journalRouter"));

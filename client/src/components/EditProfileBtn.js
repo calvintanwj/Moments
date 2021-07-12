@@ -60,7 +60,6 @@ function EditProfileBtn(prop) {
     setNewPassword("");
     setNewPasswordVerify("");
     prop.setSuccessMessage("");
-    console.log("Hello");
     setbutton2Class("");
     setbutton3Class("activePage");
     setbutton4Class("");
@@ -198,6 +197,15 @@ function EditProfileBtn(prop) {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
+        <a
+          href={`https://telegram.me/MomentsOrbBot?start=${prop.teleCode}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          id="telegram-bot-bt"
+        >
+          <i class="fab fa-telegram-plane"></i>
+          <span>Link to Telegram Bot</span>
+        </a>
         {navSideBar}
         <form onSubmit={submitProfile} id="public-profile-form">
           <h2>Public Profile</h2>

@@ -11,6 +11,7 @@ function NavBar() {
   const { loggedIn } = useContext(AuthContext);
   const [name, setName] = useState("Name Here");
   const [profilePic, setprofilePic] = useState("");
+  const [teleCode, setTeleCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   async function renderUserProfile() {
@@ -19,9 +20,10 @@ function NavBar() {
       //   .get("http://localhost:5000/update/retrieveDetails/")
       axios.get("https://momentsorbital.herokuapp.com/update/retrieveDetails")
         .then((response) => {
-          const { name, profilePic } = response.data;
+          const { name, profilePic, teleCode } = response.data;
           setName(name);
           setprofilePic(profilePic);
+          setTeleCode(teleCode);
         });
     } catch (err) {
       console.error(err);
@@ -77,6 +79,7 @@ function NavBar() {
                 renderUserProfile={renderUserProfile}
                 name={name}
                 setSuccessMessage={setSuccessMessage}
+                teleCode={teleCode}
               />
             </div>
           </div>
