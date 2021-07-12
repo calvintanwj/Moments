@@ -6,7 +6,7 @@ import "./Homepage.css";
 import { format } from 'date-fns';
 
 function HomePage() {
-	const [date, setDate] = useState(new Date("2020-04-20"));
+	const [date, setDate] = useState(new Date());
 	// const [date, setDate] = useState(new Date());
 	const [entries, setEntries] = useState([]);
 	const [selectedID, setSelectedID] = useState(-1);

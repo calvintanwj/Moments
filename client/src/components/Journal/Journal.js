@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
 import ModeToolbar from "./ModeToolbar";
 import ReactMarkdown from "react-markdown";
@@ -84,8 +84,6 @@ function Journal(props) {
   const [input, setInput] = useState(entry.entry ?? templateEntry);
 
   // ID of journal entry
-  const [id, setId] = useState(entry._id);
-
   const [title, setTitle] = useState(entry.title);
 
   const [date, setDate] = useState(entry.date);
@@ -106,7 +104,7 @@ function Journal(props) {
     setInput(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    await axios.put(`http://localhost:5000/journal/${id}`, newEntry)
+    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
   }
 
   async function titleHandler(e) {
@@ -114,7 +112,7 @@ function Journal(props) {
     setTitle(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    await axios.put(`http://localhost:5000/journal/${id}`, newEntry)
+    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
   }
 
   async function dateHandler(e) {
@@ -122,7 +120,7 @@ function Journal(props) {
     setDate(e.target.value);
     props.editHandler(newEntry);
     // Because useState is asynchronous, I set using e.target.value instead of input.
-    await axios.put(`http://localhost:5000/journal/${id}`, newEntry)
+    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
   }
 
   // Keep track of position of cursor
