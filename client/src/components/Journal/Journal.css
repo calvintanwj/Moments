@@ -233,7 +233,7 @@
 /* Styling of the journal and preview area */
 #journal-area,
 #preview-area {
-  font-size: 1.2em;
+  font-size: 1.5vw;
   border: 3px solid rgba(168, 161, 161, 0.507);
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;

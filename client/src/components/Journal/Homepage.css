@@ -1,0 +1,47 @@
+#entries-container {
+  border: 3px solid grey;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 3em 5em;
+  overflow: scroll;
+  height: 90vh;
+  width: 50vw;
+  justify-items: center;
+}
+
+#AddButton {
+  font-size: 1rem;
+  border: 3px solid rgba(168, 161, 161, 0.507);
+  border-radius: 10px 10px;
+  padding: 20px;
+  /* margin-top: 10px; */
+  outline: none;
+  justify-content: center;
+  font-family: "Exo 2", sans-serif;
+  background: white;
+  height: 337px;
+  width: 246px;
+  margin: 5%;
+  /* height: 80%;
+  width: 90%; */
+  position: relative;
+  overflow: visible;
+}
+
+#AddButton .fa-plus-circle {
+  display: block;
+}
+/* #entry {
+  height: 300px;
+  width: 100%;
+}
+
+#entry button {
+  display: none;
+  float: right;
+}
+
+#entry:hover button {
+  display: inline;
+} */ ;

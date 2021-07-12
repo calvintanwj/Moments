@@ -1,4 +1,4 @@
-import Journal from "../components/Journal/Journal.js";
+import JournalHomePage from "../components/Journal/Homepage.js";
 import Scheduler from "../components/Scheduler/Scheduler.js";
 import "../index.css";
 import Modal from "react-modal";
@@ -9,7 +9,7 @@ function Workspace() {
   return (
     <div id="workspace" >
       <Scheduler />
-      <Journal />
+      <JournalHomePage />
     </div>
   );
 }
