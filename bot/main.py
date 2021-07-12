@@ -3,19 +3,23 @@ import re
 import telebot
 import pymongo
 import time
+import datetime
+from datetime import date
 from pymongo import MongoClient
 from dotenv import load_dotenv
-import requests
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from fuzzywuzzy import fuzz
+from apscheduler.schedulers.background import BackgroundScheduler
 
 load_dotenv()
 cluster = MongoClient(os.getenv("MDB_CONNECT"))
 db = cluster["Moments"]
 users = db["users"]
 events = db["events"]
+journals = db["journalentries"]
 bot = telebot.TeleBot(os.getenv("API_KEY"))
-
+scheduler = BackgroundScheduler()
+scheduler.start()
 
 def add_event_markup():
     markup = InlineKeyboardMarkup()
@@ -49,6 +53,30 @@ def edit_event_confirm_markup():
     return markup
 
 
+def add_remind_markup():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    markup.add(InlineKeyboardButton("No Reminder", callback_data="add_remind_none"),
+               InlineKeyboardButton(
+                   "One day before", callback_data="add_remind_one_day"),
+               InlineKeyboardButton(
+                   "Two days before", callback_data="add_remind_two_days"),
+               InlineKeyboardButton("One week before", callback_data="add_remind_one_week"))
+    return markup
+
+
+def edit_remind_markup():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    markup.add(InlineKeyboardButton("No Reminder", callback_data="edit_remind_none"),
+               InlineKeyboardButton(
+                   "One day before", callback_data="edit_remind_one_day"),
+               InlineKeyboardButton(
+                   "Two days before", callback_data="edit_remind_two_days"),
+               InlineKeyboardButton("One week before", callback_data="edit_remind_one_week"))
+    return markup
+
+
 @bot.callback_query_handler(func=lambda call: True)
 def query(call):
     event = event_dict[call.from_user.id]
@@ -57,6 +85,7 @@ def query(call):
         delattr(event, "message")
         event.authorId = str(existingUser["_id"])
         events.insert_one(event.__dict__)
+        set_reminders(event.message)
         # Need to find some way to re-render the events
         bot.answer_callback_query(call.id, "Event added successfully")
         # Need to figure out how to hide keyboard
@@ -64,22 +93,48 @@ def query(call):
     elif call.data == "add_no":
         bot.answer_callback_query(call.id, "Event add failed")
         # bot.edit_message_reply_markup(event.message.chat.id, event.message.message_id, reply_markup=None)
+    elif call.data == "add_remind_none":
+        event.reminder = "No reminder"
+        add_confirm_step(event.message)
+    elif call.data == "add_remind_one_day":
+        event.reminder = "Remind me one day before"
+        add_confirm_step(event.message)
+    elif call.data == "add_remind_two_days":
+        event.reminder = "Remind me two days before"
+        add_confirm_step(event.message)
+    elif call.data == "add_remind_one_week":
+        event.reminder = "Remind me one week before"
+        add_confirm_step(event.message)
     elif call.data == "edit_yes":
         event = event_dict[0]
         edit_event_step(event.message)
     elif call.data == "edit_no":
         event = event_dict[0]
         edit_title_step(event.message)
+    elif call.data == "edit_remind_none":
+        event.reminder = "No reminder"
+        edit_confirm_step(event.message)
+    elif call.data == "edit_remind_one_day":
+        event.reminder = "Remind me one day before"
+        edit_confirm_step(event.message)
+    elif call.data == "edit_remind_two_days":
+        event.reminder = "Remind me two days before"
+        edit_confirm_step(event.message)
+    elif call.data == "edit_remind_one_week":
+        event.reminder = "Remind me one week before"
+        edit_confirm_step(event.message)
     elif call.data == "edit_confirm_yes":
         oldEvent = event_dict[1]
         events.update_one({"_id": oldEvent["_id"]}, {
-            "$set": {"title": event.title, "start": event.start, "end": event.end}})
+            "$set": {"title": event.title, "start": event.start, "end": event.end, "reminder": event.reminder}})
+        set_reminders(event.message)
         bot.answer_callback_query(call.id, "Event edited successfully")
     elif call.data == "edit_confirm_no":
         bot.answer_callback_query(call.id, "Edit Event failed")
     elif call.data == "delete_yes":
         event = event_dict[1]
         events.delete_one({"_id": event["_id"]})
+        set_reminders(event.message)
         bot.answer_callback_query(call.id, "Success! Event deleted.")
     elif call.data == "delete_no":
         event = event_dict[1]
@@ -142,6 +197,37 @@ def check_time(message, timeStr):
         return True
 
 
+def send_reminder(message, event):
+    startStr = event["start"].replace("T", " ")
+    startStr = ":".join(startStr.split(":", 2)[:2])
+    endStr = event["end"].replace("T", " ")
+    endStr = ":".join(endStr.split(":", 2)[:2])
+    info = "<b>Reminder:</b> " + \
+        event["title"] + "\n<b>Start:</b> " + \
+        startStr + "\n<b>End:</b> " + endStr + "\n\n"
+    bot.send_message(message.chat.id, info, parse_mode="HTML")
+
+
+def set_reminders(message):
+    linkedUser = users.find_one({"chat_id": message.chat.id})
+    userEvents = list(events.find({"authorId": str(linkedUser["_id"])}))
+    for event in userEvents:
+        if (event["reminder"] != "No reminder"):
+            year = int(event["start"][0:4])
+            month = int(event["start"][5:7])
+            day = int(event["start"][8:10])
+            reminderDate = datetime.datetime(year, month, day, 9)
+            if (event["reminder"] == "Remind me one day before"):
+                reminderDate -= datetime.timedelta(days=1)
+            elif (event["reminder"] == "Remind me two days before"):
+                reminderDate -= datetime.timedelta(days=2)
+            elif (event["reminder"] == "Remind me one week before"):
+                reminderDate -= datetime.timedelta(days=7)
+            if (reminderDate > datetime.datetime.now()):
+                scheduler.add_job(send_reminder, 'date', run_date=str(
+                    reminderDate), args=(message, event), id=str(event["_id"]))
+
+
 @bot.message_handler(commands=["cancel"])
 def cancel(message, command=None):
     if (command):
@@ -163,6 +249,7 @@ def start(message):
         if (existingUser):
             users.update_one({"teleCode": uniqCode}, {
                 "$set": {"chat_id": message.chat.id}})
+            set_reminders(message)
             bot.send_message(
                 message.chat.id, "Success! Your Moments account has been successfully\nlinked to your tele handle /help")
         else:
@@ -188,8 +275,6 @@ def help(message):
                 "/editjournal - edit a specified journal\n"
                 "/deletejournal - delete a specified journal\n"
                 "/viewjournal - view a specified journal\n\n"
-                "<b>Reminder settings</b>\n"
-                "/setreminder - set reminders for upcoming events"
                 )
         bot.send_message(message.chat.id, info, parse_mode="HTML")
     except:
@@ -201,6 +286,7 @@ class Event:
         self.title = title
         self.start = None
         self.end = None
+        self.reminder = None
         self.message = None
 
 
@@ -275,10 +361,8 @@ def add_end_step(message):
             if (check_date(message, end)):
                 event.end = end
                 event.message = message
-                startStr = event.start.replace("T", " ")
-                endStr = event.end.replace("T", " ")
-                bot.send_message(message.chat.id, "<b>Event:</b>\n" + "Title: " + event.title +
-                                 "\nStart: " + startStr + "\nEnd: " + endStr + "\nConfirm?", parse_mode="HTML", reply_markup=add_event_markup())
+                bot.send_message(message.chat.id, "Set a reminder?",
+                                 reply_markup=add_remind_markup())
             else:
                 add_start_step(event.message)
         elif (re.match(end_pattern_two, end)):
@@ -286,16 +370,25 @@ def add_end_step(message):
             if (check_date(message, bigArray[0]) and check_time(message, bigArray[1])):
                 event.end = bigArray[0] + "T" + bigArray[1]
                 event.message = message
-                startStr = event.start.replace("T", " ")
-                endStr = event.end.replace("T", " ")
-                bot.send_message(message.chat.id, "<b>Event:</b>\n" + "Title: " + event.title +
-                                 "\nStart: " + startStr + "\nEnd: " + endStr + "\nConfirm?", parse_mode="HTML", reply_markup=add_event_markup())
+                bot.send_message(message.chat.id, "Set a reminder?",
+                                 reply_markup=add_remind_markup())
             else:
                 add_start_step(event.message)
         else:
             bot.send_message(
                 message.chat.id, "Follow the date format closely. Please try again.")
             add_start_step(event.message)
+
+
+def add_confirm_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "addevent")
+    else:
+        event = event_dict[message.chat.id]
+        startStr = event.start.replace("T", " ")
+        endStr = event.end.replace("T", " ")
+        bot.send_message(message.chat.id, "<b>Event:</b>\n" + "Title: " + event.title +
+                         "\nStart: " + startStr + "\nEnd: " + endStr + "\n" + event.reminder + "\nConfirm?", parse_mode="HTML", reply_markup=add_event_markup())
 
 
 @bot.message_handler(commands=["editevent"])
@@ -332,7 +425,7 @@ def edit_title_step(message):
                 info = ""
                 for i in range(len(possibleEvents)):
                     info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(possibleEvents[i]["title"]) + "\nStart: " + str(
-                        possibleEvents[i]["start"]) + "\nEnd: " + str(possibleEvents[i]["end"]) + " \n\n"
+                        possibleEvents[i]["start"]) + "\nEnd: " + str(possibleEvents[i]["end"]) + "\n" + str(possibleEvents[i]["reminder"]) + "\n\n"
                 msg = bot.reply_to(message, info +
                                    "Here are all the events with a similar title to the one you specified. Please key in the number <b>(in bold)</b> of the event you wish to edit", parse_mode="HTML")
                 bot.register_next_step_handler(msg, edit_index_step)
@@ -355,7 +448,7 @@ def edit_index_step(message):
             specifiedEvent = event_dict[message.chat.id][index - 1]
             event_dict[1] = specifiedEvent
             info = "Title: " + str(specifiedEvent["title"]) + "\nStart: " + str(
-                specifiedEvent["start"]) + "\nEnd: " + str(specifiedEvent["end"])
+                specifiedEvent["start"]) + "\nEnd: " + str(specifiedEvent["end"] + "\n" + str(specifiedEvent["reminder"]))
             bot.reply_to(message, info + "\n\nIs this the event you wish to edit? Confirm?",
                          reply_markup=edit_event_markup())
             # Maybe ask which fields of the event you wish to edit
@@ -439,24 +532,15 @@ def edit_end_step(message):
         oldEvent = event_dict[1]
         if (end == "skip"):
             event.end = event_dict[1]["end"]
-            startStr = event.start.replace("T", " ")
-            endStr = event.end.replace("T", " ")
-            oldStartStr = oldEvent["start"].replace("T", " ")
-            oldEndStr = oldEvent["end"].replace("T", " ")
-            bot.send_message(message.chat.id, "<b>Editing Event:</b>\n" + "Title: " + oldEvent["title"] + "\nStart: " + oldStartStr + "\nEnd: " + oldEndStr +
-                             "\n\n<b>Edited Event:</b>\n" + "Title: " + event.title +
-                             "\nStart: " + startStr + "\nEnd: " + endStr + "\n\nConfirm your changes?", parse_mode="HTML", reply_markup=edit_event_confirm_markup())
+            event.message = message
+            bot.reply_to(event.message, "Change the reminder?",
+                         reply_markup=edit_remind_markup())
         elif (re.match(end_pattern, end)):
             if (check_date(message, end)):
                 event.end = end
                 event.message = message
-                startStr = event.start.replace("T", " ")
-                endStr = event.end.replace("T", " ")
-                oldStartStr = oldEvent["start"].replace("T", " ")
-                oldEndStr = oldEvent["end"].replace("T", " ")
-                bot.send_message(message.chat.id, "<b>Editing Event:</b>\n" + "Title: " + oldEvent["title"] + "\nStart: " + oldStartStr + "\nEnd: " + oldEndStr +
-                                 "\n\n<b>Edited Event:</b>\n" + "Title: " + event.title +
-                                 "\nStart: " + startStr + "\nEnd: " + endStr + "\n\nConfirm your changes?", parse_mode="HTML", reply_markup=edit_event_confirm_markup())
+                bot.reply_to(event.message, "Change the reminder?",
+                             reply_markup=edit_remind_markup())
             else:
                 edit_start_step(event.message)
         elif (re.match(end_pattern_two, end)):
@@ -464,19 +548,29 @@ def edit_end_step(message):
             if (check_date(message, bigArray[0]) and check_time(message, bigArray[1])):
                 event.end = bigArray[0] + "T" + bigArray[1]
                 event.message = message
-                startStr = event.start.replace("T", " ")
-                endStr = event.end.replace("T", " ")
-                oldStartStr = oldEvent["start"].replace("T", " ")
-                oldEndStr = oldEvent["end"].replace("T", " ")
-                bot.send_message(message.chat.id, "<b>Editing Event:</b>\n" + "Title: " + oldEvent["title"] + "\nStart: " + oldStartStr + "\nEnd: " + oldEndStr +
-                                 "\n\n<b>Edited Event:</b>\n" + "Title: " + event.title +
-                                 "\nStart: " + startStr + "\nEnd: " + endStr + "\n\nConfirm your changes?", parse_mode="HTML", reply_markup=edit_event_confirm_markup())
+                bot.reply_to(event.message, "Change the reminder?",
+                             reply_markup=edit_remind_markup())
             else:
                 edit_start_step(event.message)
         else:
             bot.send_message(
                 message.chat.id, "Follow the date format closely. Please try again.")
             edit_start_step(event.message)
+
+
+def edit_confirm_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "editevent")
+    else:
+        event = event_dict[message.chat.id]
+        oldEvent = event_dict[1]
+        startStr = event.start.replace("T", " ")
+        endStr = event.end.replace("T", " ")
+        oldStartStr = oldEvent["start"].replace("T", " ")
+        oldEndStr = oldEvent["end"].replace("T", " ")
+        bot.send_message(message.chat.id, "<b>Editing Event:</b>\n" + "Title: " + oldEvent["title"] + "\nStart: " + oldStartStr + "\nEnd: " + oldEndStr + "\n" + oldEvent["reminder"] +
+                         "\n\n<b>Edited Event:</b>\n" + "Title: " + event.title +
+                         "\nStart: " + startStr + "\nEnd: " + endStr + "\n" + event.reminder + "\n\nConfirm your changes?", parse_mode="HTML", reply_markup=edit_event_confirm_markup())
 
 
 @bot.message_handler(commands=["deleteevent"])
@@ -512,7 +606,7 @@ def delete_title_step(message):
                 info = ""
                 for i in range(len(possibleEvents)):
                     info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(possibleEvents[i]["title"]) + "\nStart: " + str(
-                        possibleEvents[i]["start"]) + "\nEnd: " + str(possibleEvents[i]["end"]) + " \n\n"
+                        possibleEvents[i]["start"]) + "\nEnd: " + str(possibleEvents[i]["end"]) +  "\n" + str(possibleEvents[i]["reminder"]) + "\n\n"
                 msg = bot.reply_to(message, info +
                                    "Here are all the events with a similar title to the one you specified. Please key in the number <b>(in bold)</b> of the event you wish to delete", parse_mode="HTML")
                 bot.register_next_step_handler(msg, delete_index_step)
@@ -535,7 +629,7 @@ def delete_index_step(message):
             specifiedEvent = eventsList[index - 1]
             event_dict[1] = specifiedEvent
             info = "Title: " + str(specifiedEvent["title"]) + "\nStart: " + str(
-                specifiedEvent["start"]) + "\nEnd: " + str(specifiedEvent["end"])
+                specifiedEvent["start"]) + "\nEnd: " + str(specifiedEvent["end"]) + "\n" + str(specifiedEvent["reminder"])
             bot.reply_to(message, info + "\n\nIs this the event you wish to delete? Confirm?",
                          reply_markup=delete_event_markup())
         except:
@@ -640,15 +734,8 @@ def view_end_step(message):
                 message.chat.id, "Follow the date format closely. Please try again.")
             view_start_step(event.message)
 
+@bot.message_handler(commands=["viewevents"])
 
-# set reminder command to set reminders for upcoming events
-@bot.message_handler(commands=["setreminder"])
-def setreminder(message):
-    try:
-        checklink(message)
-        bot.send_message(message.chat.id, "")
-    except:
-        return
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])

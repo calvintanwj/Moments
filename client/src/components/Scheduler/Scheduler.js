@@ -110,6 +110,7 @@ function Scheduler() {
     setNewEnd(event.event.endStr);
     setNewAllDay(event.event.allDay);
     setNewColor(event.event.backgroundColor);
+    setNewReminder(event.event.extendedProps.reminder);
     openEditForm();
   }
 
@@ -127,6 +128,7 @@ function Scheduler() {
   const [newEndStr, setNewEnd] = useState("");
   const [newAllDay, setNewAllDay] = useState(false);
   const [newColor, setNewColor] = useState("#0000FF");
+  const [newReminder, setNewReminder] = useState("");
 
   // Logic to handle when remove button is clicked
   async function handleRemoveEvent() {
@@ -144,6 +146,7 @@ function Scheduler() {
       start: newStartStr,
       end: newEndStr,
       allDay: newAllDay,
+      reminder: newReminder,
       editingEvent: editingEvent,
     };
     console.log(eventData);
@@ -259,6 +262,21 @@ function Scheduler() {
               checked={newColor}
               onChange={(e) => setNewColor(e.target.value)}
             />
+          </div>
+          <div>
+            <label for="reminder">Change Reminder:</label>
+            <select
+              name="reminder"
+              value={newReminder}
+              onChange={(e) => setNewReminder(e.target.value)}
+            >
+              <option id="one-day-before" value="Remind me one day before">One day before</option>
+              <option id="two-days-before" value="Remind me two days before">Two days before</option>
+              <option id="one-week-before" value="Remind me one week before">One week before</option>
+              <option id="none" value="No reminder">
+                No Reminder
+              </option>
+            </select>
           </div>
           <div id="edit-form-footer">
             <button id="edit-form-remove" onClick={() => handleRemoveEvent()}>

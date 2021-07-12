@@ -18,10 +18,11 @@ function AddEventForm(props) {
   // color of event
   const [color, setColor] = useState("#0000FF");
 
+  // reminder of event
+  const [reminder, setReminder] = useState("No reminder");
+
   // logic to handle an event add
   async function onEventAdded(event) {
-    // let calendarApi = props.calendarRef.current.getApi();
-    // calendarApi.addEvent(event);
     try {
       await axios.post("http://localhost:5000/events/add", event);
       setTitle("");
@@ -29,6 +30,7 @@ function AddEventForm(props) {
       setEnd("");
       setallDay(false);
       setColor("0000FF");
+      setReminder("No reminder");
       props.closeEventForm();
       props.renderEvents();
     } catch (err) {
@@ -57,7 +59,7 @@ function AddEventForm(props) {
         return false;
       }
     }
-
+    console.log(reminder);
     props.closeEventForm();
     onEventAdded({
       title,
@@ -65,6 +67,7 @@ function AddEventForm(props) {
       end: endStr,
       allDay,
       color,
+      reminder,
     });
   }
 
@@ -127,6 +130,17 @@ function AddEventForm(props) {
             value={color}
             onChange={(e) => setColor(e.target.value)}
           />
+        </div>
+        <div>
+          <label for="reminder">Remind me:</label>
+          <select name="reminder" value={reminder} onChange={(e) => setReminder(e.target.value)}>
+            <option value="Remind me one day before">One day before</option>
+            <option value="Remind me two days before">Two days before</option>
+            <option value="Remind me one week before">One week before</option>
+            <option value="No reminder">
+              No Reminder
+            </option>
+          </select>
         </div>
         <div>
           <input id="event-form-submit" type="submit" value="Add Event" />

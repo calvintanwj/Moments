@@ -17,7 +17,7 @@ router.get("/retrieve", async (req, res) => {
 // add Event
 router.post("/add", async (req, res) => {
   try {
-    const { title, start, end, allDay, color } = req.body;
+    const { title, start, end, allDay, color, reminder } = req.body;
 
     if (!title || !start) {
       return res
@@ -35,6 +35,7 @@ router.post("/add", async (req, res) => {
       end,
       allDay,
       backgroundColor: color,
+      reminder
     });
 
     await newEvent.save();
@@ -49,7 +50,7 @@ router.post("/add", async (req, res) => {
 // edit Event
 router.put("/edit", async (req, res) => {
   try {
-    const { title, start, end, color, allDay, editingEvent } = req.body;
+    const { title, start, end, color, allDay, reminder, editingEvent } = req.body;
     const eventId = editingEvent.extendedProps._id;
 
     await Event.findOneAndUpdate(
@@ -60,6 +61,7 @@ router.put("/edit", async (req, res) => {
         end,
         backgroundColor: color,
         allDay,
+        reminder
       }
     );
 
