@@ -389,7 +389,6 @@ def help(message):
                 "/viewevents - view events for a specified time period\n\n"
                 "<b>Journal settings</b>\n"
                 "/addjournal - add a journal\n"
-                "/editjournal - edit a specified journal\n"
                 "/deletejournal - delete a specified journal\n"
                 "/viewjournal - view a specified journal\n\n"
                 )
@@ -1019,8 +1018,8 @@ def delete_journal_index_step(message):
             delete_title_step(journal.message)
 
 
-@bot.message_handler(commands=["viewjournals"])
-def viewjournals(message):
+@bot.message_handler(commands=["viewjournal"])
+def viewjournal(message):
     try:
         checklink(message)
         journal_dict[message.chat.id] = Journal("View")
@@ -1034,7 +1033,7 @@ def viewjournals(message):
 
 def view_journal_start_step(message):
     if (message.text == "/cancel"):
-        cancel(message, "viewjournals")
+        cancel(message, "viewjournal")
     else:
         start_pattern = r"^\d{4}-\d{2}-\d{2}$"
         start = message.text
@@ -1052,16 +1051,16 @@ def view_journal_start_step(message):
                     journal.message, "Please key in an ending date from when you wish to view journals. Please enter with the following format YYYY-MM-DD ")
                 bot.register_next_step_handler(msg, view_journal_end_step)
             else:
-                viewjournals(journal.message)
+                viewjournal(journal.message)
         else:
             bot.send_message(
                 message.chat.id, "Follow the date format closely. Please try again")
-            viewjournals(journal.message)
+            viewjournal(journal.message)
 
 
 def view_journal_end_step(message):
     if (message.text == "/cancel"):
-        cancel(message, "viewjournals")
+        cancel(message, "viewjournal")
     else:
         end_pattern = r"^\d{4}-\d{2}-\d{2}$"
         journal = journal_dict[message.chat.id]
