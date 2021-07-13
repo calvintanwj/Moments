@@ -21,6 +21,7 @@ bot = telebot.TeleBot(os.getenv("API_KEY"))
 scheduler = BackgroundScheduler()
 scheduler.start()
 
+
 def add_event_markup():
     markup = InlineKeyboardMarkup()
     markup.row_width = 2
@@ -77,67 +78,145 @@ def edit_remind_markup():
     return markup
 
 
+def add_journal_markup():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    markup.add(InlineKeyboardButton("Yes", callback_data="add_journal_yes"),
+               InlineKeyboardButton("No", callback_data="add_journal_no"))
+    return markup
+
+
+def delete_journal_markup():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    markup.add(InlineKeyboardButton("Yes", callback_data="delete_journal_yes"),
+               InlineKeyboardButton("No", callback_data="delete_journal_no"))
+    return markup
+
+
 @bot.callback_query_handler(func=lambda call: True)
 def query(call):
-    event = event_dict[call.from_user.id]
     if call.data == "add_yes":
+        event = event_dict[call.from_user.id]
         existingUser = users.find_one({"chat_id": call.from_user.id})
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
+        set_reminders(event.message)
         delattr(event, "message")
         event.authorId = str(existingUser["_id"])
-        events.insert_one(event.__dict__)
-        set_reminders(event.message)
-        # Need to find some way to re-render the events
+        insertedEvent = events.insert_one(event.__dict__)
+        setattr(event, "id", insertedEvent.inserted_id)
+        set_reminder(call.message, event)
         bot.answer_callback_query(call.id, "Event added successfully")
-        # Need to figure out how to hide keyboard
-        # bot.edit_message_reply_markup(event.message.chat.id, event.message.message_id, reply_markup=None)
     elif call.data == "add_no":
         bot.answer_callback_query(call.id, "Event add failed")
-        # bot.edit_message_reply_markup(event.message.chat.id, event.message.message_id, reply_markup=None)
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
     elif call.data == "add_remind_none":
+        event = event_dict[call.from_user.id]
         event.reminder = "No reminder"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         add_confirm_step(event.message)
     elif call.data == "add_remind_one_day":
+        event = event_dict[call.from_user.id]
         event.reminder = "Remind me one day before"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         add_confirm_step(event.message)
     elif call.data == "add_remind_two_days":
+        event = event_dict[call.from_user.id]
         event.reminder = "Remind me two days before"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         add_confirm_step(event.message)
     elif call.data == "add_remind_one_week":
+        event = event_dict[call.from_user.id]
         event.reminder = "Remind me one week before"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         add_confirm_step(event.message)
     elif call.data == "edit_yes":
         event = event_dict[0]
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         edit_event_step(event.message)
     elif call.data == "edit_no":
         event = event_dict[0]
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         edit_title_step(event.message)
     elif call.data == "edit_remind_none":
+        event = event_dict[call.from_user.id]
         event.reminder = "No reminder"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         edit_confirm_step(event.message)
     elif call.data == "edit_remind_one_day":
+        event = event_dict[call.from_user.id]
         event.reminder = "Remind me one day before"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         edit_confirm_step(event.message)
     elif call.data == "edit_remind_two_days":
+        event = event_dict[call.from_user.id]
         event.reminder = "Remind me two days before"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         edit_confirm_step(event.message)
     elif call.data == "edit_remind_one_week":
+        event = event_dict[call.from_user.id]
         event.reminder = "Remind me one week before"
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         edit_confirm_step(event.message)
     elif call.data == "edit_confirm_yes":
         oldEvent = event_dict[1]
+        event = event_dict[call.from_user.id]
+        setattr(event, "id", oldEvent["_id"])
         events.update_one({"_id": oldEvent["_id"]}, {
             "$set": {"title": event.title, "start": event.start, "end": event.end, "reminder": event.reminder}})
-        set_reminders(event.message)
+        reschedule_reminder(event)
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         bot.answer_callback_query(call.id, "Event edited successfully")
     elif call.data == "edit_confirm_no":
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         bot.answer_callback_query(call.id, "Edit Event failed")
     elif call.data == "delete_yes":
         event = event_dict[1]
         events.delete_one({"_id": event["_id"]})
-        set_reminders(event.message)
+        scheduler.remove_job(str(event["_id"]))
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         bot.answer_callback_query(call.id, "Success! Event deleted.")
     elif call.data == "delete_no":
-        event = event_dict[1]
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
+        bot.answer_callback_query(call.id, "Event delete failed.")
+    elif call.data == "add_journal_yes":
+        journal = journal_dict[call.from_user.id]
+        existingUser = users.find_one({"chat_id": call.from_user.id})
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
+        delattr(journal, "message")
+        journal.user_id = str(existingUser["_id"])
+        journals.insert_one(journal.__dict__)
+        bot.answer_callback_query(call.id, "Journal added successfully")
+    elif call.data == "add_journal_no":
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
+        bot.answer_callback_query(call.id, "Journal add failed")
+    elif call.data == "delete_journal_yes":
+        journal = journal_dict[1]
+        journals.delete_one({"_id": journal["_id"]})
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
+        bot.answer_callback_query(call.id, "Success! Event deleted.")
+    elif call.data == "delete_journal_no":
+        bot.edit_message_reply_markup(
+            call.message.chat.id, call.message.message_id, reply_markup=None)
         bot.answer_callback_query(call.id, "Event delete failed.")
 
 
@@ -228,6 +307,44 @@ def set_reminders(message):
                     reminderDate), args=(message, event), id=str(event["_id"]))
 
 
+def set_reminder(message, event):
+    if (event.reminder != "No reminder"):
+        dateArray = event.start.split(" ")
+        resArray = dateArray[0].split("-")
+        year = int(resArray[0])
+        month = int(resArray[1])
+        day = int(resArray[2])
+        reminderDate = datetime.datetime(year, month, day, 9)
+        if (event.reminder == "Remind me one day before"):
+            reminderDate -= datetime.timedelta(days=1)
+        elif (event.reminder == "Remind me two days before"):
+            reminderDate -= datetime.timedelta(days=2)
+        elif (event.reminder == "Remind me one week before"):
+            reminderDate -= datetime.timedelta(days=7)
+        if (reminderDate > datetime.datetime.now()):
+            scheduler.add_job(send_reminder, 'date', run_date=str(
+                reminderDate), args=(message, event), id=str(event.id))
+
+
+def reschedule_reminder(event):
+    if (event.reminder != "No reminder"):
+        dateArray = event.start.split(" ")
+        resArray = dateArray[0].split("-")
+        year = int(resArray[0])
+        month = int(resArray[1])
+        day = int(resArray[2])
+        reminderDate = datetime.datetime(year, month, day, 9)
+        if (event.reminder == "Remind me one day before"):
+            reminderDate -= datetime.timedelta(days=1)
+        elif (event.reminder == "Remind me two days before"):
+            reminderDate -= datetime.timedelta(days=2)
+        elif (event.reminder == "Remind me one week before"):
+            reminderDate -= datetime.timedelta(days=7)
+        if (reminderDate > datetime.datetime.now()):
+            scheduler.reschedule_job(str(event.id), run_date=str(
+                reminderDate))
+
+
 @bot.message_handler(commands=["cancel"])
 def cancel(message, command=None):
     if (command):
@@ -289,8 +406,18 @@ class Event:
         self.reminder = None
         self.message = None
 
-
 event_dict = {}
+
+
+class Journal:
+    def __init__(self, date):
+        self.date = date
+        self.title = None
+        self.entry = None
+        self.message = None
+
+
+journal_dict = {}
 
 
 @bot.message_handler(commands=["addevent"])
@@ -424,8 +551,13 @@ def edit_title_step(message):
                 event.message = message
                 info = ""
                 for i in range(len(possibleEvents)):
-                    info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(possibleEvents[i]["title"]) + "\nStart: " + str(
-                        possibleEvents[i]["start"]) + "\nEnd: " + str(possibleEvents[i]["end"]) + "\n" + str(possibleEvents[i]["reminder"]) + "\n\n"
+                    startStr = str(
+                        possibleEvents[i]["start"]).replace("T", " ")
+                    startStr = ":".join(startStr.split(":", 2)[:2])
+                    endStr = str(possibleEvents[i]["end"]).replace("T", " ")
+                    endStr = ":".join(endStr.split(":", 2)[:2])
+                    info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(
+                        possibleEvents[i]["title"]) + "\nStart: " + startStr + "\nEnd: " + endStr + "\n" + str(possibleEvents[i]["reminder"]) + "\n\n"
                 msg = bot.reply_to(message, info +
                                    "Here are all the events with a similar title to the one you specified. Please key in the number <b>(in bold)</b> of the event you wish to edit", parse_mode="HTML")
                 bot.register_next_step_handler(msg, edit_index_step)
@@ -447,8 +579,13 @@ def edit_index_step(message):
         try:
             specifiedEvent = event_dict[message.chat.id][index - 1]
             event_dict[1] = specifiedEvent
-            info = "Title: " + str(specifiedEvent["title"]) + "\nStart: " + str(
-                specifiedEvent["start"]) + "\nEnd: " + str(specifiedEvent["end"] + "\n" + str(specifiedEvent["reminder"]))
+            startStr = str(specifiedEvent["start"]).replace("T", " ")
+            startStr = ":".join(startStr.split(":", 2)[:2])
+            endStr = str(specifiedEvent["end"]).replace("T", " ")
+            endStr = ":".join(endStr.split(":", 2)[:2])
+            info = "Title: " + str(specifiedEvent["title"]) + "\nStart: " + \
+                startStr + "\nEnd: " + endStr + "\n" + \
+                str(specifiedEvent["reminder"])
             bot.reply_to(message, info + "\n\nIs this the event you wish to edit? Confirm?",
                          reply_markup=edit_event_markup())
             # Maybe ask which fields of the event you wish to edit
@@ -566,8 +703,12 @@ def edit_confirm_step(message):
         oldEvent = event_dict[1]
         startStr = event.start.replace("T", " ")
         endStr = event.end.replace("T", " ")
+        startStr = ":".join(startStr.split(":", 2)[:2])
+        endStr = ":".join(endStr.split(":", 2)[:2])
         oldStartStr = oldEvent["start"].replace("T", " ")
         oldEndStr = oldEvent["end"].replace("T", " ")
+        oldStartStr = ":".join(oldStartStr.split(":", 2)[:2])
+        oldEndStr = ":".join(oldEndStr.split(":", 2)[:2])
         bot.send_message(message.chat.id, "<b>Editing Event:</b>\n" + "Title: " + oldEvent["title"] + "\nStart: " + oldStartStr + "\nEnd: " + oldEndStr + "\n" + oldEvent["reminder"] +
                          "\n\n<b>Edited Event:</b>\n" + "Title: " + event.title +
                          "\nStart: " + startStr + "\nEnd: " + endStr + "\n" + event.reminder + "\n\nConfirm your changes?", parse_mode="HTML", reply_markup=edit_event_confirm_markup())
@@ -605,8 +746,13 @@ def delete_title_step(message):
                 event.message = message
                 info = ""
                 for i in range(len(possibleEvents)):
-                    info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(possibleEvents[i]["title"]) + "\nStart: " + str(
-                        possibleEvents[i]["start"]) + "\nEnd: " + str(possibleEvents[i]["end"]) +  "\n" + str(possibleEvents[i]["reminder"]) + "\n\n"
+                    startStr = str(
+                        possibleEvents[i]["start"]).replace("T", " ")
+                    startStr = ":".join(startStr.split(":", 2)[:2])
+                    endStr = str(possibleEvents[i]["end"]).replace("T", " ")
+                    endStr = ":".join(endStr.split(":", 2)[:2])
+                    info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(
+                        possibleEvents[i]["title"]) + "\nStart: " + startStr + "\nEnd: " + endStr + "\n" + str(possibleEvents[i]["reminder"]) + "\n\n"
                 msg = bot.reply_to(message, info +
                                    "Here are all the events with a similar title to the one you specified. Please key in the number <b>(in bold)</b> of the event you wish to delete", parse_mode="HTML")
                 bot.register_next_step_handler(msg, delete_index_step)
@@ -628,8 +774,13 @@ def delete_index_step(message):
         try:
             specifiedEvent = eventsList[index - 1]
             event_dict[1] = specifiedEvent
-            info = "Title: " + str(specifiedEvent["title"]) + "\nStart: " + str(
-                specifiedEvent["start"]) + "\nEnd: " + str(specifiedEvent["end"]) + "\n" + str(specifiedEvent["reminder"])
+            startStr = str(specifiedEvent["start"]).replace("T", " ")
+            startStr = ":".join(startStr.split(":", 2)[:2])
+            endStr = str(specifiedEvent["end"]).replace("T", " ")
+            endStr = ":".join(endStr.split(":", 2)[:2])
+            info = "Title: " + str(specifiedEvent["title"]) + "\nStart: " + \
+                startStr + "\nEnd: " + endStr + "\n" + \
+                str(specifiedEvent["reminder"])
             bot.reply_to(message, info + "\n\nIs this the event you wish to delete? Confirm?",
                          reply_markup=delete_event_markup())
         except:
@@ -699,15 +850,19 @@ def view_end_step(message):
                 userEvents = list(events.find({"authorId": str(existingUser["_id"]), "end": {
                     "$lte": event.end}, "start": {"$gte": event.start}}))
                 info = "<u><b>Events: </b></u>\n"
-                for event in userEvents:
-                    startStr = event["start"].replace("T", " ")
-                    startStr = ":".join(startStr.split(":", 2)[:2])
-                    endStr = event["end"].replace("T", " ")
-                    endStr = ":".join(endStr.split(":", 2)[:2])
-                    info += "<b>Title:</b> " + \
-                        event["title"] + "\n<b>Start:</b> " + \
-                            startStr + "\n<b>End:</b> " + endStr + "\n\n"
-                bot.send_message(message.chat.id, info, parse_mode="HTML")
+                if (userEvents):
+                    for event in userEvents:
+                        startStr = event["start"].replace("T", " ")
+                        startStr = ":".join(startStr.split(":", 2)[:2])
+                        endStr = event["end"].replace("T", " ")
+                        endStr = ":".join(endStr.split(":", 2)[:2])
+                        info += "<b>Title:</b> " + \
+                            event["title"] + "\n<b>Start:</b> " + \
+                                startStr + "\n<b>End:</b> " + endStr + "\n\n"
+                    bot.send_message(message.chat.id, info, parse_mode="HTML")
+                else:
+                    bot.send_message(
+                        message.chat.id, info + "No events between specified dates /viewevents", parse_mode="HTML")
             else:
                 view_start_step(event.message)
         elif (re.match(end_pattern_two, end)):
@@ -718,15 +873,19 @@ def view_end_step(message):
                 userEvents = list(events.find({"authorId": str(existingUser["_id"]), "end": {
                     "$lte": event.end}, "start": {"$gte": event.start}}))
                 info = "<u><b>Events: </b></u>\n"
-                for event in userEvents:
-                    startStr = event["start"].replace("T", " ")
-                    startStr = ":".join(startStr.split(":", 2)[:2])
-                    endStr = event["end"].replace("T", " ")
-                    endStr = ":".join(endStr.split(":", 2)[:2])
-                    info += "<b>Title:</b> " + \
-                        event["title"] + "\n<b>Start:</b> " + \
-                            startStr + "\n<b>End:</b> " + endStr + "\n\n"
-                bot.send_message(message.chat.id, info, parse_mode="HTML")
+                if (userEvents):
+                    for event in userEvents:
+                        startStr = event["start"].replace("T", " ")
+                        startStr = ":".join(startStr.split(":", 2)[:2])
+                        endStr = event["end"].replace("T", " ")
+                        endStr = ":".join(endStr.split(":", 2)[:2])
+                        info += "<b>Title:</b> " + \
+                            event["title"] + "\n<b>Start:</b> " + \
+                                startStr + "\n<b>End:</b> " + endStr + "\n\n"
+                    bot.send_message(message.chat.id, info, parse_mode="HTML")
+                else:
+                    bot.send_message(
+                        message.chat.id, info + "No events between specified dates /viewevents", parse_mode="HTML")
             else:
                 view_start_step(event.message)
         else:
@@ -734,8 +893,209 @@ def view_end_step(message):
                 message.chat.id, "Follow the date format closely. Please try again.")
             view_start_step(event.message)
 
-@bot.message_handler(commands=["viewevents"])
 
+@bot.message_handler(commands=["addjournal"])
+def addjournal(message):
+    try:
+        checklink(message)
+        msg = bot.send_message(
+            message.chat.id, "Please key in the journal's date? Please enter with the following format YYYY-MM-DD")
+        bot.register_next_step_handler(msg, add_journal_date_step)
+    except:
+        return
+
+
+def add_journal_date_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "addjournal")
+    else:
+        date_pattern = r"^\d{4}-\d{2}-\d{2}$"
+        date = message.text
+        if (re.match(date_pattern, date)):
+            if (check_date(message, str(date))):
+                dateArray = str(date).split("-")
+                year = int(dateArray[0])
+                month = int(dateArray[1])
+                day = int(dateArray[2])
+                journalDate = datetime.datetime(year, month, day)
+                journal_dict[message.chat.id] = Journal(journalDate)
+                journal = journal_dict[message.chat.id]
+                journal.message = message
+                msg = bot.reply_to(
+                    journal.message, "How about the journal's title?")
+                bot.register_next_step_handler(msg, add_journal_title_step)
+            else:
+                addjournal(message)
+        else:
+            bot.send_message(
+                message.chat.id, "Follow the date format closely. Please try again")
+            addjournal(message)
+
+
+def add_journal_title_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "addjournal")
+    else:
+        title = message.text
+        journal = journal_dict[message.chat.id]
+        journal.title = title
+        journal.message = message
+        msg = bot.reply_to(
+            journal.message, "How about noting something down in your journal? On telegram desktop, press shift + enter to go to the next line.")
+        bot.register_next_step_handler(msg, add_journal_entry_step)
+
+
+def add_journal_entry_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "addjournal")
+    else:
+        entry = message.text
+        journal = journal_dict[message.chat.id]
+        journal.entry = entry
+        journal.message = message
+        bot.send_message(message.chat.id, "<b>Journal:</b>\n" + "Title: " + journal.title +
+                         "\nDate: " + str(journal.date).split(" ")[0] + "\nEntry: " + journal.entry + "\nConfirm?", parse_mode="HTML", reply_markup=add_journal_markup())
+
+
+@bot.message_handler(commands=["deletejournal"])
+def deletejournal(message):
+    try:
+        checklink(message)
+        msg = bot.send_message(
+            message.chat.id, "Please key in the date of the journal you wish to delete. Please enter with the following format YYYY-MM-DD")
+        bot.register_next_step_handler(msg, delete_journal_date_step)
+    except:
+        return
+
+
+def delete_journal_date_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "deletejournal")
+    else:
+        date = message.text
+        dateArray = str(date).split("-")
+        year = int(dateArray[0])
+        month = int(dateArray[1])
+        day = int(dateArray[2])
+        journalDate = datetime.datetime(year, month, day)
+        existingUser = users.find_one({"chat_id": message.chat.id})
+        bot.send_chat_action(message.chat.id, 'typing')
+        time.sleep(1)
+        userJournals = list(journals.find(
+            {"user_id": str(existingUser["_id"]), "date": journalDate}))
+        if (userJournals):
+            journal_dict[message.chat.id] = userJournals
+            journal = Journal(date)
+            journal_dict[0] = journal
+            journal.message = message
+            info = ""
+            for i in range(len(userJournals)):
+                info += f"<b>{str(i + 1)}</b>" + "\nTitle: " + str(userJournals[i]["title"]) + "\nDate: " + str(
+                        userJournals[i]["date"]).split("T")[0] + "\nEntry: " + str(userJournals[i]["entry"]) + "\n\n"
+            msg = bot.reply_to(message, info +
+                               "Here are all the journals created on the date you specified. Please key in the number <b>(in bold)</b> of the journal you wish to delete", parse_mode="HTML")
+            bot.register_next_step_handler(msg, delete_journal_index_step)
+        else:
+            bot.send_message(
+                message.chat.id, "There are no journals on that date. Try again? /deletejournal")
+
+
+def delete_journal_index_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "deletejournal")
+    else:
+        journalsList = journal_dict[message.chat.id]
+        journal = journal_dict[0]
+        index = int(message.text) - 1
+        try:
+            specifiedJournal = journalsList[index - 1]
+            journal_dict[1] = specifiedJournal
+            info = "Title: " + str(specifiedJournal["title"]) + "\nDate: " + str(
+                specifiedJournal["date"]).split("T")[0] + "\nEntry: " + str(specifiedJournal["entry"])
+            bot.reply_to(message, info + "\n\nIs this the event you wish to delete? Confirm?",
+                         reply_markup=delete_journal_markup())
+        except:
+            bot.reply_to(message, "Invalid number. Please try again.")
+            delete_title_step(journal.message)
+
+
+@bot.message_handler(commands=["viewjournals"])
+def viewjournals(message):
+    try:
+        checklink(message)
+        journal_dict[message.chat.id] = Journal("View")
+        journal_dict[message.chat.id].message = message
+        msg = bot.send_message(
+            message.chat.id, "Please key in a starting date from when you wish to view journals. Please enter with format YYYY-MM-DD")
+        bot.register_next_step_handler(msg, view_journal_start_step)
+    except:
+        return
+
+
+def view_journal_start_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "viewjournals")
+    else:
+        start_pattern = r"^\d{4}-\d{2}-\d{2}$"
+        start = message.text
+        journal = journal_dict[message.chat.id]
+        if (re.match(start_pattern, start)):
+            if (check_date(message, start)):
+                dateArray = str(start).split("-")
+                year = int(dateArray[0])
+                month = int(dateArray[1])
+                day = int(dateArray[2])
+                journalDate = datetime.datetime(year, month, day)
+                journal.start = journalDate
+                journal.message = message
+                msg = bot.reply_to(
+                    journal.message, "Please key in an ending date from when you wish to view journals. Please enter with the following format YYYY-MM-DD ")
+                bot.register_next_step_handler(msg, view_journal_end_step)
+            else:
+                viewjournals(journal.message)
+        else:
+            bot.send_message(
+                message.chat.id, "Follow the date format closely. Please try again")
+            viewjournals(journal.message)
+
+
+def view_journal_end_step(message):
+    if (message.text == "/cancel"):
+        cancel(message, "viewjournals")
+    else:
+        end_pattern = r"^\d{4}-\d{2}-\d{2}$"
+        journal = journal_dict[message.chat.id]
+        end = message.text
+        existingUser = users.find_one({"chat_id": message.chat.id})
+        if (re.match(end_pattern, end)):
+            if (check_date(message, end)):
+                dateArray = str(end).split("-")
+                year = int(dateArray[0])
+                month = int(dateArray[1])
+                day = int(dateArray[2])
+                journalDate = datetime.datetime(year, month, day)
+                journal.end = journalDate
+                journal.message = message
+                userJournals = list(journals.find({"user_id": str(existingUser["_id"]), "$and": [{
+                    "date": {"$lte": journal.end}}, {"date": {"$gte": journal.start}}]}))
+                if (userJournals):
+                    info = "<u><b>Journals: </b></u>\n"
+                    for journal in userJournals:
+                        info += "<b>Title:</b> " + \
+                            journal["title"] + "\n<b>Date:</b> " + \
+                                str(journal["date"]).split(" ")[
+                                    0] + "\n<b>Entry:</b> " + journal["entry"] + "\n\n"
+                    bot.send_message(message.chat.id, info, parse_mode="HTML")
+                else:
+                    info = "<u><b>Journals: </b></u>\n"
+                    bot.send_message(
+                        message.chat.id, info + "No journals between specified dates /viewjournals", parse_mode="HTML")
+            else:
+                view_journal_start_step(journal.message)
+        else:
+            bot.send_message(
+                message.chat.id, "Follow the date format closely. Please try again.")
+            view_journal_start_step(journal.message)
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
