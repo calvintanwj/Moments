@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from fuzzywuzzy import fuzz
 from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, request
 
 load_dotenv()
 cluster = MongoClient(os.getenv("MDB_CONNECT"))
@@ -17,10 +18,11 @@ db = cluster["Moments"]
 users = db["users"]
 events = db["events"]
 journals = db["journalentries"]
+TOKEN = os.getenv("API_KEY")
 bot = telebot.TeleBot(os.getenv("API_KEY"))
 scheduler = BackgroundScheduler()
 scheduler.start()
-
+server = Flask(__name__)
 
 def add_event_markup():
     markup = InlineKeyboardMarkup()
@@ -1104,4 +1106,16 @@ def command_default(message):
                      message.text + "\"\nMaybe try the help page at /help")
 
 
-bot.polling()
+# SERVER SIDE 
+@server.route('/' + TOKEN, methods=['POST'])
+def getMessage():
+   bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+   return "!", 200
+@server.route("/")
+def webhook():
+   bot.remove_webhook()
+   bot.set_webhook(url='https://momentsorbbot.herokuapp.com/' + TOKEN)
+   return "!", 200
+if __name__ == "__main__":
+   server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 7000)))
+
