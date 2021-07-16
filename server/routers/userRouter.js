@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ lowerCaseEmail });
+    const existingUser = await User.findOne({ email: lowerCaseEmail });
 
     if (existingUser) {
       return res.status(400).json({
