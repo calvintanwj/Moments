@@ -76,16 +76,21 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { date, title, entry } = req.body;
     const user_id = req.user;
-    let matchedEntries = await journalEntry.findOneAndUpdate(
+    const parsedDate = Date.parse(date);
+
+    let matchedEntry = await journalEntry.findOneAndUpdate(
       { _id: id, user_id },
-      { date, title, entry },
+      { date: parsedDate, title, entry },
       { new: true }
     );
     // findOneAndDelete returns null, if a post with the conditions is not found
-    if (matchedEntries == null) {
+    if (matchedEntry == null) {
       return res.status(404).json({ message: "Post does not exist" });
     }
-    return res.status(200).json({ message: "Entry has been updated" });
+    return res.status(200).json({
+      message: "Journal entry has been updated"
+      , data: matchedEntry
+    });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: "Could not update journal entry" });
@@ -104,7 +109,7 @@ router.delete("/:id", async (req, res) => {
     if (matchedEntries == null) {
       return res.status(404).json({ message: "Post does not exist" });
     }
-    return res.status(200).json({ message: "Entry has been deleted" });
+    return res.status(200).json({ message: "Journal entry has been deleted" });
   } catch (err) {
     console.err(err);
     return res.status(400).json({ message: "Could not delete journal entry" });
