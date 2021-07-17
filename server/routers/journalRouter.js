@@ -62,7 +62,7 @@ router.get("/:date", async (req, res) => {
       .lean();
     return res.status(200).json({ entries: matchedEntries });
   } catch (err) {
-    console.err(err);
+    console.log(err);
     return res.status(400).json({ error: "Could not get journal entry" });
   }
 });
@@ -87,7 +87,7 @@ router.put("/:id", async (req, res) => {
     }
     return res.status(200).json({ message: "Entry has been updated" });
   } catch (err) {
-    console.err(err);
+    console.log(err);
     return res.status(400).json({ error: "Could not update journal entry" });
   }
 });
