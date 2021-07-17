@@ -8,13 +8,11 @@ const jwt = require("jsonwebtoken");
 // Checks user_id from JWT cookie stored from loggin in
 var getUser = function (req, res, next) {
   req.user = jwt.decode(req.cookies.token, process.env.JWT_SECRET).user;
-  console.log(`User making request: ${req.user}`);
   next();
 };
 
 router.use(getUser);
 router.use(function (req, res, next) {
-  console.log(req.body);
   next();
 });
 
@@ -44,7 +42,7 @@ router.post("/", async (req, res) => {
         data: savedJournalEntry,
       });
   } catch (err) {
-    console.log(err);
+    console.err(err);
     return res.status(400).json({ error: "Could not create journal entry" });
   }
 });
@@ -64,7 +62,7 @@ router.get("/:date", async (req, res) => {
       .lean();
     return res.status(200).json({ entries: matchedEntries });
   } catch (err) {
-    console.log(err);
+    console.err(err);
     return res.status(400).json({ error: "Could not get journal entry" });
   }
 });
@@ -89,7 +87,7 @@ router.put("/:id", async (req, res) => {
     }
     return res.status(200).json({ message: "Entry has been updated" });
   } catch (err) {
-    console.log(err);
+    console.err(err);
     return res.status(400).json({ error: "Could not update journal entry" });
   }
 });
@@ -108,7 +106,7 @@ router.delete("/:id", async (req, res) => {
     }
     return res.status(200).json({ message: "Entry has been deleted" });
   } catch (err) {
-    console.log(err);
+    console.err(err);
     return res.status(400).json({ message: "Could not delete journal entry" });
   }
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Error from "../components/Error";
 
@@ -13,14 +13,14 @@ function ResetPasswordPage() {
     e.preventDefault();
     try {
       const verifyData = { newPassword, token };
-      // await axios.post(
-      //   "http://localhost:5000/auth/reset-password/",
-      //   verifyData
-      // );
       await axios.post(
-        "https://momentsorbital.herokuapp.com/auth/reset-password/",
+        "http://localhost:5000/auth/reset-password/",
         verifyData
       );
+      // await axios.post(
+      //   "https://momentsorbital.herokuapp.com/auth/reset-password/",
+      //   verifyData
+      // );
       history.push("/success");
     } catch (err) {
       console.error(err);
@@ -37,13 +37,16 @@ function ResetPasswordPage() {
         setErrorMessage={setErrorMessage}
       />
       <h1>Reset your password</h1>
-      <label for="password">Enter your new password</label>
+      <label for="password">Enter your new password (Must contain at least one lowercase, one uppercase, one number, and one special character)</label>
       <input
         type="text"
         name="password"
         required
         onChange={(e) => setNewPassword(e.target.value)}
       />
+      <Link to="/forgot-password">
+          <a href>Forgot Password?</a>
+      </Link>
       <button type="submit">Change password</button>
     </form>
   );

@@ -13,11 +13,11 @@ function ExpiredPage() {
     e.preventDefault();
     try {
       const emailData = { email };
-      // await axios.post("http://localhost:5000/confirmation/resend/", emailData);
-      await axios.post(
-        "https://momentsorbital.herokuapp.com/confirmation/resend/",
-        emailData
-      );
+      await axios.post("http://localhost:5000/confirmation/resend/", emailData);
+      // await axios.post(
+      //   "https://momentsorbital.herokuapp.com/confirmation/resend/",
+      //   emailData
+      // );
       history.push("/confirmation");
     } catch (err) {
       console.error(err);

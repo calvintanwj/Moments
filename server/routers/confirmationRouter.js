@@ -8,11 +8,11 @@ router.get("/:token", async (req, res) => {
   try {
     const verify = jwt.verify(req.params.token, process.env.JWT_ACTIVATE_ACC);
     await User.findOneAndUpdate({ _id: verify.user }, { confirmed: true });
-    // res.redirect("http://localhost:3000/verified");
-    res.redirect("https://moments-flax.vercel.app/verified");
+    res.redirect("http://localhost:3000/verified");
+    // res.redirect("https://moments-flax.vercel.app/verified");
   } catch (err) {
-    // res.redirect("http://localhost:3000/expired");
-    res.redirect("https://moments-flax.vercel.app/expired");
+    res.redirect("http://localhost:3000/expired");
+    // res.redirect("https://moments-flax.vercel.app/expired");
   }
 });
 
@@ -24,7 +24,7 @@ router.post("/resend", async (req, res) => {
   if (!email) {
     return res
       .status(400)
-      .json({ errorMessage: "Please enter all required fields." });
+      .json({ errorMessage: "Please enter all required fields" });
   }
 
   // create reusable transporter object using the default SMTP transport
@@ -42,14 +42,14 @@ router.post("/resend", async (req, res) => {
     {
       user: existingUser._id,
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_ACTIVATE_ACC,
     {
       expiresIn: "1d",
     }
   );
 
-  // const url = `http://localhost:5000/confirmation/${emailToken}`;
-  const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
+  const url = `http://localhost:5000/confirmation/${emailToken}`;
+  // const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
 
   transporter.sendMail({
     from: "Moments <momentsorbital@gmail.com>",
@@ -66,7 +66,7 @@ router.post("/resend", async (req, res) => {
     The Moments Team`,
   });
 
-  res.send("");
+  res.status(200).send();
 });
 
 module.exports = router;

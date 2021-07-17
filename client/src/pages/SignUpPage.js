@@ -22,8 +22,8 @@ function SignUpPage() {
         passwordVerify,
       };
 
-      // await axios.post("http://localhost:5000/auth/", signupData);
-      await axios.post("https://momentsorbital.herokuapp.com/auth", signupData);
+      await axios.post("http://localhost:5000/auth/", signupData);
+      // await axios.post("https://momentsorbital.herokuapp.com/auth", signupData);
       history.push("/confirmation");
     } catch (err) {
       console.error(err);
@@ -54,7 +54,7 @@ function SignUpPage() {
         required
         onChange={(e) => setEmail(e.target.value)}
       />
-      <label for="password">Password</label>
+      <label for="password">Password (Must contain at least one lowercase, one uppercase, one number, and one special character)</label>
       <input
         type="password"
         name="password"

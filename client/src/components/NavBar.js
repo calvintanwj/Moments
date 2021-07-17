@@ -16,9 +16,9 @@ function NavBar() {
 
   async function renderUserProfile() {
     try {
-      //  axios
-      //   .get("http://localhost:5000/update/retrieveDetails/")
-      axios.get("https://momentsorbital.herokuapp.com/update/retrieveDetails")
+       axios
+        .get("http://localhost:5000/update/retrieveDetails/")
+      // axios.get("https://momentsorbital.herokuapp.com/update/retrieveDetails")
         .then((response) => {
           const { name, profilePic, teleCode } = response.data;
           setName(name);
@@ -29,10 +29,12 @@ function NavBar() {
       console.error(err);
     }
   }
-
+  
   useEffect(() => {
-    renderUserProfile();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (loggedIn) {
+        renderUserProfile();
+    }
+  }, [loggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <nav id="navbar">
@@ -68,12 +70,12 @@ function NavBar() {
               Welcome back, {name}
             </h5>
             <img
-              // src={`http://localhost:5000/images/${profilePic}`}
-              src={`https://momentsorbital.herokuapp.com/images/${profilePic}`}
+              src={`http://localhost:5000/images/${profilePic}`}
+              // src={`https://momentsorbital.herokuapp.com/images/${profilePic}`}
               alt="profile-pic"
             />
             <div id="settings-menu">
-              <LogOutBtn />
+              <LogOutBtn setSuccessMessage={setSuccessMessage}/>
               <EditProfileBtn
                 profilePic={profilePic}
                 renderUserProfile={renderUserProfile}

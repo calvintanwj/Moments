@@ -16,12 +16,15 @@ router.post("/", async (req, res) => {
     if (!name || !email || !password || !passwordVerify) {
       return res
         .status(400)
-        .json({ errorMessage: "Please enter all required fields." });
+        .json({ errorMessage: "Please enter all required fields" });
     }
 
-    if (password.length < 8) {
+    var passwordFormat =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+
+    if (!password.match(passwordFormat)) {
       return res.status(400).json({
-        errorMessage: "Please enter a password of at least 8 characters",
+        errorMessage: "Please follow the password format",
       });
     }
 
@@ -31,7 +34,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email: lowerCaseEmail });
+    const existingUser = await User.findOne({ lowerCaseEmail });
 
     if (existingUser) {
       return res.status(400).json({
@@ -48,6 +51,7 @@ router.post("/", async (req, res) => {
       name,
       email: lowerCaseEmail,
       passwordHash,
+      profilePic: "defaultprofile.jpg",
     });
 
     const savedUser = await newUser.save();
@@ -71,8 +75,8 @@ router.post("/", async (req, res) => {
       }
     );
 
-    // const url = `http://localhost:5000/confirmation/${emailToken}`;
-    const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
+    const url = `http://localhost:5000/confirmation/${emailToken}`;
+    // const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",
@@ -89,7 +93,7 @@ router.post("/", async (req, res) => {
       The Moments Team`,
     });
 
-    res.send("");
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -106,13 +110,13 @@ router.post("/login", async (req, res) => {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ errorMessage: "Please enter all required fields." });
+        .json({ errorMessage: "Please enter all required fields" });
     }
 
     const existingUser = await User.findOne({ email: lowerCaseEmail });
 
     if (!existingUser) {
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
+      return res.status(401).json({ errorMessage: "Wrong email or password" });
     }
 
     if (!existingUser.confirmed) {
@@ -189,6 +193,12 @@ router.post("/forgot-password", async (req, res) => {
     const { email } = req.body;
     const lowerCaseEmail = email.toLowerCase();
 
+    if (!email) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Please enter all required fields" });
+    }
+
     const existingUser = await User.findOne({ email: lowerCaseEmail });
 
     if (!existingUser) {
@@ -216,11 +226,11 @@ router.post("/forgot-password", async (req, res) => {
       }
     );
 
-    // const url = `http://localhost:3000/reset-password/${emailToken}`;
-    const url = `https://moments-flax.vercel.app/reset-password/${emailToken}`;
+    const url = `http://localhost:3000/reset-password/${emailToken}`;
+    // const url = `https://moments-flax.vercel.app/reset-password/${emailToken}`;
 
-    // const forgotpass = "http://localhost:3000/forgot-password";
-    const forgotpass = "https://moments-flax.vercel.app/forgot-password";
+    const forgotpass = "http://localhost:3000/forgot-password";
+    // const forgotpass = "https://moments-flax.vercel.app/forgot-password";
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",
@@ -239,7 +249,7 @@ router.post("/forgot-password", async (req, res) => {
 
     await User.updateOne({ email: lowerCaseEmail }, { resetToken: emailToken });
 
-    res.send("");
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -252,8 +262,6 @@ router.post("/reset-password", async (req, res) => {
     const { newPassword, token } = req.body;
     jwt.verify(token, process.env.JWT_RESET_PASS, (err, decodedData) => {
       if (err) {
-        // res.redirect("http://localhost:3000/forgot-password");
-        res.redirect("https://moments-flax.vercel.app/forgot-password");
         return res.status(401).json({
           errorMessage: "Reset Link has expired, please resend email again",
         });
@@ -263,9 +271,18 @@ router.post("/reset-password", async (req, res) => {
     const changedUser = await User.findOne({ resetToken: token });
 
     if (!changedUser) {
-      return res
-        .status(401)
-        .json({ errorMessage: "User with this token does not exist" });
+      return res.status(401).json({
+        errorMessage: "Incorrect token, please resend email again",
+      });
+    }
+
+    var passwordFormat =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+
+    if (!newPassword.match(passwordFormat)) {
+      return res.status(400).json({
+        errorMessage: "Please follow the password format",
+      });
     }
 
     // encrypt (hash) password
@@ -277,7 +294,7 @@ router.post("/reset-password", async (req, res) => {
       { passwordHash: newPasswordHash, resetToken: "" }
     );
 
-    res.send("");
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();

@@ -21,27 +21,27 @@ function HomePage() {
   }
 
   async function handleAddEntry() {
-    const res = await axios.post(
-      "https://momentsorbital.herokuapp.com/journal/",
-      {
-        date: format(date, "yyyy-MM-dd"),
-        title: "Journal Title",
-        entry: "",
-      }
-    );
-    // const res = await axios.post('http://localhost:5000/journal/', {
-    // 	date: format(date, 'yyyy-MM-dd'),
-    // 	title: "Journal Title",
-    // 	entry: ""
-    // });
+    // const res = await axios.post(
+    //   "https://momentsorbital.herokuapp.com/journal/",
+    //   {
+    //     date: format(date, "yyyy-MM-dd"),
+    //     title: "Journal Title",
+    //     entry: "",
+    //   }
+    // );
+    const res = await axios.post('http://localhost:5000/journal/', {
+    	date: format(date, 'yyyy-MM-dd'),
+    	title: "Journal Title",
+    	entry: ""
+    });
     const newEntries = [...entries, res.data.data];
     setEntries(newEntries);
   }
 
   async function handleDeleteEntry(entry, index) {
     console.log("Deleting entry");
-    // await axios.delete(`http://localhost:5000/journal/${entry._id}`)
-    await axios.delete(`https://momentsorbital.herokuapp.com/journal/${entry._id}`);
+    await axios.delete(`http://localhost:5000/journal/${entry._id}`)
+    // await axios.delete(`https://momentsorbital.herokuapp.com/journal/${entry._id}`);
     const newEntries = [
       ...entries.slice(0, index),
       ...entries.slice(index + 1),
@@ -61,13 +61,13 @@ function HomePage() {
 
   useEffect(() => {
     async function fetchData() {
-      // const queryObject = await axios.get(`http://localhost:5000/journal/${format(date, 'yyyy-MM-dd')}`);
-      const queryObject = await axios.get(
-        `https://momentsorbital.herokuapp.com/journal/${format(
-          date,
-          "yyyy-MM-dd"
-        )}`
-      );
+      const queryObject = await axios.get(`http://localhost:5000/journal/${format(date, 'yyyy-MM-dd')}`);
+      // const queryObject = await axios.get(
+      //   `https://momentsorbital.herokuapp.com/journal/${format(
+      //     date,
+      //     "yyyy-MM-dd"
+      //   )}`
+      // );
       console.log(queryObject.data.entries);
       setEntries(queryObject.data.entries ?? []);
     }

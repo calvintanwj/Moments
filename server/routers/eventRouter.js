@@ -40,7 +40,7 @@ router.post("/add", async (req, res) => {
 
     await newEvent.save();
 
-    res.send("");
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -65,7 +65,7 @@ router.put("/edit", async (req, res) => {
       }
     );
 
-    res.send("");
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -78,7 +78,7 @@ router.post("/delete", async (req, res) => {
     const eventId = req.body.extendedProps._id;
     await Event.findOneAndDelete({ _id: eventId });
 
-    res.send("");
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -97,6 +97,7 @@ router.put("/resize", async (req, res) => {
         end,
       }
     );
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -127,6 +128,7 @@ router.put("/drop", async (req, res) => {
         }
       );
     }
+    res.status(200).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();

@@ -97,13 +97,13 @@ function EditProfileBtn(prop) {
         newUserData.append("image", newPicture.target.files[0]);
       }
       newUserData.append("name", newName);
-      // await axios
-      //   .post("http://localhost:5000/update/userDetails/", newUserData)
       await axios
-        .post(
-          "https://momentsorbital.herokuapp.com/update/userDetails/",
-          newUserData
-        )
+        .post("http://localhost:5000/update/userDetails/", newUserData)
+      // await axios
+      //   .post(
+      //     "https://momentsorbital.herokuapp.com/update/userDetails/",
+      //     newUserData
+      //   )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -121,13 +121,13 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newEmailData = { newEmail };
-      // await axios
-      //   .post("http://localhost:5000/update/email", newEmailData)
       await axios
-        .post(
-          "https://momentsorbital.herokuapp.com/update/email/",
-          newEmailData
-        )
+        .post("http://localhost:5000/update/email", newEmailData)
+      // await axios
+      //   .post(
+      //     "https://momentsorbital.herokuapp.com/update/email/",
+      //     newEmailData
+      //   )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -144,13 +144,13 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newPasswordData = { oldPassword, newPassword, newPasswordVerify };
-      // await axios
-      //   .post("http://localhost:5000/update/password", newPasswordData)
       await axios
-        .post(
-          "https://momentsorbital.herokuapp.com/update/password/",
-          newPasswordData
-        )
+        .post("http://localhost:5000/update/password", newPasswordData)
+      // await axios
+      //   .post(
+      //     "https://momentsorbital.herokuapp.com/update/password/",
+      //     newPasswordData
+      //   )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -224,8 +224,8 @@ function EditProfileBtn(prop) {
           <h5 className="edit-labels">Profile Picture</h5>
           <div id="image-preview" onClick={() => setEditPicture(true)}>
             <img
-              src={`https://momentsorbital.herokuapp.com/images/${prop.profilePic}`}
-              // src={`http://localhost:5000/images/${prop.profilePic}`}
+              // src={`https://momentsorbital.herokuapp.com/images/${prop.profilePic}`}
+              src={`http://localhost:5000/images/${prop.profilePic}`}
               alt="profile-pic"
             />
             <i class="fas fa-edit" />

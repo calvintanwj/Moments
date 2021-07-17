@@ -13,14 +13,14 @@ function ForgotPasswordPage() {
     e.preventDefault();
     try {
       const emailData = { email };
-      // await axios.post(
-      //   "http://localhost:5000/auth/forgot-password/",
-      //   emailData
-      // );
       await axios.post(
-        "https://momentsorbital.herokuapp.com/auth/forgot-password/",
+        "http://localhost:5000/auth/forgot-password/",
         emailData
       );
+      // await axios.post(
+      //   "https://momentsorbital.herokuapp.com/auth/forgot-password/",
+      //   emailData
+      // );
       history.push("/resetemail");
     } catch (err) {
       console.error(err);
