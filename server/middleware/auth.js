@@ -5,7 +5,7 @@ function auth(req, res, next) {
   try {
     const token = req.cookies.token;
     if (!token) {
-      return res.status(401).json({ errorMessage: "Unauthorized" });
+      return res.status(401).json({ errorMessage: "You are not authorized to access this resource" });
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified.user;
@@ -13,7 +13,7 @@ function auth(req, res, next) {
     next();
   } catch (err) {
     console.error(err);
-    res.status(401).json({ errorMessage: "Unauthorized" });
+    res.status(401).json({ errorMessage: "You are not authorized to access this resource" });
   }
 }
 
