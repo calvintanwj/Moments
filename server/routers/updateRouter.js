@@ -72,7 +72,7 @@ router.put("/userDetails", upload.single("image"), async (req, res) => {
 //     teleCode: String (Token to link telegram account)
 //     profilePic: String (Name of profile image uploaded or defaultprofile.jpg if none uploaded)
 // }
-router.get("/retrieveDetails", async (req, res) => {
+router.get("/userDetails", async (req, res) => {
   try {
     const loggedInUserID = jwt.decode(req.cookies.token).user;
     const loggedInUser = await User.findById(loggedInUserID);
