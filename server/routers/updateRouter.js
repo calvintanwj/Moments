@@ -25,7 +25,13 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-// Upload user details
+// User profile
+// =============================================================================
+
+// POST user details
+// JSON should be formatted as {
+// name: New name of user
+// }
 router.post("/userDetails", upload.single("image"), async (req, res) => {
   try {
     const loggedInUserID = jwt.decode(req.cookies.token).user;
@@ -52,6 +58,20 @@ router.post("/userDetails", upload.single("image"), async (req, res) => {
   }
 });
 
+
+// GET details for current logged in account
+// JSON would be formatted as {
+//     resetToken: , (Password reset token assigned to account)
+//     _id: String, (User id)
+//     profilePicID: int, ()
+//     name: String, (Name of user)
+//     email: String, (Current registered email address)
+//     passwordHash: String, (Hash of password)
+//     __v: int,  (Version of profile - not used in this project)
+//     confirmed: boolean, (If user has confirmed their account)
+//     teleCode: String (Token to link telegram account)
+//     profilePic: String (Name of profile image uploaded or defaultprofile.jpg if none uploaded)
+// }
 router.get("/retrieveDetails", async (req, res) => {
   try {
     const loggedInUserID = jwt.decode(req.cookies.token).user;
@@ -63,6 +83,14 @@ router.get("/retrieveDetails", async (req, res) => {
   }
 });
 
+// User Email Address
+// =============================================================================
+
+
+// POST account email address
+// JSON should be formatted as {
+// newEmail: String (New email for user account)
+// }
 router.post("/email", async (req, res) => {
   try {
     const { newEmail } = req.body;
@@ -116,6 +144,15 @@ router.post("/email", async (req, res) => {
   }
 });
 
+// User account password
+// =============================================================================
+
+// POST account password 
+// JSON should be formatted as {
+// oldPassword: String,
+// newPassword: String,
+// newPasswordVerify: String
+// }
 router.post("/password", async (req, res) => {
   try {
     const { oldPassword, newPassword, newPasswordVerify } = req.body;
@@ -185,5 +222,7 @@ router.post("/password", async (req, res) => {
     res.status(500).send();
   }
 });
+
+// =============================================================================
 
 module.exports = router;
