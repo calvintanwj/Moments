@@ -28,11 +28,11 @@ const upload = multer({ storage, fileFilter });
 // User profile
 // =============================================================================
 
-// POST user details
+// Update user details
 // JSON should be formatted as {
 // name: New name of user
 // }
-router.post("/userDetails", upload.single("image"), async (req, res) => {
+router.put("/userDetails", upload.single("image"), async (req, res) => {
   try {
     const loggedInUserID = jwt.decode(req.cookies.token).user;
     const loggedInUser = await User.findById(loggedInUserID);
@@ -91,7 +91,7 @@ router.get("/retrieveDetails", async (req, res) => {
 // JSON should be formatted as {
 // newEmail: String (New email for user account)
 // }
-router.post("/email", async (req, res) => {
+router.put("/email", async (req, res) => {
   try {
     const { newEmail } = req.body;
     const lowerCaseEmail = newEmail.toLowerCase();
@@ -153,7 +153,7 @@ router.post("/email", async (req, res) => {
 // newPassword: String,
 // newPasswordVerify: String
 // }
-router.post("/password", async (req, res) => {
+router.put("/password", async (req, res) => {
   try {
     const { oldPassword, newPassword, newPasswordVerify } = req.body;
     const loggedInUserID = jwt.decode(req.cookies.token).user;

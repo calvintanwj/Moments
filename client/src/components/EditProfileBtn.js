@@ -98,12 +98,12 @@ function EditProfileBtn(prop) {
       }
       newUserData.append("name", newName);
       await axios
-        .post("http://localhost:5000/update/userDetails/", newUserData)
-      // await axios
-      //   .post(
-      //     "https://momentsorbital.herokuapp.com/update/userDetails/",
-      //     newUserData
-      //   )
+        .put("http://localhost:5000/update/userDetails/", newUserData)
+        // await axios
+        //   .put(
+        //     "https://momentsorbital.herokuapp.com/update/userDetails/",
+        //     newUserData
+        //   )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -122,12 +122,12 @@ function EditProfileBtn(prop) {
       e.preventDefault();
       const newEmailData = { newEmail };
       await axios
-        .post("http://localhost:5000/update/email", newEmailData)
-      // await axios
-      //   .post(
-      //     "https://momentsorbital.herokuapp.com/update/email/",
-      //     newEmailData
-      //   )
+        .put("http://localhost:5000/update/email", newEmailData)
+        // await axios
+        //   .put(
+        //     "https://momentsorbital.herokuapp.com/update/email/",
+        //     newEmailData
+        //   )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -145,12 +145,12 @@ function EditProfileBtn(prop) {
       e.preventDefault();
       const newPasswordData = { oldPassword, newPassword, newPasswordVerify };
       await axios
-        .post("http://localhost:5000/update/password", newPasswordData)
-      // await axios
-      //   .post(
-      //     "https://momentsorbital.herokuapp.com/update/password/",
-      //     newPasswordData
-      //   )
+        .put("http://localhost:5000/update/password", newPasswordData)
+        // await axios
+        //   .put(
+        //     "https://momentsorbital.herokuapp.com/update/password/",
+        //     newPasswordData
+        //   )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
