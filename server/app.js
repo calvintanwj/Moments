@@ -55,7 +55,7 @@ app.use("/confirmation", require("./routers/confirmationRouter"));
 
 // Confirmation Route
 // =========================================================================================================
-app.use("/update", require("./routers/updateRouter"));
+app.use("/update", auth, require("./routers/updateRouter"));
 
 // Event Route
 // =========================================================================================================
