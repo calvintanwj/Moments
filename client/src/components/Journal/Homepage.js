@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Journal from "./Journal";
 import MarkdownEntry from "./MarkdownEntry";
 import axios from "axios";
@@ -7,7 +7,7 @@ import { format } from "date-fns";
 
 function HomePage() {
   const [date, setDate] = useState(new Date());
-  // const [date, setDate] = useState(new Date());
+  const dateInput = useRef(null);
   const [entries, setEntries] = useState([]);
   const [selectedID, setSelectedID] = useState(-1);
 
@@ -74,17 +74,21 @@ function HomePage() {
     fetchData();
   }, [date]);
 
-  function dateHandler(e) {
-    setDate(Date.parse(e.target.value));
-    console.log(e.target.value);
+  function dateHandler() {
+    // Date input does not have a valid date
+    if (dateInput.current.value === "") {
+      return;
+    }
+    setDate(Date.parse(dateInput.current.value));
   }
 
   return (
     <div>
       <input
         type="date"
-        value={format(date, "yyyy-MM-dd")}
-        onChange={dateHandler}
+        defaultValue={format(new Date(), "yyyy-MM-dd")}
+        ref={dateInput}
+        onBlur={dateHandler}
       />
       {selectedID === -1 ? (
         <div id="entries-container">
