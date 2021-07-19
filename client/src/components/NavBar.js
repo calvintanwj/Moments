@@ -33,7 +33,7 @@ function NavBar() {
     if (loggedIn) {
       renderUserProfile();
     }
-  }, [loggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <nav id="navbar">
