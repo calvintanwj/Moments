@@ -572,11 +572,11 @@ body {
   bottom: 40px;
   left: 39.5%;
   cursor: pointer;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 #login-password-mask:hover {
-  opacity: 70%;
+  opacity: 0.7;
 }
 
 #login-page-container button[type="submit"] {
@@ -737,7 +737,7 @@ body {
 
 .passwordrequnmet {
   color: black;
-  opacity: 50%;
+  opacity: 0.5;
   font-weight: bold;
 }
 
@@ -760,11 +760,11 @@ body {
   bottom: 68px;
   left: 39.5%;
   cursor: pointer;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 #signup-password-mask:hover {
-  opacity: 70%;
+  opacity: 0.7;
 }
 
 .fa-eye,
@@ -1232,11 +1232,11 @@ body {
   bottom: 68px;
   left: 39.5%;
   cursor: pointer;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 #reset-password-mask:hover {
-  opacity: 70%;
+  opacity: 0.7;
 }
 
 #reset-passwordreqs {
