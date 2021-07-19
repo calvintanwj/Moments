@@ -206,7 +206,7 @@ function EditProfileBtn(prop) {
         passwordData
       );
       closeDeletePage();
-      history.push("/");
+      history.push("/deleteaccount");
       window.location.reload();
     } catch (err) {
       console.error(err);
