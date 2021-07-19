@@ -37,6 +37,7 @@ router.put("/userDetails", upload.single("image"), async (req, res) => {
     const loggedInUserID = jwt.decode(req.cookies.token).user;
     const loggedInUser = await User.findById(loggedInUserID);
     let image = loggedInUser.profilePic;
+    let updatedUser;
     if (req.file) {
       image = req.file.filename;
     }
@@ -44,14 +45,14 @@ router.put("/userDetails", upload.single("image"), async (req, res) => {
     const newName = req.body.name;
 
     if (newName !== loggedInUser.name) {
-      await User.updateOne({ _id: loggedInUserID }, { name: newName });
+      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { name: newName }, { new: true });
     }
 
     if (image !== loggedInUser.profilePic) {
-      await User.updateOne({ _id: loggedInUserID }, { profilePic: image });
+      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { profilePic: image }, { new: true });
     }
 
-    res.json({ successMessage: "Profile updated successfully" });
+    res.json({ successMessage: "Profile updated successfully", user: updatedUser });
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -113,7 +114,7 @@ router.put("/email", async (req, res) => {
       });
     }
 
-    await User.updateOne({ _id: loggedInUserID }, { email: lowerCaseEmail });
+    const updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { email: lowerCaseEmail }, { new: true });
 
     let transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -137,7 +138,7 @@ router.put("/email", async (req, res) => {
       The Moments Team`,
     });
 
-    res.json({ successMessage: "Email updated successfully" });
+    res.json({ successMessage: "Email updated successfully", user: updatedUser });
   } catch (err) {
     console.error(err);
     res.status(500).send();
