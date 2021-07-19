@@ -13,10 +13,11 @@ function NavBar() {
   const [profilePic, setprofilePic] = useState("");
   const [teleCode, setTeleCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isFetching, setIsFetching] = useState(true);
 
   async function renderUserProfile() {
     try {
-      axios
+      await axios
         .get("http://localhost:5000/userProfile/")
         // axios.get("https://momentsorbital.herokuapp.com/userProfile")
         .then((response) => {
@@ -24,6 +25,7 @@ function NavBar() {
           setName(name);
           setprofilePic(profilePic);
           setTeleCode(teleCode);
+          setIsFetching(false);
         });
     } catch (err) {
       console.error(err);
@@ -76,13 +78,17 @@ function NavBar() {
             />
             <div id="settings-menu">
               <LogOutBtn setSuccessMessage={setSuccessMessage} />
-              <EditProfileBtn
-                profilePic={profilePic}
-                renderUserProfile={renderUserProfile}
-                name={name}
-                setSuccessMessage={setSuccessMessage}
-                teleCode={teleCode}
-              />
+              {isFetching ? (
+                <div></div>
+              ) : (
+                <EditProfileBtn
+                  profilePic={profilePic}
+                  renderUserProfile={renderUserProfile}
+                  name={name}
+                  setSuccessMessage={setSuccessMessage}
+                  teleCode={teleCode}
+                />
+              )}
             </div>
           </div>
         </>

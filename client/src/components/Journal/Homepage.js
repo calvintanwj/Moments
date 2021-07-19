@@ -68,7 +68,6 @@ function HomePage() {
       //     "yyyy-MM-dd"
       //   )}`
       // );
-      console.log(queryObject.data.entries);
       setEntries(queryObject.data.entries ?? []);
     }
     fetchData();
