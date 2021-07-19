@@ -13,16 +13,19 @@ function NavBar() {
   const [profilePic, setprofilePic] = useState("");
   const [teleCode, setTeleCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isFetching, setIsFetching] = useState(true);
 
   async function renderUserProfile() {
     try {
       // axios.get("http://localhost:5000/userProfile/")
-        axios.get("https://momentsorbital.herokuapp.com/userProfile")
+      axios
+        .get("https://momentsorbital.herokuapp.com/userProfile")
         .then((response) => {
           const { name, profilePic, teleCode } = response.data;
           setName(name);
           setprofilePic(profilePic);
           setTeleCode(teleCode);
+          setIsFetching(false);
         });
     } catch (err) {
       console.error(err);
@@ -30,8 +33,10 @@ function NavBar() {
   }
 
   useEffect(() => {
+    if (loggedIn) {
       renderUserProfile();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }
+  }, [loggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <nav id="navbar">
@@ -73,13 +78,17 @@ function NavBar() {
             />
             <div id="settings-menu">
               <LogOutBtn setSuccessMessage={setSuccessMessage} />
-              <EditProfileBtn
-                profilePic={profilePic}
-                renderUserProfile={renderUserProfile}
-                name={name}
-                setSuccessMessage={setSuccessMessage}
-                teleCode={teleCode}
-              />
+              {isFetching ? (
+                <div></div>
+              ) : (
+                <EditProfileBtn
+                  profilePic={profilePic}
+                  renderUserProfile={renderUserProfile}
+                  name={name}
+                  setSuccessMessage={setSuccessMessage}
+                  teleCode={teleCode}
+                />
+              )}
             </div>
           </div>
         </>
