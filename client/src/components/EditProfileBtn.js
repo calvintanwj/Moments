@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import Error from "./Error";
+import { useHistory } from "react-router-dom";
 
 function EditProfileBtn(prop) {
   const [editProfileIsOpen, setEditProfileIsOpen] = useState(false);
   const [emailPageIsOpen, setEmailPageIsOpen] = useState(false);
   const [passwordPageIsOpen, setPasswordPageIsOpen] = useState(false);
+  const [deletePageIsOpen, setDeletePageIsOpen] = useState(false);
   const [newName, setNewName] = useState(prop.name);
   const [newPicture, setNewPicture] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -15,9 +17,13 @@ function EditProfileBtn(prop) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordVerify, setNewPasswordVerify] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
   const [button2Class, setbutton2Class] = useState("activePage");
   const [button3Class, setbutton3Class] = useState("");
   const [button4Class, setbutton4Class] = useState("");
+  const [button5Class, setbutton5Class] = useState("");
+
+  const history = useHistory();
 
   const editProfileStyle = {
     overlay: { zIndex: 9999 },
@@ -33,6 +39,7 @@ function EditProfileBtn(prop) {
     setEditProfileIsOpen(true);
     closeEmailPage();
     closePasswordPage();
+    closeDeletePage();
     setEditPicture(false);
     setErrorMessage("");
     setNewEmail("");
@@ -43,16 +50,18 @@ function EditProfileBtn(prop) {
     setbutton2Class("activePage");
     setbutton3Class("");
     setbutton4Class("");
+    setbutton5Class("");
   }
 
   function closeEditProfile() {
     setEditProfileIsOpen(false);
   }
 
-  function openEmailPage(e) {
+  function openEmailPage() {
     setEmailPageIsOpen(true);
     closeEditProfile();
     closePasswordPage();
+    closeDeletePage();
     setEditPicture(false);
     setErrorMessage("");
     setNewEmail("");
@@ -63,6 +72,7 @@ function EditProfileBtn(prop) {
     setbutton2Class("");
     setbutton3Class("activePage");
     setbutton4Class("");
+    setbutton5Class("");
   }
 
   function closeEmailPage() {
@@ -73,6 +83,7 @@ function EditProfileBtn(prop) {
     setPasswordPageIsOpen(true);
     closeEmailPage();
     closeEditProfile();
+    closeDeletePage();
     setEditPicture(false);
     setErrorMessage("");
     setNewEmail("");
@@ -83,10 +94,33 @@ function EditProfileBtn(prop) {
     setbutton2Class("");
     setbutton3Class("");
     setbutton4Class("activePage");
+    setbutton5Class("");
   }
 
   function closePasswordPage() {
     setPasswordPageIsOpen(false);
+  }
+
+  function openDeletePage() {
+    setDeletePageIsOpen(true);
+    closeEmailPage();
+    closeEditProfile();
+    closePasswordPage();
+    setEditPicture(false);
+    setErrorMessage("");
+    setNewEmail("");
+    setOldPassword("");
+    setNewPassword("");
+    setNewPasswordVerify("");
+    prop.setSuccessMessage("");
+    setbutton2Class("");
+    setbutton3Class("");
+    setbutton4Class("");
+    setbutton5Class("activePage");
+  }
+
+  function closeDeletePage() {
+    setDeletePageIsOpen(false);
   }
 
   async function submitProfile(e) {
@@ -163,21 +197,38 @@ function EditProfileBtn(prop) {
     }
   }
 
+  async function deleteAccount(e) {
+    try {
+      e.preventDefault();
+      const passwordData = { deletePassword };
+      await axios.post(
+        "http://localhost:5000/userProfile/deleteAccount",
+        passwordData
+      );
+      closeDeletePage();
+      history.push("/");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(err.response.data.errorMessage);
+      document.getElementById("delete-account-alert").style.display = "block";
+    }
+  }
+
   const navSideBar = (
     <div id="edit-profile-page-navbar">
       <button id="button1">Account Settings</button>
       <button id="button2" className={button2Class} onClick={openEditProfile}>
         Profile
       </button>
-      <button
-        id="button3"
-        className={button3Class}
-        onClick={(e) => openEmailPage(e)}
-      >
+      <button id="button3" className={button3Class} onClick={openEmailPage}>
         Email
       </button>
       <button id="button4" className={button4Class} onClick={openPasswordPage}>
         Password
+      </button>
+      <button id="button5" className={button5Class} onClick={openDeletePage}>
+        Terminate
       </button>
     </div>
   );
@@ -306,6 +357,40 @@ function EditProfileBtn(prop) {
               onChange={(e) => setNewPasswordVerify(e.target.value)}
             />
             <input type="submit" value="Update password" />
+          </div>
+        </form>
+      </Modal>
+      <Modal
+        isOpen={deletePageIsOpen}
+        onRequestClose={closeDeletePage}
+        style={editProfileStyle}
+      >
+        <Error
+          id="delete-account-alert"
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
+        {navSideBar}
+        <form onSubmit={deleteAccount} id="delete-form">
+          <h2>Delete Account</h2>
+          <button id="edit-close-button" onClick={closeDeletePage}></button>
+          <div>
+            <p>
+              Hi, <b>{prop.name}</b>.{" "}
+            </p>
+            <p>
+              We're sorry to hear you'd like to delete your account. Once you
+              delete your account, there is no going back. Please be certain.
+            </p>
+            <label for="delete-password">
+              To continue, please enter your <b>password</b>:{" "}
+            </label>
+            <input
+              type="password"
+              name="delete-password"
+              onChange={(e) => setDeletePassword(e.target.value)}
+            />
+            <input name="terminate" type="submit" value="Terminate Account" />
           </div>
         </form>
       </Modal>

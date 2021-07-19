@@ -50,7 +50,7 @@ function Router() {
         {loggedIn === true && (
           <>
             <Route exact path="/workspace" component={Workspace} />
-            <Redirect from="/" to ="/workspace" />
+            <Redirect from="/" to="/workspace" />
           </>
         )}
       </Switch>

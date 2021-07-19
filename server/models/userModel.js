@@ -20,14 +20,14 @@ const userSchema = new mongoose.Schema({
   },
   profilePic: {
     type: String,
-    defaultValue: "defaultprofile.jpg"
+    defaultValue: "defaultprofile.jpg",
   },
   teleCode: {
     type: String,
   },
   chat_id: {
     type: Number,
-  }
+  },
 });
 
 const User = mongoose.model("user", userSchema);

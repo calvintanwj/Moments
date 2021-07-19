@@ -8,12 +8,12 @@ const randtoken = require("rand-token");
 // registration
 router.post("/", async (req, res) => {
   try {
-    const { name, email, password, passwordVerify } = req.body;
+    const { name, email, password } = req.body;
 
     const lowerCaseEmail = email.toLowerCase();
 
     // validate
-    if (!name || !email || !password || !passwordVerify) {
+    if (!name || !email || !password) {
       return res
         .status(400)
         .json({ errorMessage: "Please enter all required fields" });
@@ -28,13 +28,15 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (password !== passwordVerify) {
+    var emailFormat = /^\S+@\S+\S+$/;
+
+    if (!email.match(emailFormat)) {
       return res.status(400).json({
-        errorMessage: "Passwords do not match",
+        errorMessage: "Please enter a valid email",
       });
     }
 
-    const existingUser = await User.findOne({ lowerCaseEmail });
+    const existingUser = await User.findOne({ email: lowerCaseEmail });
 
     if (existingUser) {
       return res.status(400).json({

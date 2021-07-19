@@ -8,6 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showInput, setShowInput] = useState(false);
 
   const { getLoggedIn } = useContext(AuthContext);
   const history = useHistory();
@@ -33,6 +34,11 @@ function LoginPage() {
     }
   }
 
+  function toggleMasking(e) {
+    e.preventDefault();
+    setShowInput(!showInput);
+  }
+
   return (
     <form id="login-page-container" onSubmit={login}>
       <Error
@@ -51,21 +57,25 @@ function LoginPage() {
       />
       <label for="password">Password</label>
       <input
-        type="password"
+        type={showInput ? "text" : "password"}
         name="password"
         required
         onChange={(e) => setPassword(e.target.value)}
       />
+      <div id="login-password-mask" onClick={(e) => toggleMasking(e)}>
+        {showInput ? (
+          <i class="fas fa-eye"></i>
+        ) : (
+          <i class="fas fa-eye-slash"></i>
+        )}
+      </div>
       {/* <label id="remember-me" for="remember">
         <input type="checkbox" name="remember" />
         Remember me
       </label> */}
       <button type="submit">Login</button>
       <div id="login-page-footer">
-        <Link to="/">
-          <button>Home</button>
-        </Link>
-        <Link to="/forgot-password">Forgot password?</Link>
+        <Link to="/forgot-password">Forgot your password?</Link>
       </div>
       <div></div>
     </form>

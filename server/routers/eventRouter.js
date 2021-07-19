@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const jwt = require("jsonwebtoken");
 const Event = require("../models/eventModel");
+const auth = require("../middleware/auth");
 
 // retrieve Events
-router.get("/retrieve", async (req, res) => {
+router.get("/retrieve", auth, async (req, res) => {
   try {
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUserID = req.user;
     const arrayOfEvents = await Event.find({ authorId: loggedInUserID });
     res.json(arrayOfEvents);
   } catch (err) {
@@ -15,7 +15,7 @@ router.get("/retrieve", async (req, res) => {
 });
 
 // add Event
-router.post("/add", async (req, res) => {
+router.post("/add", auth, async (req, res) => {
   try {
     const { title, start, end, allDay, color, reminder } = req.body;
 
@@ -25,7 +25,7 @@ router.post("/add", async (req, res) => {
         .json({ errorMessage: "Please enter all required fields." });
     }
 
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUserID = req.user;
 
     // create a new event object in db
     const newEvent = new Event({
@@ -35,7 +35,7 @@ router.post("/add", async (req, res) => {
       end,
       allDay,
       backgroundColor: color,
-      reminder
+      reminder,
     });
 
     await newEvent.save();
@@ -48,9 +48,10 @@ router.post("/add", async (req, res) => {
 });
 
 // edit Event
-router.put("/edit", async (req, res) => {
+router.put("/edit", auth, async (req, res) => {
   try {
-    const { title, start, end, color, allDay, reminder, editingEvent } = req.body;
+    const { title, start, end, color, allDay, reminder, editingEvent } =
+      req.body;
     const eventId = editingEvent.extendedProps._id;
 
     await Event.findOneAndUpdate(
@@ -61,7 +62,7 @@ router.put("/edit", async (req, res) => {
         end,
         backgroundColor: color,
         allDay,
-        reminder
+        reminder,
       }
     );
 
@@ -73,7 +74,7 @@ router.put("/edit", async (req, res) => {
 });
 
 // delete Event
-router.post("/delete", async (req, res) => {
+router.post("/delete", auth, async (req, res) => {
   try {
     const eventId = req.body.extendedProps._id;
     await Event.findOneAndDelete({ _id: eventId });
@@ -86,7 +87,7 @@ router.post("/delete", async (req, res) => {
 });
 
 // resize Event
-router.put("/resize", async (req, res) => {
+router.put("/resize", auth, async (req, res) => {
   try {
     const { start, end, extendedProps } = req.body;
     const eventId = extendedProps._id;
@@ -105,7 +106,7 @@ router.put("/resize", async (req, res) => {
 });
 
 // event drop
-router.put("/drop", async (req, res) => {
+router.put("/drop", auth, async (req, res) => {
   try {
     const { start, end, extendedProps } = req.body;
     const eventId = extendedProps._id;
@@ -124,7 +125,7 @@ router.put("/drop", async (req, res) => {
         {
           start,
           end,
-	  allDay: false,
+          allDay: false,
         }
       );
     }

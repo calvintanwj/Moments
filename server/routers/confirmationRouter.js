@@ -27,6 +27,14 @@ router.post("/resend", async (req, res) => {
       .json({ errorMessage: "Please enter all required fields" });
   }
 
+  var emailFormat = /^\S+@\S+\S+$/;
+
+  if (!email.match(emailFormat)) {
+    return res.status(400).json({
+      errorMessage: "Please enter a valid email",
+    });
+  }
+
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     service: "Gmail",

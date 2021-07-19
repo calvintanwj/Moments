@@ -9,7 +9,7 @@ function LogOutBtn(prop) {
   const history = useHistory();
 
   async function logOut() {
-    prop.setSuccessMessage("")
+    prop.setSuccessMessage("");
     await axios.get("http://localhost:5000/auth/logout");
     // await axios.get("https://momentsorbital.herokuapp.com/auth/logout");
     await getLoggedIn();

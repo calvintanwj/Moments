@@ -1,9 +1,12 @@
 const router = require("express").Router();
 const User = require("../models/userModel");
+const Event = require("../models/eventModel");
+const Journal = require("../models/journalEntryModel");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
+const auth = require("../middleware/auth");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,16 +31,15 @@ const upload = multer({ storage, fileFilter });
 // User Email Address
 // =============================================================================
 
-
 // POST account email address
 // JSON should be formatted as {
 // newEmail: String (New email for user account)
 // }
-router.put("/email", async (req, res) => {
+router.put("/email", auth, async (req, res) => {
   try {
     const { newEmail } = req.body;
     const lowerCaseEmail = newEmail.toLowerCase();
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUserID = req.user;
 
     if (!newEmail) {
       return res
@@ -55,7 +57,11 @@ router.put("/email", async (req, res) => {
       });
     }
 
-    const updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { email: lowerCaseEmail }, { new: true });
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: loggedInUserID },
+      { email: lowerCaseEmail },
+      { new: true }
+    );
 
     let transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -79,7 +85,10 @@ router.put("/email", async (req, res) => {
       The Moments Team`,
     });
 
-    res.json({ successMessage: "Email updated successfully", user: updatedUser });
+    res.json({
+      successMessage: "Email updated successfully",
+      user: updatedUser,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -89,16 +98,16 @@ router.put("/email", async (req, res) => {
 // User account password
 // =============================================================================
 
-// POST account password 
+// POST account password
 // JSON should be formatted as {
 // oldPassword: String,
 // newPassword: String,
 // newPasswordVerify: String
 // }
-router.put("/password", async (req, res) => {
+router.put("/password", auth, async (req, res) => {
   try {
     const { oldPassword, newPassword, newPasswordVerify } = req.body;
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUserID = req.user;
     const loggedInUser = await User.findOne({ _id: loggedInUserID });
 
     if (!oldPassword || !newPassword || !newPasswordVerify) {
@@ -168,7 +177,6 @@ router.put("/password", async (req, res) => {
 // User profile
 // =============================================================================
 
-
 // GET details for current logged in account
 // JSON would be formatted as {
 //     resetToken: , (Password reset token assigned to account)
@@ -181,9 +189,9 @@ router.put("/password", async (req, res) => {
 //     teleCode: String (Token to link telegram account)
 //     profilePic: String (Name of profile image uploaded or defaultprofile.jpg if none uploaded)
 // }
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUserID = req.user;
     const loggedInUser = await User.findById(loggedInUserID);
     res.send(loggedInUser);
   } catch (err) {
@@ -193,12 +201,14 @@ router.get("/", async (req, res) => {
 });
 
 // Update user details
+// =============================================================================
+
 // JSON should be formatted as {
 // name: New name of user
 // }
-router.put("/", upload.single("image"), async (req, res) => {
+router.put("/", upload.single("image"), auth, async (req, res) => {
   try {
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUserID = req.user;
     const loggedInUser = await User.findById(loggedInUserID);
     let image = loggedInUser.profilePic;
     let updatedUser;
@@ -209,20 +219,70 @@ router.put("/", upload.single("image"), async (req, res) => {
     const newName = req.body.name;
 
     if (newName !== loggedInUser.name) {
-      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { name: newName }, { new: true });
+      updatedUser = await User.findOneAndUpdate(
+        { _id: loggedInUserID },
+        { name: newName },
+        { new: true }
+      );
     }
 
     if (image !== loggedInUser.profilePic) {
-      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { profilePic: image }, { new: true });
+      updatedUser = await User.findOneAndUpdate(
+        { _id: loggedInUserID },
+        { profilePic: image },
+        { new: true }
+      );
     }
 
-    res.json({ successMessage: "Profile updated successfully", user: updatedUser });
+    res.json({
+      successMessage: "Profile updated successfully",
+      user: updatedUser,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send();
   }
 });
 
-// =============================================================================
+router.post("/deleteAccount", auth, async (req, res) => {
+  try {
+    const { deletePassword } = req.body;
+    const loggedInUserID = req.user;
+    const loggedInUser = await User.findOne({ _id: loggedInUserID });
+
+    if (!deletePassword) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Please key in your password." });
+    }
+
+    const passwordCorrect = await bcrypt.compare(
+      deletePassword,
+      loggedInUser.passwordHash
+    );
+
+    if (!passwordCorrect) {
+      return res
+        .status(401)
+        .json({ errorMessage: "Password is incorrect. Please try again" });
+    }
+
+    await Event.deleteMany({ authorId: loggedInUserID });
+    await Journal.deleteMany({ user_id: loggedInUserID });
+    await User.deleteOne({ _id: loggedInUserID });
+
+    res
+      .cookie("token", "", {
+        httpOnly: true,
+        expires: new Date(0),
+        secure: true,
+        sameSite: "none",
+      })
+      .send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
 
 module.exports = router;

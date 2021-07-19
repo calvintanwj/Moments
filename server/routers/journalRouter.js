@@ -1,20 +1,7 @@
 const router = require("express").Router();
 const journalEntry = require("../models/journalEntryModel");
 const jwt = require("jsonwebtoken");
-
-// Middleware
-// =============================================================================================================
-
-// Checks user_id from JWT cookie stored from loggin in
-var getUser = function (req, res, next) {
-  req.user = jwt.decode(req.cookies.token, process.env.JWT_SECRET).user;
-  next();
-};
-
-router.use(getUser);
-router.use(function (req, res, next) {
-  next();
-});
+const auth = require("../middleware/auth");
 
 // CRUD operations
 // =============================================================================================================
@@ -24,7 +11,7 @@ router.use(function (req, res, next) {
 // date: year-month-date
 // entry: String
 // }
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const { date, title, entry } = req.body;
     const user_id = req.user;
@@ -35,12 +22,10 @@ router.post("/", async (req, res) => {
       date: Date.parse(date),
     });
     const savedJournalEntry = await newJournalEntry.save();
-    return res
-      .status(201)
-      .json({
-        message: "Journal entry has been created",
-        data: savedJournalEntry,
-      });
+    return res.status(201).json({
+      message: "Journal entry has been created",
+      data: savedJournalEntry,
+    });
   } catch (err) {
     console.err(err);
     return res.status(400).json({ error: "Could not create journal entry" });
@@ -51,7 +36,7 @@ router.post("/", async (req, res) => {
 // JSON should be formatted as {
 // date: year-month-date
 // }
-router.get("/:date", async (req, res) => {
+router.get("/:date", auth, async (req, res) => {
   try {
     const { date } = req.params;
     const user_id = req.user;
@@ -71,7 +56,7 @@ router.get("/:date", async (req, res) => {
 // JSON should be formatted as {
 // entry: Contents of new entry
 // }
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
     const { date, title, entry } = req.body;
@@ -88,8 +73,8 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "Post does not exist" });
     }
     return res.status(200).json({
-      message: "Journal entry has been updated"
-      , data: matchedEntry
+      message: "Journal entry has been updated",
+      data: matchedEntry,
     });
   } catch (err) {
     console.log(err);
@@ -99,7 +84,7 @@ router.put("/:id", async (req, res) => {
 
 // Delete journal entry
 // no JSON required
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
     const user_id = req.user;
