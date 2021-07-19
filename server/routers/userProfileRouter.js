@@ -25,65 +25,6 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-// User profile
-// =============================================================================
-
-// Update user details
-// JSON should be formatted as {
-// name: New name of user
-// }
-router.put("/userDetails", upload.single("image"), async (req, res) => {
-  try {
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
-    const loggedInUser = await User.findById(loggedInUserID);
-    let image = loggedInUser.profilePic;
-    let updatedUser;
-    if (req.file) {
-      image = req.file.filename;
-    }
-
-    const newName = req.body.name;
-
-    if (newName !== loggedInUser.name) {
-      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { name: newName }, { new: true });
-    }
-
-    if (image !== loggedInUser.profilePic) {
-      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { profilePic: image }, { new: true });
-    }
-
-    res.json({ successMessage: "Profile updated successfully", user: updatedUser });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send();
-  }
-});
-
-
-// GET details for current logged in account
-// JSON would be formatted as {
-//     resetToken: , (Password reset token assigned to account)
-//     _id: String, (User id)
-//     profilePicID: int, ()
-//     name: String, (Name of user)
-//     email: String, (Current registered email address)
-//     passwordHash: String, (Hash of password)
-//     __v: int,  (Version of profile - not used in this project)
-//     confirmed: boolean, (If user has confirmed their account)
-//     teleCode: String (Token to link telegram account)
-//     profilePic: String (Name of profile image uploaded or defaultprofile.jpg if none uploaded)
-// }
-router.get("/userDetails", async (req, res) => {
-  try {
-    const loggedInUserID = jwt.decode(req.cookies.token).user;
-    const loggedInUser = await User.findById(loggedInUserID);
-    res.send(loggedInUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send();
-  }
-});
-
 // User Email Address
 // =============================================================================
 
@@ -218,6 +159,64 @@ router.put("/password", async (req, res) => {
     });
 
     res.json({ successMessage: "Password changed successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
+
+// User profile
+// =============================================================================
+
+
+// GET details for current logged in account
+// JSON would be formatted as {
+//     resetToken: , (Password reset token assigned to account)
+//     _id: String, (User id)
+//     name: String, (Name of user)
+//     email: String, (Current registered email address)
+//     passwordHash: String, (Hash of password)
+//     __v: int,  (Version of profile - not used in this project)
+//     confirmed: boolean, (If user has confirmed their account)
+//     teleCode: String (Token to link telegram account)
+//     profilePic: String (Name of profile image uploaded or defaultprofile.jpg if none uploaded)
+// }
+router.get("/", async (req, res) => {
+  try {
+    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUser = await User.findById(loggedInUserID);
+    res.send(loggedInUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
+
+// Update user details
+// JSON should be formatted as {
+// name: New name of user
+// }
+router.put("/", upload.single("image"), async (req, res) => {
+  try {
+    const loggedInUserID = jwt.decode(req.cookies.token).user;
+    const loggedInUser = await User.findById(loggedInUserID);
+    let image = loggedInUser.profilePic;
+    let updatedUser;
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    const newName = req.body.name;
+
+    if (newName !== loggedInUser.name) {
+      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { name: newName }, { new: true });
+    }
+
+    if (image !== loggedInUser.profilePic) {
+      updatedUser = await User.findOneAndUpdate({ _id: loggedInUserID }, { profilePic: image }, { new: true });
+    }
+
+    res.json({ successMessage: "Profile updated successfully", user: updatedUser });
   } catch (err) {
     console.error(err);
     res.status(500).send();

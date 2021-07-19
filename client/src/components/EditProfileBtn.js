@@ -98,10 +98,10 @@ function EditProfileBtn(prop) {
       }
       newUserData.append("name", newName);
       await axios
-        .put("http://localhost:5000/update/userDetails/", newUserData)
+        .put("http://localhost:5000/userProfile/", newUserData)
         // await axios
         //   .put(
-        //     "https://momentsorbital.herokuapp.com/update/userDetails/",
+        //     "https://momentsorbital.herokuapp.com/userProfile/",
         //     newUserData
         //   )
         .then((response) => {
@@ -122,10 +122,10 @@ function EditProfileBtn(prop) {
       e.preventDefault();
       const newEmailData = { newEmail };
       await axios
-        .put("http://localhost:5000/update/email", newEmailData)
+        .put("http://localhost:5000/userProfile/email", newEmailData)
         // await axios
         //   .put(
-        //     "https://momentsorbital.herokuapp.com/update/email/",
+        //     "https://momentsorbital.herokuapp.com/userProfile/email/",
         //     newEmailData
         //   )
         .then((response) => {
@@ -145,10 +145,10 @@ function EditProfileBtn(prop) {
       e.preventDefault();
       const newPasswordData = { oldPassword, newPassword, newPasswordVerify };
       await axios
-        .put("http://localhost:5000/update/password", newPasswordData)
+        .put("http://localhost:5000/userProfile/password", newPasswordData)
         // await axios
         //   .put(
-        //     "https://momentsorbital.herokuapp.com/update/password/",
+        //     "https://momentsorbital.herokuapp.com/userProfile/password/",
         //     newPasswordData
         //   )
         .then((response) => {

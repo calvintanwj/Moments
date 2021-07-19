@@ -17,8 +17,8 @@ function NavBar() {
   async function renderUserProfile() {
     try {
       axios
-        .get("http://localhost:5000/update/userDetails/")
-        // axios.get("https://momentsorbital.herokuapp.com/update/userDetails")
+        .get("http://localhost:5000/userProfile/")
+        // axios.get("https://momentsorbital.herokuapp.com/userProfile")
         .then((response) => {
           const { name, profilePic, teleCode } = response.data;
           setName(name);
