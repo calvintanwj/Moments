@@ -24,11 +24,11 @@ function AddEventForm(props) {
   // logic to handle an event add
   async function onEventAdded(event) {
     try {
-      await axios.post("http://localhost:5000/events/add", event);
-      // await axios.post(
-      //   "https://momentsorbital.herokuapp.com/events/add/",
-      //   event
-      // );
+      // await axios.post("http://localhost:5000/events/add", event);
+      await axios.post(
+        "https://momentsorbital.herokuapp.com/events/add/",
+        event
+      );
       setTitle("");
       setStart("");
       setEnd("");

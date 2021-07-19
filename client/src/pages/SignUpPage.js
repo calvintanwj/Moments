@@ -27,8 +27,8 @@ function SignUpPage() {
         password,
       };
 
-      await axios.post("http://localhost:5000/auth/", signupData);
-      // await axios.post("https://momentsorbital.herokuapp.com/auth", signupData);
+      // await axios.post("http://localhost:5000/auth/", signupData);
+      await axios.post("https://momentsorbital.herokuapp.com/auth", signupData);
       history.push("/confirmation");
     } catch (err) {
       console.error(err);

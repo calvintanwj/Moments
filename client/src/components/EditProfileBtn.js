@@ -131,13 +131,13 @@ function EditProfileBtn(prop) {
         newUserData.append("image", newPicture.target.files[0]);
       }
       newUserData.append("name", newName);
-      await axios
-        .put("http://localhost:5000/userProfile/", newUserData)
-        // await axios
-        //   .put(
-        //     "https://momentsorbital.herokuapp.com/userProfile/",
-        //     newUserData
-        //   )
+      // await axios
+      //   .put("http://localhost:5000/userProfile/", newUserData)
+        await axios
+          .put(
+            "https://momentsorbital.herokuapp.com/userProfile/",
+            newUserData
+          )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -155,13 +155,13 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newEmailData = { newEmail };
-      await axios
-        .put("http://localhost:5000/userProfile/email", newEmailData)
-        // await axios
-        //   .put(
-        //     "https://momentsorbital.herokuapp.com/userProfile/email/",
-        //     newEmailData
-        //   )
+      // await axios
+      //   .put("http://localhost:5000/userProfile/email", newEmailData)
+        await axios
+          .put(
+            "https://momentsorbital.herokuapp.com/userProfile/email/",
+            newEmailData
+          )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -178,13 +178,13 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const newPasswordData = { oldPassword, newPassword, newPasswordVerify };
-      await axios
-        .put("http://localhost:5000/userProfile/password", newPasswordData)
-        // await axios
-        //   .put(
-        //     "https://momentsorbital.herokuapp.com/userProfile/password/",
-        //     newPasswordData
-        //   )
+      // await axios
+      //   .put("http://localhost:5000/userProfile/password", newPasswordData)
+        await axios
+          .put(
+            "https://momentsorbital.herokuapp.com/userProfile/password/",
+            newPasswordData
+          )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -201,8 +201,12 @@ function EditProfileBtn(prop) {
     try {
       e.preventDefault();
       const passwordData = { deletePassword };
+      // await axios.post(
+      //   "http://localhost:5000/userProfile/deleteAccount",
+      //   passwordData
+      // );
       await axios.post(
-        "http://localhost:5000/userProfile/deleteAccount",
+        "https://momentsorbital.herokuapp.com/userProfile/deleteAccount",
         passwordData
       );
       closeDeletePage();
@@ -275,8 +279,8 @@ function EditProfileBtn(prop) {
           <h5 className="edit-labels">Profile Picture</h5>
           <div id="image-preview" onClick={() => setEditPicture(true)}>
             <img
-              // src={`https://momentsorbital.herokuapp.com/images/${prop.profilePic}`}
-              src={`http://localhost:5000/images/${prop.profilePic}`}
+              src={`https://momentsorbital.herokuapp.com/images/${prop.profilePic}`}
+              // src={`http://localhost:5000/images/${prop.profilePic}`}
               alt="profile-pic"
             />
             <i class="fas fa-edit" />

@@ -34,10 +34,10 @@ function Scheduler() {
 
   async function renderEvents() {
     try {
-      await axios
-        .get("http://localhost:5000/events/retrieve")
       // await axios
-      //   .get("https://momentsorbital.herokuapp.com/events/retrieve/")
+      //   .get("http://localhost:5000/events/retrieve")
+      await axios
+        .get("https://momentsorbital.herokuapp.com/events/retrieve/")
         .then((response) => {
           setEvents(response.data);
         });
@@ -117,18 +117,18 @@ function Scheduler() {
   }
 
   async function handleEventResize(event) {
-    await axios.put("http://localhost:5000/events/resize", event.event);
-    // await axios.put(
-    //   "https://momentsorbital.herokuapp.com/events/resize/",
-    //   event.event
-    // );
+    // await axios.put("http://localhost:5000/events/resize", event.event);
+    await axios.put(
+      "https://momentsorbital.herokuapp.com/events/resize/",
+      event.event
+    );
   }
   async function handleEventDrop(event) {
-    await axios.put("http://localhost:5000/events/drop", event.event);
-    // await axios.put(
-    //   "https://momentsorbital.herokuapp.com/events/drop/",
-    //   event.event
-    // );
+    // await axios.put("http://localhost:5000/events/drop", event.event);
+    await axios.put(
+      "https://momentsorbital.herokuapp.com/events/drop/",
+      event.event
+    );
   }
 
   // States to keep track of new attributes of event edited.
@@ -141,11 +141,11 @@ function Scheduler() {
 
   // Logic to handle when remove button is clicked
   async function handleRemoveEvent() {
-    await axios.post("http://localhost:5000/events/delete", editingEvent);
-    // await axios.post(
-    //   "https://momentsorbital.herokuapp.com/events/delete/",
-    //   editingEvent
-    // );
+    // await axios.post("http://localhost:5000/events/delete", editingEvent);
+    await axios.post(
+      "https://momentsorbital.herokuapp.com/events/delete/",
+      editingEvent
+    );
     setEditingEvent(null);
     closeEditForm();
   }
@@ -164,11 +164,11 @@ function Scheduler() {
     };
     console.log(eventData);
 
-    await axios.put("http://localhost:5000/events/edit", eventData);
-    // await axios.put(
-    //   "https://momentsorbital.herokuapp.com/events/edit/",
-    //   eventData
-    // );
+    // await axios.put("http://localhost:5000/events/edit", eventData);
+    await axios.put(
+      "https://momentsorbital.herokuapp.com/events/edit/",
+      eventData
+    );
     closeEditForm();
     await renderEvents();
   }

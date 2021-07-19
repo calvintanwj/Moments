@@ -61,6 +61,6 @@ app.use("/userProfile", auth, require("./routers/userProfileRouter"));
 // =========================================================================================================
 app.use("/events", require("./routers/eventRouter"));
 
-// Journal CRUD Route
+// Journal Route
 // =========================================================================================================
 app.use("/journal", auth, require("./routers/journalRouter"));

@@ -77,8 +77,8 @@ router.post("/", async (req, res) => {
       }
     );
 
-    const url = `http://localhost:5000/confirmation/${emailToken}`;
-    // const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
+    // const url = `http://localhost:5000/confirmation/${emailToken}`;
+    const url = `https://momentsorbital.herokuapp.com/confirmation/${emailToken}`;
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",
@@ -228,11 +228,11 @@ router.post("/forgot-password", async (req, res) => {
       }
     );
 
-    const url = `http://localhost:3000/reset-password/${emailToken}`;
-    // const url = `https://moments-flax.vercel.app/reset-password/${emailToken}`;
+    // const url = `http://localhost:3000/reset-password/${emailToken}`;
+    const url = `https://moments-flax.vercel.app/reset-password/${emailToken}`;
 
-    const forgotpass = "http://localhost:3000/forgot-password";
-    // const forgotpass = "https://moments-flax.vercel.app/forgot-password";
+    // const forgotpass = "http://localhost:3000/forgot-password";
+    const forgotpass = "https://moments-flax.vercel.app/forgot-password";
 
     transporter.sendMail({
       from: "Moments <momentsorbital@gmail.com>",

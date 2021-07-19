@@ -16,9 +16,8 @@ function NavBar() {
 
   async function renderUserProfile() {
     try {
-      axios
-        .get("http://localhost:5000/userProfile/")
-        // axios.get("https://momentsorbital.herokuapp.com/userProfile")
+      // axios.get("http://localhost:5000/userProfile/")
+        axios.get("https://momentsorbital.herokuapp.com/userProfile")
         .then((response) => {
           const { name, profilePic, teleCode } = response.data;
           setName(name);
@@ -70,8 +69,8 @@ function NavBar() {
               Welcome back, {name}
             </h5>
             <img
-              src={`http://localhost:5000/images/${profilePic}`}
-              // src={`https://momentsorbital.herokuapp.com/images/${profilePic}`}
+              // src={`http://localhost:5000/images/${profilePic}`}
+              src={`https://momentsorbital.herokuapp.com/images/${profilePic}`}
               alt="profile-pic"
             />
             <div id="settings-menu">
