@@ -30,9 +30,9 @@ function HomePage() {
     //   }
     // );
     const res = await axios.post('http://localhost:5000/journal/', {
-    	date: format(date, 'yyyy-MM-dd'),
-    	title: "Journal Title",
-    	entry: ""
+      date: format(date, 'yyyy-MM-dd'),
+      title: "Journal Title",
+      entry: ""
     });
     const newEntries = [...entries, res.data.data];
     setEntries(newEntries);
@@ -83,30 +83,32 @@ function HomePage() {
   }
 
   return (
-    <div>
-      <input
-        type="date"
-        defaultValue={format(new Date(), "yyyy-MM-dd")}
-        ref={dateInput}
-        onBlur={dateHandler}
-      />
+    <div id="journal-component">
       {selectedID === -1 ? (
-        <div id="entries-container">
-          {entries.map((entryObject, index) => {
-            return (
-              <>
-                <MarkdownEntry
-                  entry={entryObject.entry}
-                  clickHandler={() => handleSelectEntry(index)}
-                  deleteHandler={() => handleDeleteEntry(entryObject, index)}
-                />
-              </>
-            );
-          })}
-          <button id="AddButton" onClick={handleAddEntry}>
-            <i class="fas fa-plus-circle fa-3x"></i>
-            <span>Add new entry</span>
-          </button>
+        <div id="journal-homepage">
+          <input
+            type="date"
+            defaultValue={format(new Date(), "yyyy-MM-dd")}
+            ref={dateInput}
+            onBlur={dateHandler}
+          />
+          <div id="entries-container">
+            {entries.map((entryObject, index) => {
+              return (
+                <>
+                  <MarkdownEntry
+                    entry={entryObject.entry}
+                    clickHandler={() => handleSelectEntry(index)}
+                    deleteHandler={() => handleDeleteEntry(entryObject, index)}
+                  />
+                </>
+              );
+            })}
+            <button id="AddButton" onClick={handleAddEntry}>
+              <i class="fas fa-plus-circle fa-3x"></i>
+              <span>Add new entry</span>
+            </button>
+          </div>
         </div>
       ) : (
         <Journal
