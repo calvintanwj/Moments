@@ -1,4 +1,5 @@
 /* General styling of the main-interface */
+/* ============================================================================ */
 #journal-interface {
   grid-column: 2;
   display: flex;
@@ -11,6 +12,7 @@
 }
 
 /* Styling for top header of journal */
+/* ============================================================================ */
 #journal-header {
   display: flex;
   justify-content: space-between;
@@ -18,6 +20,8 @@
 }
 
 /* Styling for the back-button */
+/* ============================================================================ */
+
 #back-button {
   height: 40px;
   width: 70px;
@@ -57,6 +61,8 @@
 }
 
 /* Styling for the mode toolbar */
+/* ============================================================================ */
+
 #mode-switch {
   visibility: hidden;
 }
@@ -112,6 +118,8 @@
 #mode-switch + label:active:after {
   width: 50px;
 }
+
+/* ============================================================================ */
 
 #journal-title {
   padding-left: 15%;
