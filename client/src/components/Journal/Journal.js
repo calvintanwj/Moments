@@ -7,6 +7,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import axios from "axios";
 import "./Journal.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { format } from 'date-fns';
 
@@ -86,7 +88,7 @@ function Journal(props) {
   // ID of journal entry
   const [title, setTitle] = useState(entry.title);
 
-  const [date, setDate] = useState(entry.date);
+  const [date, setDate] = useState(Date.parse(entry.date));
 
   // Controls the state of whether the user is in editing or preview mode.
   // User starts out in editing mode.
@@ -117,11 +119,10 @@ function Journal(props) {
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
-  async function dateHandler(e) {
-    const newEntry = { title, entry: input, date: e.target.value, _id: entry._id };
-    setDate(e.target.value);
+  async function dateHandler(date) {
+    const newEntry = { title, entry: input, date: format(date, "yyyy-MM-dd"), _id: entry._id };
+    setDate(date);
     props.editHandler(newEntry);
-    // Because useState is asynchronous, I set using e.target.value instead of input.
     await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
@@ -202,6 +203,8 @@ function Journal(props) {
 
   const MarkdownEntry = (
     <div id="preview-area" onClick={props.clickHandler}>
+      <h2 id="journal-title-preview">{title}</h2>
+      <p id="journal-date-preview">{format(date, 'dd-MM-yyyy')}</p>
       <ReactMarkdown components={components} remarkPlugins={[gfm]}>
         {input}
       </ReactMarkdown>
@@ -212,21 +215,32 @@ function Journal(props) {
   const editingMode = (
     <>
       <div id="date-with-toolbar-editing">
-        <input type="date" value={format(Date.parse(date), 'yyyy-MM-dd')} onChange={dateHandler} />
         <MarkdownToolbar
           id="markdown-toolbar-editing"
           onClick={toolbarClick}
           buttons={buttonTypes}
         />
       </div>
-      <textarea
-        id="journal-area"
-        value={input}
-        // placeholder="Write here"
-        onChange={inputTextHandler}
-        onKeyDown={(e) => clickTab(e)}
-        onSelect={(e) => handleCursor(e)}
-      />
+      <div id="edit-area">
+        <input id="journal-title-edit" value={title} onChange={titleHandler} />
+        <DatePicker selected={date} onChange={(date) => dateHandler(date)} dateFormat={'dd-MM-yyy'} />
+        {/* <span
+          class="input"
+          role="textbox"
+          contenteditable="true"
+        >
+          Hi
+        </span> */}
+        <textarea
+          id="journal-input-edit"
+          value={input}
+          // placeholder="Write here"
+          onChange={inputTextHandler}
+          onKeyDown={(e) => clickTab(e)}
+          onSelect={(e) => handleCursor(e)}
+        />
+        {/* <p>{input}</p> */}
+      </div>
     </>
   );
 
@@ -234,7 +248,6 @@ function Journal(props) {
   const previewMode = (
     <>
       <div id="date-with-toolbar-preview">
-        <p id="journal-date-preview">{format(Date.parse(date), 'dd-MM-yyyy')}</p>
         <MarkdownToolbar
           id="markdown-toolbar-preview"
           onClick={toolbarClick}
@@ -251,10 +264,6 @@ function Journal(props) {
     <div id="journal-interface">
       <div id="journal-header">
         <button id="back-button" onClick={props.unselectHandler}></button>
-        {isEditing
-          ? <input value={title} onChange={titleHandler} />
-          : <h2 id="journal-title">{title}</h2>
-        }
         <ModeToolbar onClick={toggleMode} />
       </div>
       {isEditing ? editingMode : previewMode}

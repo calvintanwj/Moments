@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Journal from "./Journal";
 import MarkdownEntry from "./MarkdownEntry";
 import axios from "axios";
 import "./Homepage.css";
 import { format } from "date-fns";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function HomePage() {
   const [date, setDate] = useState(new Date());
-  const dateInput = useRef(null);
   const [entries, setEntries] = useState([]);
   const [selectedID, setSelectedID] = useState(-1);
 
@@ -74,24 +75,11 @@ function HomePage() {
     fetchData();
   }, [date]);
 
-  function dateHandler() {
-    // Date input does not have a valid date
-    if (dateInput.current.value === "") {
-      return;
-    }
-    setDate(Date.parse(dateInput.current.value));
-  }
-
   return (
     <div id="journal-component">
       {selectedID === -1 ? (
         <div id="journal-homepage">
-          <input
-            type="date"
-            defaultValue={format(new Date(), "yyyy-MM-dd")}
-            ref={dateInput}
-            onBlur={dateHandler}
-          />
+          <DatePicker selected={date} onChange={(date) => setDate(date)} dateFormat={'dd-MM-yyy'} />
           <button id="Add-Entry-bar" class="sticky" onClick={handleAddEntry}>Add New Entry</button>
 
           <div id="entries-container">
