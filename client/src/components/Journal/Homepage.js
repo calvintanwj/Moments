@@ -92,6 +92,8 @@ function HomePage() {
             ref={dateInput}
             onBlur={dateHandler}
           />
+          <button id="Add-Entry-bar" class="sticky" onClick={handleAddEntry}>Add New Entry</button>
+
           <div id="entries-container">
             {entries.map((entryObject, index) => {
               return (
