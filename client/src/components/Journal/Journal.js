@@ -259,7 +259,10 @@ function Journal(props) {
       </div>
       {isEditing ? editingMode : previewMode}
       <div id="docs-link">
-        <a href="https://spec.commonmark.org/0.29/">Commonmark Docs</a>
+        <a href="https://spec.commonmark.org/0.29/"
+          title="Markdown documentation used to format your journal entries">
+          Commonmark Docs
+        </a>
       </div>
     </div>
   )
