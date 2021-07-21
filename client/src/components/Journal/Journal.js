@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MarkdownToolbar from "./MarkdownToolbar";
-import ModeToolbar from "./ModeToolbar";
+import ToggleButton from "./ToggleButton";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -92,7 +92,7 @@ function Journal(props) {
 
   // Controls the state of whether the user is in editing or preview mode.
   // User starts out in editing mode.
-  const [isEditing, setEditing] = useState(true);
+  const [isEditing, setEditing] = useState(false);
 
   // State of the cursor position
   const [cursor, setCursor] = useState({
@@ -150,8 +150,8 @@ function Journal(props) {
   }
 
   // Contains the main logic to toggle between editing and preview mode
-  function toggleMode(bool) {
-    setEditing(bool);
+  function toggleMode() {
+    setEditing(!isEditing);
   }
 
   // Contains the main logic to handle a toolbar button being clicked
@@ -224,13 +224,6 @@ function Journal(props) {
       <div id="edit-area">
         <input id="journal-title-edit" value={title} onChange={titleHandler} />
         <DatePicker selected={date} onChange={(date) => dateHandler(date)} dateFormat={'dd-MM-yyy'} />
-        {/* <span
-          class="input"
-          role="textbox"
-          contenteditable="true"
-        >
-          Hi
-        </span> */}
         <textarea
           id="journal-input-edit"
           value={input}
@@ -239,22 +232,7 @@ function Journal(props) {
           onKeyDown={(e) => clickTab(e)}
           onSelect={(e) => handleCursor(e)}
         />
-        {/* <p>{input}</p> */}
       </div>
-    </>
-  );
-
-  // Preview mode (makes use of the ReactMarkdown dependency)
-  const previewMode = (
-    <>
-      <div id="date-with-toolbar-preview">
-        <MarkdownToolbar
-          id="markdown-toolbar-preview"
-          onClick={toolbarClick}
-          buttons={buttonTypes}
-        />
-      </div>
-      {MarkdownEntry}
     </>
   );
 
@@ -264,9 +242,9 @@ function Journal(props) {
     <div id="journal-interface">
       <div id="journal-header">
         <button id="back-button" onClick={props.unselectHandler}></button>
-        <ModeToolbar onClick={toggleMode} />
+        <ToggleButton clickHandler={toggleMode} active={!isEditing} />
       </div>
-      {isEditing ? editingMode : previewMode}
+      {isEditing ? editingMode : MarkdownEntry}
       <div id="docs-link">
         <a href="https://spec.commonmark.org/0.29/"
           title="Markdown documentation used to format your journal entries">

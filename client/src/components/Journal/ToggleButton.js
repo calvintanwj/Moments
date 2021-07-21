@@ -1,17 +1,18 @@
 import React from "react";
 
 // Mode toolbar component
-function ModeToolbar({ onClick }) {
+function ToggleButton(props) {
   return (
     <>
       <input
         id="mode-switch"
         type="checkbox"
-        onClick={() => onClick(!document.getElementById("mode-switch").checked)}
+        onClick={props.clickHandler}
+        checked={props.active}
       />
       <label for="mode-switch">Toggle</label>
     </>
   );
 }
 
-export default ModeToolbar;
+export default ToggleButton;
