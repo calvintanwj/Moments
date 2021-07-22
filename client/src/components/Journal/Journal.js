@@ -13,64 +13,82 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
 
 // Global Variables
-
 // Consists of all the button types within the journal toolbar.
 const buttonTypes = [
   {
     key: 0,
     id: "bold-text",
-    text: "****",
+    text: "**text**",
     label: <i class="fas fa-bold"></i>,
+    inline: true,
   },
   {
     key: 1,
     id: "italicize-text",
-    text: "__",
+    text: "_text_",
     label: <i class="fas fa-italic"></i>,
+    inline: true,
   },
   {
     key: 2,
     id: "attach-image",
-    text: "![image]()",
+    text: "![text](url)",
     label: <i class="far fa-images"></i>,
+    inline: true,
   },
   {
     key: 3,
     id: "attach-link",
-    text: "[Link]()",
+    text: "[text](url)",
     label: <i class="fas fa-link"></i>,
+    inline: true
   },
   {
     key: 4,
     id: "blockquote",
-    text: "> ",
+    text: "> text",
     label: <i class="fas fa-quote-right"></i>,
+    inline: false
   },
   {
     key: 5,
     id: "bullet-list",
-    text: "* ",
+    text: "* text",
     label: <i class="fas fa-list"></i>,
+    inline: false
   },
   {
     key: 6,
     id: "numbered-list",
-    text: "1. ",
+    text: "1. text",
     label: <i class="fas fa-list-ol"></i>,
+    inline: false
   },
   {
     key: 7,
     id: "line-break",
     text: "---",
     label: <i class="fas fa-grip-lines"></i>,
+    inline: true
   },
   {
     key: 8,
     id: "block-code",
-    text: "~~~java\n\n~~~",
+    text: "~~~java\ntext\n~~~",
     label: <i class="fas fa-code"></i>,
+    inline: false
   },
 ];
+
+// Helper function to replace and format text that go between markdown
+function replaceText(templateText, text, inline) {
+  if (templateText.search("text") != -1) {
+    return `${inline ? " " : "\n"}${templateText.replace("text", text)}${inline ? " " : "\n"}`
+  }
+  return `${inline ? " " : "\n"}${templateText} ${text}${inline ? " " : "\n"}`
+}
+
+
 
 // Journal component
 function Journal(props) {
@@ -142,7 +160,7 @@ function Journal(props) {
         "    " +
         input.substring(cursor.end, input.length),
         setTimeout(() => {
-          const txtarea = document.getElementById("journal-area");
+          const txtarea = document.getElementById("journal-input-edit");
           txtarea.selectionStart = txtarea.selectionEnd = start + 4;
         }, 1)
       );
@@ -151,6 +169,7 @@ function Journal(props) {
 
   // Contains the main logic to toggle between editing and preview mode
   function toggleMode() {
+    console.log(input)
     setEditing(!isEditing);
   }
 
@@ -158,18 +177,20 @@ function Journal(props) {
   // Puts the respective markdown in the journal
   // Moves the cursor to the right place
   function toolbarClick(key) {
-    const txtarea = document.getElementById("journal-area");
+    const txtarea = document.getElementById("journal-input-edit");
     txtarea.focus();
     const start = cursor.start;
+    const pressedKey = buttonTypes[key];
+    const selectedText = input.substring(cursor.start, cursor.end);
     setInput(
       input.substring(0, cursor.start) +
-      buttonTypes[key].text +
+      replaceText(pressedKey.text, selectedText, pressedKey.inline) +
       input.substring(cursor.end, input.length),
       setTimeout(() => {
         if (key === 0 || key === 4 || key === 5) {
-          txtarea.selectionStart = txtarea.selectionEnd = start + 2;
+          txtarea.selectionStart = txtarea.selectionEnd = start + 3;
         } else if (key === 1) {
-          txtarea.selectionStart = txtarea.selectionEnd = start + 1;
+          txtarea.selectionStart = txtarea.selectionEnd = start + 2;
         } else if (key === 2) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 9;
         } else if (key === 3) {
