@@ -18,6 +18,7 @@ const buttonTypes = [
   {
     key: 0,
     id: "bold-text",
+    name: "Bold",
     text: "**text**",
     label: <i class="fas fa-bold"></i>,
     inline: true,
@@ -25,6 +26,7 @@ const buttonTypes = [
   {
     key: 1,
     id: "italicize-text",
+    name: "Italics",
     text: "_text_",
     label: <i class="fas fa-italic"></i>,
     inline: true,
@@ -32,6 +34,7 @@ const buttonTypes = [
   {
     key: 2,
     id: "attach-image",
+    name: "Add image",
     text: "![text](url)",
     label: <i class="far fa-images"></i>,
     inline: true,
@@ -39,6 +42,7 @@ const buttonTypes = [
   {
     key: 3,
     id: "attach-link",
+    name: "Add link",
     text: "[text](url)",
     label: <i class="fas fa-link"></i>,
     inline: true
@@ -46,6 +50,7 @@ const buttonTypes = [
   {
     key: 4,
     id: "blockquote",
+    name: "Blockquote",
     text: "> text",
     label: <i class="fas fa-quote-right"></i>,
     inline: false
@@ -53,6 +58,7 @@ const buttonTypes = [
   {
     key: 5,
     id: "bullet-list",
+    name: "Unordered list",
     text: "* text",
     label: <i class="fas fa-list"></i>,
     inline: false
@@ -60,6 +66,7 @@ const buttonTypes = [
   {
     key: 6,
     id: "numbered-list",
+    name: "Ordered list",
     text: "1. text",
     label: <i class="fas fa-list-ol"></i>,
     inline: false
@@ -67,6 +74,7 @@ const buttonTypes = [
   {
     key: 7,
     id: "line-break",
+    name: "Line break",
     text: "---",
     label: <i class="fas fa-grip-lines"></i>,
     inline: true
@@ -74,6 +82,7 @@ const buttonTypes = [
   {
     key: 8,
     id: "block-code",
+    name: "Code block",
     text: "~~~java\ntext\n~~~",
     label: <i class="fas fa-code"></i>,
     inline: false
