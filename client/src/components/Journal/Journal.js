@@ -150,7 +150,7 @@ function Journal(props) {
   async function dateHandler(date) {
     const newEntry = { title, entry: input, date: format(date, "yyyy-MM-dd"), _id: entry._id };
     setDate(date);
-    props.editHandler(newEntry);
+    props.dateChangeHandler(date)
     await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }

@@ -44,11 +44,7 @@ function HomePage() {
     handleUnselectEntry(entry)
     await axios.delete(`http://localhost:5000/journal/${entry._id}`)
     // await axios.delete(`https://momentsorbital.herokuapp.com/journal/${entry._id}`);
-    const newEntries = [
-      ...entries.slice(0, index),
-      ...entries.slice(index + 1),
-    ];
-    setEntries(newEntries);
+    removeEntry(index);
   }
 
   function handleEditEntry(entry, index) {
@@ -58,6 +54,18 @@ function HomePage() {
       ...entries.slice(index + 1),
     ];
     setEntries(newEntries);
+  }
+
+  function removeEntry(index) {
+    const newEntries = [
+      ...entries.slice(0, index),
+      ...entries.slice(index + 1),
+    ];
+    setEntries(newEntries);
+  }
+
+  function handleEntryDateChange(date) {
+    setDate(date);
   }
 
   function toggleAnimate() {
@@ -115,6 +123,7 @@ function HomePage() {
           entry={entries[selectedID]}
           editHandler={(entryData) => handleEditEntry(entryData, selectedID)}
           unselectHandler={() => handleUnselectEntry(entries[selectedID])}
+          dateChangeHandler={(newEntry) => handleEntryDateChange(newEntry)}
           deleteHandler={() =>
             handleDeleteEntry(entries[selectedID], selectedID)
           }
