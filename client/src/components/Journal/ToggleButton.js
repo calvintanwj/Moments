@@ -10,7 +10,7 @@ function ToggleButton(props) {
         onChange={props.clickHandler}
         checked={props.active}
       />
-      <label for="mode-switch">Toggle</label>
+      <label htmlFor="mode-switch">Toggle</label>
     </>
   );
 }

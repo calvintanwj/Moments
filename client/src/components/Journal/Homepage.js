@@ -109,12 +109,13 @@ function HomePage() {
                     entry={entryObject}
                     clickHandler={() => handleSelectEntry(index)}
                     deleteHandler={() => handleDeleteEntry(entryObject, index)}
+                    key={entryObject._id}
                   />
                 </>
               );
             })}
             <button id="AddButton" onClick={handleAddEntry}>
-              <i class="fas fa-plus-circle fa-3x"></i>
+              <i className="fas fa-plus-circle fa-3x"></i>
               <span>Add new entry</span>
             </button>
           </div>
