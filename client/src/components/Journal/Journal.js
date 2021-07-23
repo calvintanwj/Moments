@@ -220,7 +220,7 @@ function Journal(props) {
     );
 
     const newEntry = { title, entry: newText, date: format(date, "yyyy-MM-dd"), _id: entry._id };
-    props.editHandler(newEntry);
+    props.editHandler(newEntry, index);
     await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
