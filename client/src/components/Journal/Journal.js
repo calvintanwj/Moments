@@ -260,8 +260,11 @@ function Journal(props) {
         />
       </div>
       <div id="edit-area" class={animate ? "contract" : ""}>
-        <input id="title-edit" value={title} onChange={titleHandler} />
-        <DatePicker selected={date} onChange={(date) => dateHandler(date)} dateFormat={'dd-MM-yyy'} />
+        <input id="journal-title-edit" value={title} onChange={titleHandler} />
+        <DatePicker selected={date}
+          onChange={(date) => dateHandler(date)}
+          dateFormat={'dd-MM-yyy'}
+          className="no-border text-font" />
         <textarea
           id="journal-input-edit"
           value={input}
@@ -280,7 +283,12 @@ function Journal(props) {
     <div id="journal-interface">
       <div id="journal-header">
         <button id="back-button" onClick={props.unselectHandler}></button>
-        <ToggleButton clickHandler={toggleMode} active={!isEditing} />
+        <div id="header-right">
+          <button id="delete-button" onClick={props.deleteHandler}>
+            <i class="fas fa-trash-alt fa-2x"></i>
+          </button>
+          <ToggleButton clickHandler={toggleMode} active={!isEditing} />
+        </div>
       </div>
       {isEditing ? editingMode : MarkdownEntry}
       <div id="docs-link">
@@ -296,7 +304,7 @@ function Journal(props) {
   // The overall journal interface.
   return (
     <>
-      <button onClick={props.deleteHandler}>Delete Post</button>
+
       {selectedEntry}
     </>
   );

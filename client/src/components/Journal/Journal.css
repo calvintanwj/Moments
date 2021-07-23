@@ -16,6 +16,11 @@
   align-items: center;
 }
 
+#header-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* Styling for the back-button */
 /* ============================================================================ */
 
@@ -62,6 +67,7 @@
 
 #mode-switch {
   visibility: hidden;
+  display: none;
 }
 
 /* The mode switch background */
@@ -249,20 +255,17 @@
 }
 
 /* General styling for the scrollbar */
-#edit-area::-webkit-scrollbar-track,
 #preview-area::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(143, 139, 139, 0.3);
   border-radius: 20px;
   background-color: #f5f5f5;
 }
 
-#edit-area::-webkit-scrollbar,
 #preview-area::-webkit-scrollbar {
   width: 8px;
   background-color: #f5f5f5;
 }
 
-#edit-area::-webkit-scrollbar-thumb,
 #preview-area::-webkit-scrollbar-thumb {
   border-radius: 20px;
   background-color: rgb(80, 78, 78);
@@ -272,7 +275,7 @@
 /* Styling for journal area */
 #edit-area {
   width: 40vw;
-  height: 70vh;
+  height: 55vh;
 }
 
 .contract {
@@ -283,12 +286,12 @@
 /* Animation for journal area */
 @keyframes contract {
   from {
-    height: 75vh;
+    height: 60vh;
     width: 90%;
     opacity: 0.4;
   }
   to {
-    height: 70vh;
+    height: 55vh;
     width: 40vw;
     opacity: 1;
   }
@@ -296,7 +299,7 @@
 
 /* Styling for preview area */
 #preview-area {
-  height: 75vh;
+  height: 60vh;
   width: 90%;
 }
 
@@ -308,12 +311,12 @@
 /* Animation for the preview-area */
 @keyframes expand {
   from {
-    height: 70vh;
+    height: 55vh;
     width: 40vw;
     opacity: 0.4;
   }
   to {
-    height: 75vh;
+    height: 60vh;
     width: 90%;
     opacity: 1;
   }
@@ -345,6 +348,25 @@
     10px 10px 15px rgba(70, 70, 70, 0.12),
     inset -10px -10px 15px rgba(255, 255, 255, 0.5),
     inset 10px 10px 15px rgba(70, 70, 70, 0.12);
+}
+
+.no-border {
+  border: none;
+}
+
+.text-font {
+  font-family: "Exo 2", sans-serif;
+}
+
+#delete-button {
+  border: none;
+  color: rgb(255, 0, 0);
+}
+
+#delete-button:hover {
+  border: none;
+  color: rgb(192, 0, 0);
+  cursor: pointer;
 }
 
 #docs-link {
