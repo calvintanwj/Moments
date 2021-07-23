@@ -98,7 +98,7 @@ function HomePage() {
               return (
                 <>
                   <MarkdownEntry
-                    entry={entryObject.entry}
+                    entry={entryObject}
                     clickHandler={() => handleSelectEntry(index)}
                     deleteHandler={() => handleDeleteEntry(entryObject, index)}
                   />
