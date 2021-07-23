@@ -41,14 +41,13 @@ function HomePage() {
   }
 
   async function handleDeleteEntry(entry, index) {
-    console.log("Deleting entry");
+    handleUnselectEntry(entry)
     await axios.delete(`http://localhost:5000/journal/${entry._id}`)
     // await axios.delete(`https://momentsorbital.herokuapp.com/journal/${entry._id}`);
     const newEntries = [
       ...entries.slice(0, index),
       ...entries.slice(index + 1),
     ];
-    console.log(newEntries);
     setEntries(newEntries);
   }
 
