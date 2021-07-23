@@ -77,7 +77,7 @@ const buttonTypes = [
     name: "Line break",
     text: "---",
     label: <i class="fas fa-grip-lines"></i>,
-    inline: true
+    inline: false
   },
   {
     key: 8,
@@ -104,6 +104,7 @@ function Journal(props) {
   // Just a quick little template for a journal entry.
   var entry = props.entry;
   const templateEntry = ""
+  const animate = props.animate;
   // "# Moments\n## Past, Present, and Future\n\nToday's date: _" +
   // date +
   // "_\n\nThis is a journal template \\\n**Click preview** to see your markdown get parsed :) \n\n~Does~ Now supports strikethroughs, task lists, link literals, and **custom** code blocks\n\nhttps://moments-flax.vercel.app/\n\n* [ ] to do\n\n* [x] done\n\n ~~~java\n function foo() {\n  return;\n}\n ~~~";
@@ -232,27 +233,28 @@ function Journal(props) {
   };
 
   const MarkdownEntry = (
-    <div id="preview-area" onClick={props.clickHandler}>
+    <div id="preview-area" class={animate ? "expand" : ""} onClick={props.clickHandler} >
       <h2 id="journal-title-preview">{title}</h2>
       <p id="journal-date-preview">{format(date, 'dd-MM-yyyy')}</p>
       <ReactMarkdown components={components} remarkPlugins={[gfm]}>
         {input}
       </ReactMarkdown>
-    </div>
+    </div >
   );
 
   // Editing mode
   const editingMode = (
     <>
-      <div id="date-with-toolbar-editing">
+      <div id="date-with-toolbar-editing" class={animate ? "pop" : ""}>
         <MarkdownToolbar
           id="markdown-toolbar-editing"
+          class={animate ? "appear" : ""}
           onClick={toolbarClick}
           buttons={buttonTypes}
         />
       </div>
-      <div id="edit-area">
-        <input id="journal-title-edit" value={title} onChange={titleHandler} />
+      <div id="edit-area" class={animate ? "contract" : ""}>
+        <input id="title-edit" value={title} onChange={titleHandler} />
         <DatePicker selected={date} onChange={(date) => dateHandler(date)} dateFormat={'dd-MM-yyy'} />
         <textarea
           id="journal-input-edit"

@@ -127,6 +127,9 @@
   border-bottom: 3px solid rgba(168, 161, 161, 0.507);
   border-top: 3px solid rgba(168, 161, 161, 0.507);
   height: 50px;
+}
+
+.pop {
   animation-name: pop;
   animation-duration: 2s;
 }
@@ -145,17 +148,9 @@
   }
 }
 
-/* Preview Mode */
-#date-with-toolbar-preview {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 0px;
-  border-bottom: 3px solid rgba(168, 161, 161, 0.507);
-  border-top: 3px solid rgba(168, 161, 161, 0.507);
+.collapse {
   animation-name: collapse;
   animation-duration: 3s;
-  visibility: hidden;
 }
 
 /* Animaton for hiding date with toolbar */
@@ -173,36 +168,16 @@
 }
 
 /* Styling for date */
-/* Editing mode */
-#journal-date-editing {
-  padding-left: 3%;
-  font-weight: bold;
+
+.appear {
   animation-name: appear;
   animation-duration: 2s;
 }
 
-/* Preview mode */
-#journal-date-preview {
-  padding-left: 3%;
-  font-weight: bold;
-}
-
-/* Styling for markdown toolbar */
-/* Editing mode */
-#markdown-toolbar-editing {
-  animation-name: appear;
-  animation-duration: 2s;
-}
-
-/* Animation for hiding markdown toolbar */
-/* Preview mode */
-#markdown-toolbar-preview {
+.hide {
   animation-name: hide;
   animation-duration: 3s;
-  visibility: hidden;
-  opacity: 0;
 }
-
 /* Animation for hiding markdown toolbar and date */
 @keyframes hide {
   from {
@@ -296,10 +271,13 @@
 
 /* Styling for journal area */
 #edit-area {
-  animation-name: contract;
-  animation-duration: 2s;
   width: 40vw;
   height: 70vh;
+}
+
+.contract {
+  animation-name: contract;
+  animation-duration: 2s;
 }
 
 /* Animation for journal area */
@@ -318,10 +296,13 @@
 
 /* Styling for preview area */
 #preview-area {
-  animation-name: expand;
-  animation-duration: 3s;
   height: 75vh;
   width: 90%;
+}
+
+.expand {
+  animation-name: expand;
+  animation-duration: 3s;
 }
 
 /* Animation for the preview-area */

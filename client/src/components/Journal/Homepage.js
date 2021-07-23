@@ -11,6 +11,7 @@ function HomePage() {
   const [date, setDate] = useState(new Date());
   const [entries, setEntries] = useState([]);
   const [selectedID, setSelectedID] = useState(-1);
+  const [animate, setAnimate] = useState(true)
 
   function handleSelectEntry(index) {
     console.log(`Selecting to ${index}`);
@@ -60,6 +61,10 @@ function HomePage() {
     setEntries(newEntries);
   }
 
+  function toggleAnimate() {
+    setAnimate(!animate)
+  }
+
   useEffect(() => {
     async function fetchData() {
       const queryObject = await axios.get(`http://localhost:5000/journal/${format(date, 'yyyy-MM-dd')}`);
@@ -80,6 +85,12 @@ function HomePage() {
       {selectedID === -1 ? (
         <div id="journal-homepage">
           <DatePicker selected={date} onChange={(date) => setDate(date)} dateFormat={'dd-MM-yyy'} />
+          <div>
+            {/* <label>{animate ? "Disable journal animation" : "Enable journal animation"}</label> */}
+            <button onClick={toggleAnimate}>
+              {animate ? "Disable journal animation" : "Enable journal animation"}
+            </button>
+          </div>
           <button id="Add-Entry-bar" class="sticky" onClick={handleAddEntry}>Add New Entry</button>
 
           <div id="entries-container">
@@ -108,6 +119,7 @@ function HomePage() {
           deleteHandler={() =>
             handleDeleteEntry(entries[selectedID], selectedID)
           }
+          animate={animate}
         />
       )}
     </div>
