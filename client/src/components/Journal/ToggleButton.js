@@ -7,7 +7,7 @@ function ToggleButton(props) {
       <input
         id="mode-switch"
         type="checkbox"
-        onClick={props.clickHandler}
+        onChange={props.clickHandler}
         checked={props.active}
       />
       <label for="mode-switch">Toggle</label>

@@ -75,9 +75,9 @@ const buttonTypes = [
     key: 7,
     id: "line-break",
     name: "Line break",
-    text: "---",
+    text: "\n---\ntext",
     label: <i class="fas fa-grip-lines"></i>,
-    inline: false
+    inline: true
   },
   {
     key: 8,
@@ -91,7 +91,7 @@ const buttonTypes = [
 
 // Helper function to replace and format text that go between markdown
 function replaceText(templateText, text, inline) {
-  if (templateText.search("text") != -1) {
+  if (templateText.search("text") !== -1) {
     return `${inline ? " " : "\n"}${templateText.replace("text", text)}${inline ? " " : "\n"}`
   }
   return `${inline ? " " : "\n"}${templateText} ${text}${inline ? " " : "\n"}`
@@ -186,16 +186,17 @@ function Journal(props) {
   // Contains the main logic to handle a toolbar button being clicked
   // Puts the respective markdown in the journal
   // Moves the cursor to the right place
-  function toolbarClick(key) {
+  async function toolbarClick(key) {
     const txtarea = document.getElementById("journal-input-edit");
     txtarea.focus();
     const start = cursor.start;
     const pressedKey = buttonTypes[key];
     const selectedText = input.substring(cursor.start, cursor.end);
-    setInput(
-      input.substring(0, cursor.start) +
+    const newText = input.substring(0, cursor.start) +
       replaceText(pressedKey.text, selectedText, pressedKey.inline) +
-      input.substring(cursor.end, input.length),
+      input.substring(cursor.end, input.length)
+    setInput(
+      newText,
       setTimeout(() => {
         if (key === 0 || key === 4 || key === 5) {
           txtarea.selectionStart = txtarea.selectionEnd = start + 3;
@@ -212,6 +213,11 @@ function Journal(props) {
         }
       }, 1)
     );
+
+    const newEntry = { title, entry: newText, date: format(date, "yyyy-MM-dd"), _id: entry._id };
+    props.editHandler(newEntry);
+    await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
   // Renderer for custom code blocks
