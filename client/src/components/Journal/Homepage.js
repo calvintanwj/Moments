@@ -18,7 +18,7 @@ function HomePage() {
     setSelectedID(index);
   }
 
-  function handleUnselectEntry(entry) {
+  function handleUnselectEntry() {
     setSelectedID(-1);
   }
 
@@ -82,7 +82,8 @@ function HomePage() {
       //   )}`
       // );
       console.log(queryObject.data.entries);
-      setEntries(queryObject.data.entries ?? []);
+      const entries = queryObject.data.entries ?? []
+      setEntries(entries)
     }
     fetchData();
   }, [date]);
@@ -120,12 +121,13 @@ function HomePage() {
         </div>
       ) : (
         <Journal
+          index={selectedID}
           entry={entries[selectedID]}
-          editHandler={(entryData) => handleEditEntry(entryData, selectedID)}
-          unselectHandler={() => handleUnselectEntry(entries[selectedID])}
+          editHandler={(entryData, index) => handleEditEntry(entryData, index)}
+          unselectHandler={() => handleUnselectEntry()}
           dateChangeHandler={(newEntry) => handleEntryDateChange(newEntry)}
-          deleteHandler={() =>
-            handleDeleteEntry(entries[selectedID], selectedID)
+          deleteHandler={(index) =>
+            handleDeleteEntry(entries[index], index)
           }
           animate={animate}
         />

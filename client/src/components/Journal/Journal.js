@@ -112,6 +112,7 @@ function Journal(props) {
   // Controls the state of text written in the journal
   // Text should be blank. May add a template in the future
   const [input, setInput] = useState(entry.entry ?? templateEntry);
+  const [index, setIndex] = useState(props.index)
 
   // ID of journal entry
   const [title, setTitle] = useState(entry.title);
@@ -132,7 +133,7 @@ function Journal(props) {
   async function inputTextHandler(e) {
     const newEntry = { title, entry: e.target.value, date: format(date, "yyyy-MM-dd"), _id: entry._id };
     setInput(e.target.value);
-    props.editHandler(newEntry);
+    props.editHandler(newEntry, index);
     // Because useState is asynchronous, I set using e.target.value instead of input.
     await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
@@ -141,7 +142,7 @@ function Journal(props) {
   async function titleHandler(e) {
     const newEntry = { title: e.target.value, entry: input, date: format(date, "yyyy-MM-dd"), _id: entry._id };
     setTitle(e.target.value);
-    props.editHandler(newEntry);
+    props.editHandler(newEntry, index);
     // Because useState is asynchronous, I set using e.target.value instead of input.
     await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
@@ -149,9 +150,13 @@ function Journal(props) {
 
   async function dateHandler(date) {
     const newEntry = { title, entry: input, date: format(date, "yyyy-MM-dd"), _id: entry._id };
-    setDate(date);
-    props.dateChangeHandler(date)
+    setDate(date)
+    props.editHandler(newEntry)
     await axios.put(`http://localhost:5000/journal/${entry._id}`, newEntry)
+    props.dateChangeHandler(date)
+    const numPosts = await axios.get(`http://localhost:5000/journal/${format(date, "yyyy-MM-dd")}`, newEntry)
+    console.log(`New Index: ${numPosts.data.entries.length - 1}`)
+    setIndex(numPosts.data.entries.length - 1)
     // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
@@ -284,7 +289,7 @@ function Journal(props) {
       <div id="journal-header">
         <button id="back-button" onClick={props.unselectHandler}></button>
         <div id="header-right">
-          <button id="delete-button" onClick={props.deleteHandler}>
+          <button id="delete-button" onClick={() => props.deleteHandler(index)}>
             <i class="fas fa-trash-alt fa-2x"></i>
           </button>
           <ToggleButton clickHandler={toggleMode} active={!isEditing} />
