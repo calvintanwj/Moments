@@ -1053,7 +1053,7 @@ body {
   font-weight: bold;
   font-family: "Exo 2", sans-serif;
   border: 1px solid #f5f2f3;
-  background-color: #2436ff;
+  background-color: #404ffd;
   color: rgb(255, 255, 255);
   border-radius: 15px;
   cursor: pointer;
@@ -1063,7 +1063,7 @@ body {
 }
 
 #home-page-container button:hover {
-  background-color: rgb(64, 64, 253);
+  background-color: rgb(8, 72, 248);
 }
 
 #home-page-container button:active {

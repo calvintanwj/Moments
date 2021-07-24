@@ -1,8 +1,17 @@
 #journal-component {
-  border: 3px solid grey;
   height: 90vh;
-  width: 50vw;
-  overflow: hidden scroll;
+  width: 48vw;
+  overflow: hidden auto;
+  border-radius: 20px;
+  border: 1px solid #f5f2f3;
+  box-shadow: -10px -10px 15px rgba(211, 191, 191, 0.424),
+    10px 10px 15px rgba(255, 255, 255, 0.828),
+    inset -10px -10px 15px rgba(211, 191, 191, 0.424),
+    inset 10px 10px 15px rgba(255, 255, 255, 0.828);
+  color: rgb(80, 75, 75);
+  margin-top: -10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 #journal-homepage {
