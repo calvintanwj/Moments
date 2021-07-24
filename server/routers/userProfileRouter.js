@@ -106,25 +106,22 @@ router.put("/email", auth, async (req, res) => {
 // }
 router.put("/password", auth, async (req, res) => {
   try {
-    const { oldPassword, newPassword, newPasswordVerify } = req.body;
+    const { oldPassword, newPassword } = req.body;
     const loggedInUserID = req.user;
     const loggedInUser = await User.findOne({ _id: loggedInUserID });
 
-    if (!oldPassword || !newPassword || !newPasswordVerify) {
+    if (!oldPassword || !newPassword) {
       return res
         .status(400)
         .json({ errorMessage: "Please enter all required fields." });
     }
 
-    if (newPassword !== newPasswordVerify) {
-      return res.status(400).json({
-        errorMessage: "Passwords do not match",
-      });
-    }
+    var passwordFormat =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
 
-    if (newPassword.length < 8) {
+    if (!newPassword.match(passwordFormat)) {
       return res.status(400).json({
-        errorMessage: "Please enter a new password of at least 8 characters",
+        errorMessage: "Please follow the password format",
       });
     }
 
@@ -134,7 +131,7 @@ router.put("/password", auth, async (req, res) => {
     );
 
     if (!passwordCorrect) {
-      return res.status(401).json({ errorMessage: "Old password isn't valid" });
+      return res.status(401).json({ errorMessage: "Old password isn't correct" });
     }
 
     const salt = await bcrypt.genSalt();

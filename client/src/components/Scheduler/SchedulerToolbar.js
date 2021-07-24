@@ -18,74 +18,110 @@ function SchedulerToolbar(props) {
     props.setdateDesired(calendarApi.getDate());
   }
 
-  // Logic to toggle between day and list view.
   function toggleView(view) {
+    props.setView(view);
     let calendarApi = props.calendarRef.current.getApi();
-    calendarApi.changeView(view);
+    if (view === "month") {
+      calendarApi.changeView("dayGridMonth");
+    } else if (view === "week") {
+      calendarApi.changeView("timeGridWeek");
+    } else if (view === "day") {
+      calendarApi.changeView("timeGridDay");
+    } else if (view === "list") {
+      calendarApi.changeView("listDay");
+    }
   }
 
-  function handleBackButton() {
-    toggleView("dayGridMonth");
-    props.setNewView(true);
+  const dateOptions = { weekday: "short", year: "numeric", month: "long" };
+  const dateOptionsDay = { year: "numeric", month: "long", day: "numeric" };
+
+  const date = (
+    <>
+      {props.view === "month"
+        ? props.dateDesired
+            .toLocaleDateString(undefined, dateOptions)
+            .split(" ")[0] +
+          ", " +
+          props.dateDesired
+            .toLocaleDateString(undefined, dateOptions)
+            .split(" ")[1]
+        : props.view === "week"
+        ? props.dateDesired
+            .toLocaleDateString(undefined, dateOptions)
+            .split(" ")[0] +
+          ", " +
+          props.dateDesired
+            .toLocaleDateString(undefined, dateOptions)
+            .split(" ")[1]
+        : props.dateDesired
+            .toLocaleDateString(undefined, dateOptionsDay)
+            .split(",")[0] +
+          ", " +
+          props.dateDesired
+            .toLocaleDateString(undefined, dateOptionsDay)
+            .split(" ")[2]}
+    </>
+  );
+
+  function handleLeft() {
+    let calendarApi = props.calendarRef.current.getApi();
+    calendarApi.prev();
+    props.setdateDesired(calendarApi.getDate());
   }
 
-  const dayListView = (
-    <>
-      <button id="day-button" onClick={() => toggleView("timeGridDay")}>
-        Day
-      </button>
-      <button id="list-button" onClick={() => toggleView("listDay")}>
-        List
-      </button>
-    </>
-  );
+  function handleRight() {
+    let calendarApi = props.calendarRef.current.getApi();
+    calendarApi.next();
+    props.setdateDesired(calendarApi.getDate());
+  }
 
-  const monthWeekView = (
-    <>
-      <button id="month-button" onClick={() => toggleView("dayGridMonth")}>
-        Month
-      </button>
-      <button id="week-button" onClick={() => toggleView("timeGridWeek")}>
-        Week
-      </button>
-    </>
-  );
-
-  const backButton = (
-    <>
-      <button id="scheduler-back-button" onClick={() => handleBackButton()}>
-        Back
-      </button>
-    </>
-  );
+  function handleAddEvent() {
+    props.setAddEndTime(false)
+    props.setAddStartTime(false)
+    props.openEventForm()
+  }
 
   // The scheduler toolbar
   return (
     <div id="scheduler-toolbar">
-      {props.view ? <></> : backButton}
+      <button id="add-event-button" onClick={handleAddEvent}>
+        <i class="fas fa-plus"></i> Add Event
+      </button>
+      <div id="scheduler-date-div">
+        <h2 id="scheduler-date">{date}</h2>
+        <div id="date-picker">
+          <DatePicker
+            className="date-picker"
+            selected={props.dateDesired}
+            onChange={(date) => goToDate(date)}
+            dateFormat="dd/MM/yyyy"
+            showYearDropdown
+            // scrollableMonthYearDropdown
+          />
+        </div>
+      </div>
+      <select
+        name="views"
+        id="calendar-views"
+        value={props.view}
+        onChange={(e) => toggleView(e.target.value)}
+      >
+        <option value="month">Month</option>
+        <option value="week">Week</option>
+        <option value="day">Day</option>
+        <option value="list">List</option>
+      </select>
       <button id="today-button" onClick={() => handleToday()}>
         Today
       </button>
-      <button id="add-event-button" onClick={() => props.openEventForm()}>
-        Add Event
-      </button>
-      <div id="date-picker">
-        <DatePicker
-          selected={props.dateDesired}
-          onChange={(date) => goToDate(date)}
-          dateFormat="dd/MM/yyyy"
-          showYearDropdown
-          scrollableMonthYearDropdown
-        />
+      <div id="navigate-calendar">
+        <button id="scheduler-left-button" onClick={() => handleLeft()}>
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="scheduler-right-button" onClick={() => handleRight()}>
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
-      <h2 id="scheduler-date">
-        {props.dateDesired.toDateString().substring(0, 3) +
-          "," +
-          props.dateDesired.toDateString().substring(3, 10) +
-          ", " +
-          props.dateDesired.toDateString().substring(11)}
-      </h2>
-      {props.view ? monthWeekView : dayListView}
     </div>
   );
 }
