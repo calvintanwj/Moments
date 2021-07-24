@@ -34,7 +34,7 @@ router.post("/add", auth, async (req, res) => {
       start,
       end,
       allDay,
-      backgroundColor: color,
+      color,
       reminder,
     });
 
@@ -60,7 +60,7 @@ router.put("/edit", auth, async (req, res) => {
         title,
         start,
         end,
-        backgroundColor: color,
+        color,
         allDay,
         reminder,
       }
