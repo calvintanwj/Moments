@@ -1,13 +1,29 @@
-#entries-container {
+#journal-component {
   border: 3px solid grey;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 3em 5em;
-  overflow: scroll;
   height: 90vh;
   width: 50vw;
+  overflow: hidden scroll;
+}
+
+#journal-homepage {
+  display: grid;
+}
+
+.center-in-grid {
+  justify-self: center;
+}
+
+#entries-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3em 5em;
   justify-items: center;
+}
+
+#entries-container > input {
+  grid-row-start: 1;
+  grid-column-start: 1;
+  grid-column-end: 2;
 }
 
 #AddButton {
@@ -32,6 +48,24 @@
 #AddButton .fa-plus-circle {
   display: block;
 }
+
+.sticky {
+  position: sticky;
+  top: 0px;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: space-around;
+}
+
+.sticky > button {
+  width: 100%;
+}
+
+.popper {
+  z-index: 2;
+}
+
 /* #entry {
   height: 300px;
   width: 100%;

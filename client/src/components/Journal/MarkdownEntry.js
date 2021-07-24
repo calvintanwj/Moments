@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+import { format } from "date-fns";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -24,11 +25,14 @@ const components = {
 
 // Parsed markdown entry with no toolbar
 function MarkdownEntry(props) {
+	const entry = props.entry
 	return (<div id="journal" >
 		<button onClick={props.deleteHandler}><i class="far fa-times-circle"></i></button>
 		<div id="entry-text" onClick={props.clickHandler}>
+			<h2 id="entry-title">{entry.title}</h2>
+			<p>{format(new Date(entry.date), 'dd-MM-yyyy')}</p>
 			<ReactMarkdown components={components} remarkPlugins={[gfm]}>
-				{props.entry}
+				{entry.entry}
 			</ReactMarkdown>
 		</div>
 	</div>);

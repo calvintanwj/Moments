@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Journal from "./Journal";
 import MarkdownEntry from "./MarkdownEntry";
 import axios from "axios";
 import "./Homepage.css";
 import { format } from "date-fns";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function HomePage() {
   const [date, setDate] = useState(new Date());
-  const dateInput = useRef(null);
   const [entries, setEntries] = useState([]);
   const [selectedID, setSelectedID] = useState(-1);
+  const [animate, setAnimate] = useState(true)
 
   function handleSelectEntry(index) {
     console.log(`Selecting to ${index}`);
     setSelectedID(index);
   }
 
-  function handleUnselectEntry(entry) {
+  function handleUnselectEntry() {
     setSelectedID(-1);
   }
 
@@ -30,24 +32,19 @@ function HomePage() {
     //   }
     // );
     const res = await axios.post('http://localhost:5000/journal/', {
-    	date: format(date, 'yyyy-MM-dd'),
-    	title: "Journal Title",
-    	entry: ""
+      date: format(date, 'yyyy-MM-dd'),
+      title: "Journal Title",
+      entry: ""
     });
     const newEntries = [...entries, res.data.data];
     setEntries(newEntries);
   }
 
   async function handleDeleteEntry(entry, index) {
-    console.log("Deleting entry");
+    handleUnselectEntry(entry)
     await axios.delete(`http://localhost:5000/journal/${entry._id}`)
     // await axios.delete(`https://momentsorbital.herokuapp.com/journal/${entry._id}`);
-    const newEntries = [
-      ...entries.slice(0, index),
-      ...entries.slice(index + 1),
-    ];
-    console.log(newEntries);
-    setEntries(newEntries);
+    removeEntry(index);
   }
 
   function handleEditEntry(entry, index) {
@@ -59,6 +56,22 @@ function HomePage() {
     setEntries(newEntries);
   }
 
+  function removeEntry(index) {
+    const newEntries = [
+      ...entries.slice(0, index),
+      ...entries.slice(index + 1),
+    ];
+    setEntries(newEntries);
+  }
+
+  function handleEntryDateChange(date) {
+    setDate(date);
+  }
+
+  function toggleAnimate() {
+    setAnimate(!animate)
+  }
+
   useEffect(() => {
     async function fetchData() {
       const queryObject = await axios.get(`http://localhost:5000/journal/${format(date, 'yyyy-MM-dd')}`);
@@ -68,53 +81,59 @@ function HomePage() {
       //     "yyyy-MM-dd"
       //   )}`
       // );
-      setEntries(queryObject.data.entries ?? []);
+      const entries = queryObject.data.entries ?? []
+      setEntries(entries)
     }
     fetchData();
   }, [date]);
 
-  function dateHandler() {
-    // Date input does not have a valid date
-    if (dateInput.current.value === "") {
-      return;
-    }
-    setDate(Date.parse(dateInput.current.value));
-  }
-
   return (
-    <div>
-      <input
-        type="date"
-        defaultValue={format(new Date(), "yyyy-MM-dd")}
-        ref={dateInput}
-        onBlur={dateHandler}
-      />
+    <div id="journal-component">
       {selectedID === -1 ? (
-        <div id="entries-container">
-          {entries.map((entryObject, index) => {
-            return (
-              <>
-                <MarkdownEntry
-                  entry={entryObject.entry}
-                  clickHandler={() => handleSelectEntry(index)}
-                  deleteHandler={() => handleDeleteEntry(entryObject, index)}
-                />
-              </>
-            );
-          })}
-          <button id="AddButton" onClick={handleAddEntry}>
-            <i class="fas fa-plus-circle fa-3x"></i>
-            <span>Add new entry</span>
-          </button>
+        <div id="journal-homepage">
+          <DatePicker selected={date}
+            onChange={(date) => setDate(date)}
+            dateFormat='dd-MM-yyy'
+            popperClassName="popper"
+            wrapperClassName="center-in-grid"
+          />
+          <div class="sticky">
+            <button onClick={toggleAnimate}>
+              {animate ? "Disable journal animation" : "Enable journal animation"}
+            </button>
+            <button id="Add-Entry-bar" onClick={handleAddEntry}>Add New Entry</button>
+          </div>
+
+          <div id="entries-container">
+            {entries.map((entryObject, index) => {
+              return (
+                <>
+                  <MarkdownEntry
+                    entry={entryObject}
+                    clickHandler={() => handleSelectEntry(index)}
+                    deleteHandler={() => handleDeleteEntry(entryObject, index)}
+                    key={entryObject._id}
+                  />
+                </>
+              );
+            })}
+            <button id="AddButton" onClick={handleAddEntry}>
+              <i className="fas fa-plus-circle fa-3x"></i>
+              <span>Add new entry</span>
+            </button>
+          </div>
         </div>
       ) : (
         <Journal
+          index={selectedID}
           entry={entries[selectedID]}
-          editHandler={(entryData) => handleEditEntry(entryData, selectedID)}
-          unselectHandler={() => handleUnselectEntry(entries[selectedID])}
-          deleteHandler={() =>
-            handleDeleteEntry(entries[selectedID], selectedID)
+          editHandler={(entryData, index) => handleEditEntry(entryData, index)}
+          unselectHandler={() => handleUnselectEntry()}
+          dateChangeHandler={(newEntry) => handleEntryDateChange(newEntry)}
+          deleteHandler={(index) =>
+            handleDeleteEntry(entries[index], index)
           }
+          animate={animate}
         />
       )}
     </div>
