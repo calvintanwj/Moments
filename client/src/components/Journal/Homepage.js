@@ -92,14 +92,18 @@ function HomePage() {
     <div id="journal-component">
       {selectedID === -1 ? (
         <div id="journal-homepage">
-          <DatePicker selected={date} onChange={(date) => setDate(date)} dateFormat={'dd-MM-yyy'} />
-          <div>
-            {/* <label>{animate ? "Disable journal animation" : "Enable journal animation"}</label> */}
+          <DatePicker selected={date}
+            onChange={(date) => setDate(date)}
+            dateFormat='dd-MM-yyy'
+            popperClassName="popper"
+            wrapperClassName="center-in-grid"
+          />
+          <div class="sticky">
             <button onClick={toggleAnimate}>
               {animate ? "Disable journal animation" : "Enable journal animation"}
             </button>
+            <button id="Add-Entry-bar" onClick={handleAddEntry}>Add New Entry</button>
           </div>
-          <button id="Add-Entry-bar" class="sticky" onClick={handleAddEntry}>Add New Entry</button>
 
           <div id="entries-container">
             {entries.map((entryObject, index) => {

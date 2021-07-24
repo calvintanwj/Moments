@@ -2,21 +2,20 @@
   border: 3px solid grey;
   height: 90vh;
   width: 50vw;
-  overflow: scroll;
+  overflow: hidden scroll;
 }
 
 #journal-homepage {
   display: grid;
 }
 
-#journal-homepage > input {
+.center-in-grid {
   justify-self: center;
 }
 
 #entries-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
   gap: 3em 5em;
   justify-items: center;
 }
@@ -54,6 +53,16 @@
   position: sticky;
   top: 0px;
   width: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: space-around;
+}
+
+.sticky > button {
+  width: 100%;
+}
+
+.popper {
   z-index: 2;
 }
 
