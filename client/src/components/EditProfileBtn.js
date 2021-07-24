@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import Error from "./Error";
 import { useHistory } from "react-router-dom";
+import PasswordStrengthBar from "react-password-strength-bar";
 
 function EditProfileBtn(prop) {
   const [editProfileIsOpen, setEditProfileIsOpen] = useState(false);
@@ -16,12 +17,18 @@ function EditProfileBtn(prop) {
   const [errorMessage, setErrorMessage] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [newPasswordVerify, setNewPasswordVerify] = useState("");
   const [deletePassword, setDeletePassword] = useState("");
   const [button2Class, setbutton2Class] = useState("activePage");
   const [button3Class, setbutton3Class] = useState("");
   const [button4Class, setbutton4Class] = useState("");
   const [button5Class, setbutton5Class] = useState("");
+  const [passwordLength, setPasswordLength] = useState(false);
+  const [containsNumbers, setContainsNumbers] = useState(false);
+  const [containsUppercase, setContainsUppercase] = useState(false);
+  const [containsLowercase, setContainsLowercase] = useState(false);
+  const [containsSpecial, setContainsSpecial] = useState(false);
+  const [showInput, setShowInput] = useState(false);
+  const [showOldInput, setShowOldInput] = useState(false);
 
   const history = useHistory();
 
@@ -29,11 +36,70 @@ function EditProfileBtn(prop) {
     overlay: { zIndex: 9999 },
     content: {
       top: "15%",
-      bottom: "40%",
+      bottom: "25%",
       left: "10%",
       right: "10%",
     },
   };
+
+  function checkPasswordLength(e) {
+    if (e.target.value.length > 7) {
+      setPasswordLength(true);
+    } else {
+      setPasswordLength(false);
+    }
+  }
+
+  function checkUpperCase(e) {
+    if (/[A-Z]/.test(e.target.value)) {
+      setContainsUppercase(true);
+    } else {
+      setContainsUppercase(false);
+    }
+  }
+
+  function checkLowerCase(e) {
+    if (/[a-z]/.test(e.target.value)) {
+      setContainsLowercase(true);
+    } else {
+      setContainsLowercase(false);
+    }
+  }
+
+  function checkNumber(e) {
+    if (/\d/.test(e.target.value)) {
+      setContainsNumbers(true);
+    } else {
+      setContainsNumbers(false);
+    }
+  }
+
+  function checkSpecial(e) {
+    if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(e.target.value)) {
+      setContainsSpecial(true);
+    } else {
+      setContainsSpecial(false);
+    }
+  }
+
+  function handlePasswordChange(e) {
+    setNewPassword(e.target.value);
+    checkPasswordLength(e);
+    checkNumber(e);
+    checkUpperCase(e);
+    checkLowerCase(e);
+    checkSpecial(e);
+  }
+
+  function toggleMasking(e) {
+    e.preventDefault();
+    setShowInput(!showInput);
+  }
+
+  function toggleOldMasking(e) {
+    e.preventDefault();
+    setShowOldInput(!showOldInput);
+  }
 
   function openEditProfile() {
     setEditProfileIsOpen(true);
@@ -45,12 +111,18 @@ function EditProfileBtn(prop) {
     setNewEmail("");
     setOldPassword("");
     setNewPassword("");
-    setNewPasswordVerify("");
     prop.setSuccessMessage("");
     setbutton2Class("activePage");
     setbutton3Class("");
     setbutton4Class("");
     setbutton5Class("");
+    setPasswordLength(false);
+    setContainsLowercase(false);
+    setContainsNumbers(false);
+    setContainsSpecial(false);
+    setContainsUppercase(false);
+    setShowInput(false);
+    setShowOldInput(false);
   }
 
   function closeEditProfile() {
@@ -67,12 +139,18 @@ function EditProfileBtn(prop) {
     setNewEmail("");
     setOldPassword("");
     setNewPassword("");
-    setNewPasswordVerify("");
     prop.setSuccessMessage("");
     setbutton2Class("");
     setbutton3Class("activePage");
     setbutton4Class("");
     setbutton5Class("");
+    setPasswordLength(false);
+    setContainsLowercase(false);
+    setContainsNumbers(false);
+    setContainsSpecial(false);
+    setContainsUppercase(false);
+    setShowInput(false);
+    setShowOldInput(false);
   }
 
   function closeEmailPage() {
@@ -89,12 +167,18 @@ function EditProfileBtn(prop) {
     setNewEmail("");
     setOldPassword("");
     setNewPassword("");
-    setNewPasswordVerify("");
     prop.setSuccessMessage("");
     setbutton2Class("");
     setbutton3Class("");
     setbutton4Class("activePage");
     setbutton5Class("");
+    setPasswordLength(false);
+    setContainsLowercase(false);
+    setContainsNumbers(false);
+    setContainsSpecial(false);
+    setContainsUppercase(false);
+    setShowInput(false);
+    setShowOldInput(false);
   }
 
   function closePasswordPage() {
@@ -111,12 +195,18 @@ function EditProfileBtn(prop) {
     setNewEmail("");
     setOldPassword("");
     setNewPassword("");
-    setNewPasswordVerify("");
     prop.setSuccessMessage("");
     setbutton2Class("");
     setbutton3Class("");
     setbutton4Class("");
     setbutton5Class("activePage");
+    setPasswordLength(false);
+    setContainsLowercase(false);
+    setContainsNumbers(false);
+    setContainsSpecial(false);
+    setContainsUppercase(false);
+    setShowInput(false);
+    setShowOldInput(false);
   }
 
   function closeDeletePage() {
@@ -133,11 +223,8 @@ function EditProfileBtn(prop) {
       newUserData.append("name", newName);
       // await axios
       //   .put("http://localhost:5000/userProfile/", newUserData)
-        await axios
-          .put(
-            "https://momentsorbital.herokuapp.com/userProfile/",
-            newUserData
-          )
+      await axios
+        .put("https://momentsorbital.herokuapp.com/userProfile/", newUserData)
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -157,11 +244,11 @@ function EditProfileBtn(prop) {
       const newEmailData = { newEmail };
       // await axios
       //   .put("http://localhost:5000/userProfile/email", newEmailData)
-        await axios
-          .put(
-            "https://momentsorbital.herokuapp.com/userProfile/email/",
-            newEmailData
-          )
+      await axios
+        .put(
+          "https://momentsorbital.herokuapp.com/userProfile/email/",
+          newEmailData
+        )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -177,14 +264,14 @@ function EditProfileBtn(prop) {
   async function submitPassword(e) {
     try {
       e.preventDefault();
-      const newPasswordData = { oldPassword, newPassword, newPasswordVerify };
+      const newPasswordData = { oldPassword, newPassword };
       // await axios
       //   .put("http://localhost:5000/userProfile/password", newPasswordData)
-        await axios
-          .put(
-            "https://momentsorbital.herokuapp.com/userProfile/password/",
-            newPasswordData
-          )
+      await axios
+        .put(
+          "https://momentsorbital.herokuapp.com/userProfile/password/",
+          newPasswordData
+        )
         .then((response) => {
           prop.setSuccessMessage(response.data.successMessage);
         });
@@ -252,15 +339,6 @@ function EditProfileBtn(prop) {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
-        <a
-          href={`https://telegram.me/MomentsOrbBot?start=${prop.teleCode}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          id="telegram-bot-bt"
-        >
-          <i class="fab fa-telegram-plane"></i>
-          <span>Link to Telegram Bot</span>
-        </a>
         {navSideBar}
         <form onSubmit={submitProfile} id="public-profile-form">
           <h2>Public Profile</h2>
@@ -277,24 +355,25 @@ function EditProfileBtn(prop) {
             />
           </div>
           <h5 className="edit-labels">Profile Picture</h5>
-          <div id="image-preview" onClick={() => setEditPicture(true)}>
+          <div id="image-preview" onClick={() => setEditPicture(!editPicture)}>
             <img
               src={`https://momentsorbital.herokuapp.com/images/${prop.profilePic}`}
               // src={`http://localhost:5000/images/${prop.profilePic}`}
               alt="profile-pic"
             />
             <i class="fas fa-edit" />
+            {editPicture && (
+              <div id="upload-image">
+                <input
+                  type="file"
+                  name="image"
+                  accept=".png, .jpg, .jpeg"
+                  onChange={(e) => setNewPicture(e)}
+                />
+              </div>
+            )}
           </div>
-          {editPicture && (
-            <div id="upload-image">
-              <input
-                type="file"
-                name="image"
-                accept=".png, .jpg, .jpeg"
-                onChange={(e) => setNewPicture(e)}
-              />
-            </div>
-          )}
+
           <input
             id="public-profile-submit-btn"
             type="submit"
@@ -341,25 +420,90 @@ function EditProfileBtn(prop) {
         <form onSubmit={submitPassword} id="password-form">
           <h2>Change password</h2>
           <button id="edit-close-button" onClick={closePasswordPage}></button>
-          <div>
+          <div id="password-form-div">
             <label for="old-pass">Old password</label>
             <input
-              type="password"
+              type={showOldInput ? "text" : "password"}
               name="old-pass"
+              required
               onChange={(e) => setOldPassword(e.target.value)}
             />
+            <div
+              id="old-change-password-mask"
+              onClick={(e) => toggleOldMasking(e)}
+            >
+              {showOldInput ? (
+                <i class="fas fa-eye"></i>
+              ) : (
+                <i class="fas fa-eye-slash"></i>
+              )}
+            </div>
             <label for="new-pass">New password</label>
             <input
-              type="password"
+              type={showInput ? "text" : "password"}
               name="new-pass"
-              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              onChange={(e) => handlePasswordChange(e)}
             />
-            <label for="new-pass-verify">Confirm new password</label>
-            <input
-              type="password"
-              name="new-pass-verify"
-              onChange={(e) => setNewPasswordVerify(e.target.value)}
+            <PasswordStrengthBar
+              className="password-strength-bar"
+              password={newPassword}
+              minLength="8"
             />
+            <div id="change-password-mask" onClick={(e) => toggleMasking(e)}>
+              {showInput ? (
+                <i class="fas fa-eye"></i>
+              ) : (
+                <i class="fas fa-eye-slash"></i>
+              )}
+            </div>
+            <div id="change-passwordreqs">
+              <div
+                className={
+                  passwordLength
+                    ? "passwordreqmet eightchar"
+                    : "passwordrequnmet eightchar"
+                }
+              >
+                8 characters minimum
+              </div>
+              <div
+                className={
+                  containsNumbers
+                    ? "passwordreqmet onenum"
+                    : "passwordrequnmet onenum"
+                }
+              >
+                One number
+              </div>
+              <div
+                className={
+                  containsUppercase
+                    ? "passwordreqmet oneupp"
+                    : "passwordrequnmet oneupp"
+                }
+              >
+                One uppercase character
+              </div>
+              <div
+                className={
+                  containsLowercase
+                    ? "passwordreqmet onelow"
+                    : "passwordrequnmet onelow"
+                }
+              >
+                One lowercase character
+              </div>
+              <div
+                className={
+                  containsSpecial
+                    ? "passwordreqmet onespec"
+                    : "passwordrequnmet onespec"
+                }
+              >
+                One special character (!@#$...)
+              </div>
+            </div>
             <input type="submit" value="Update password" />
           </div>
         </form>
@@ -394,7 +538,9 @@ function EditProfileBtn(prop) {
               name="delete-password"
               onChange={(e) => setDeletePassword(e.target.value)}
             />
-            <input name="terminate" type="submit" value="Terminate Account" />
+            <div>
+              <input name="terminate" type="submit" value="Terminate Account" />
+            </div>
           </div>
         </form>
       </Modal>

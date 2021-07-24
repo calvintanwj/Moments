@@ -43,8 +43,9 @@ function NavBar() {
       {loggedIn === false && (
         <>
           <Link className="navbar-routes" to="/">
-            <img src={logo} alt="icon" />
-            <h3 id="navbar-title">Moments</h3>
+            <div id="navbar-img-div">
+              <img src={logo} alt="icon" />
+            </div>
           </Link>
           <ul className="navbar-links">
             <Link className="navbar-routes" to="/login">
@@ -63,10 +64,18 @@ function NavBar() {
             successMessage={successMessage}
             setSuccessMessage={setSuccessMessage}
           />
-          <div>
+          <div id="navbar-login-img-div">
             <img src={logo} alt="icon" />
-            <h3 id="navbar-title">Moments</h3>
           </div>
+          <a
+            href={`https://telegram.me/MomentsOrbBot?start=${teleCode}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            id="telegram-bot-bt"
+          >
+            <i class="fab fa-telegram-plane"></i>
+            <span>Link to Telegram Bot</span>
+          </a>
           <div id="user-nav-container">
             <h5 key={name} id="navbar-profile-name">
               Welcome back, {name}

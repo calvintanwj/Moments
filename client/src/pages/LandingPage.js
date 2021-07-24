@@ -12,9 +12,9 @@ function LandingPage() {
       <div id="home-page-left-container">
         <h1>Moments</h1>
         <h3>Journal + Planner + Calendar</h3>
-        <h2>Some inspirational text to get People to use the app</h2>
+        <h2>One app to plan your day. Write, plan, and get organized.</h2>
         <Link id="home-page-link" to="/sign-up">
-          <button>Sign-up</button>
+          <button>Join Moments</button>
         </Link>
       </div>
       <div id="home-page-slideshow">

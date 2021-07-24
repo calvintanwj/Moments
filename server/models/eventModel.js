@@ -6,7 +6,7 @@ const eventSchema = new mongoose.Schema({
   start: { type: String, required: true },
   end: { type: String },
   allDay: { type: Boolean, defaultValue: false },
-  backgroundColor: { type: String, defaultValue: "lightblue" },
+  color: { type: String, defaultValue: "#2196f3" },
   reminder: { type: String },
 });
 

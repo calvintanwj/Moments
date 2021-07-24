@@ -6,6 +6,7 @@ function MDToolbarButton({ onClick, button }) {
     <button
       key={button.key}
       id={button.id}
+      title={button.name}
       className="markdowntb-bt"
       onClick={() => onClick(button.key)}
     >

@@ -1,26 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Modal from "react-modal";
+import { CirclePicker } from "react-color";
 
 // Event Form Modal
 function AddEventForm(props) {
-  // title of event
-  const [title, setTitle] = useState("");
-
-  // starting time of event
-  const [startStr, setStart] = useState("");
-
-  // ending time of event
-  const [endStr, setEnd] = useState("");
-
-  // all day of event
-  const [allDay, setallDay] = useState(false);
-
-  // color of event
-  const [color, setColor] = useState("#0000FF");
-
-  // reminder of event
-  const [reminder, setReminder] = useState("No reminder");
-
   // logic to handle an event add
   async function onEventAdded(event) {
     try {
@@ -29,12 +13,14 @@ function AddEventForm(props) {
         "https://momentsorbital.herokuapp.com/events/add/",
         event
       );
-      setTitle("");
-      setStart("");
-      setEnd("");
-      setallDay(false);
-      setColor("0000FF");
-      setReminder("No reminder");
+      props.setTitle("");
+      props.setStart("");
+      props.setEnd("");
+      props.setAllDay(false);
+      props.setColor("#2196f3");
+      props.setReminder("No reminder");
+      props.setEndTime("");
+      props.setStartTime("");
       props.closeEventForm();
       props.renderEvents();
     } catch (err) {
@@ -46,43 +32,117 @@ function AddEventForm(props) {
   function onSubmit(e) {
     e.preventDefault();
 
-    if (title === "") {
+    if (props.title === "") {
       alert("Please key in a title");
       return false;
-    } else if (allDay === false) {
-      if (startStr === "") {
-        alert("Please key in starting time");
+    } else if (props.allDay === false) {
+      if (props.startStr === "") {
+        alert("Please key in a starting time");
         return false;
-      } else if (endStr === "") {
-        alert("Please key in ending time");
+      } else if (props.endStr === "") {
+        alert("Please key in a ending time");
         return false;
       }
-    } else if (allDay === true) {
-      if (startStr === "") {
+    } else if (props.allDay === true) {
+      if (props.startStr === "") {
         alert("Plese key in date");
         return false;
       }
     }
-    console.log(reminder);
     props.closeEventForm();
+    let startStr = props.startStr;
+    if (props.startTime) {
+      startStr = startStr + "T" + props.startTime;
+    }
+    let endStr = props.endStr;
+    if (props.endTime) {
+      endStr = endStr + "T" + props.endTime;
+    }
     onEventAdded({
-      title,
+      title: props.title,
       start: startStr,
       end: endStr,
-      allDay,
-      color,
-      reminder,
+      allDay: props.allDay,
+      color: props.color,
+      reminder: props.reminder,
     });
+  }
+
+  function handleSetStart(e) {
+    props.setStart(e.target.value);
+    if (props.endStr === "") {
+      props.setEnd(e.target.value);
+    }
+  }
+
+  function handleCloseEventForm() {
+    if (
+      props.title === "" &&
+      props.allDay === false &&
+      props.reminder === "No reminder"
+    ) {
+      props.closeEventForm();
+    } else {
+      openDiscard();
+    }
+  }
+
+  const customStylesForDiscard = {
+    overlay: { zIndex: 9999 },
+    content: {
+      top: "43%",
+      bottom: "42.5%",
+      left: "41%",
+      right: "41%",
+    },
+  };
+
+  const [discardIsOpen, setDiscardIsOpen] = useState(false);
+
+  function openDiscard() {
+    setDiscardIsOpen(true);
+  }
+
+  function closeDiscard() {
+    setDiscardIsOpen(false);
+  }
+
+  function handleDiscard() {
+    closeDiscard();
+    props.closeEventForm();
+  }
+
+  function handleAllDay(e) {
+    props.setAllDay(e.target.checked);
+    if (e.target.checked) {
+      props.setAddEndTime(false);
+      props.setAddStartTime(false);
+    }
   }
 
   // The Event Form
   return (
     <div id="event-form-container">
+      <Modal
+        isOpen={discardIsOpen}
+        onRequestClose={closeDiscard}
+        style={customStylesForDiscard}
+      >
+        <div id="discard-prompt">
+          <p>Discard unsaved changes?</p>
+          <button id="discard-bt" onClick={handleDiscard}>
+            Discard
+          </button>
+          <button id="cancel-bt" onClick={closeDiscard}>
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <div id="event-form-header">
         <h2>Event Form</h2>
         <button
           id="event-close-button"
-          onClick={() => props.closeEventForm()}
+          onClick={() => handleCloseEventForm()}
         ></button>
       </div>
       <form id="event-form" onSubmit={onSubmit}>
@@ -91,29 +151,63 @@ function AddEventForm(props) {
           <input
             id="event-form-title"
             name="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={props.title}
+            onChange={(e) => props.setTitle(e.target.value)}
           />
         </div>
         <div>
           <label for="start-time">Starting time: </label>
           <input
             id="event-form-start"
-            type="datetime-local"
+            type="date"
             name="start-time"
-            value={startStr}
-            onChange={(e) => setStart(e.target.value)}
+            max="2999-12-31"
+            value={props.startStr}
+            onChange={(e) => handleSetStart(e)}
           />
+          {props.addStartTime ? (
+            <input
+              id="event-form-start-time"
+              type="time"
+              value={props.startTime}
+              onChange={(e) => props.setStartTime(e.target.value)}
+            ></input>
+          ) : (
+            <></>
+          )}
+          <button
+            className="add-start-time"
+            onClick={(e) => props.handleAddStartTime(e)}
+          >
+            {props.addStartTime ? "Remove Time" : "Add Time"}
+          </button>
         </div>
         <div>
           <label for="end-time">Ending time:</label>
           <input
             id="event-form-end"
-            type="datetime-local"
+            type="date"
             name="end-time"
-            value={endStr}
-            onChange={(e) => setEnd(e.target.value)}
+            max="2999-12-31"
+            value={props.endStr}
+            onChange={(e) => props.setEnd(e.target.value)}
           />
+          {props.addEndTime ? (
+            <input
+              id="event-form-end-time"
+              type="time"
+              value={props.endTime}
+              onChange={(e) => props.setEndTime(e.target.value)}
+            ></input>
+          ) : (
+            <></>
+          )}
+          <button
+            className="add-end-time"
+            onClick={(e) => props.handleAddEndTime(e)}
+          >
+            {props.addEndTime ? "Remove Time" : "Add Time"}
+          </button>
         </div>
         <div>
           <label for="all-day">All Day: </label>
@@ -121,29 +215,47 @@ function AddEventForm(props) {
             id="event-form-allday"
             type="checkbox"
             name="all-day"
-            value={allDay}
-            onChange={(e) => setallDay(e.target.checked)}
+            checked={props.allDay}
+            value={props.allDay}
+            onChange={(e) => handleAllDay(e)}
           />
         </div>
         <div>
           <label for="color">Color: </label>
-          <input
+          <CirclePicker
             id="event-form-color"
-            type="color"
             name="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
+            colors={[
+              "#f22724",
+              "#f87e40",
+              "#fde830",
+              "#57e92f",
+              "#2196f3",
+              "#57e7cf",
+              "#9751c6",
+              "#e356f4",
+              "#cfcacf",
+            ]}
+            circleSize="28"
+            circleSpacing="14"
+            width="130px"
+            color={props.color}
+            onChange={(e) => props.setColor(e.hex)}
           />
         </div>
+
         <div>
           <label for="reminder">Remind me:</label>
-          <select name="reminder" value={reminder} onChange={(e) => setReminder(e.target.value)}>
+          <select
+            id="event-form-reminders"
+            name="reminder"
+            value={props.reminder}
+            onChange={(e) => props.setReminder(e.target.value)}
+          >
             <option value="Remind me one day before">One day before</option>
             <option value="Remind me two days before">Two days before</option>
             <option value="Remind me one week before">One week before</option>
-            <option value="No reminder">
-              No Reminder
-            </option>
+            <option value="No reminder">No Reminder</option>
           </select>
         </div>
         <div>
