@@ -14,7 +14,6 @@ function HomePage() {
   const [animate, setAnimate] = useState(true);
 
   function handleSelectEntry(index) {
-    console.log(`Selecting to ${index}`);
     setSelectedID(index);
   }
 
@@ -93,15 +92,17 @@ function HomePage() {
     <div id="journal-component">
       {selectedID === -1 ? (
         <div id="journal-homepage">
-          <DatePicker
-            selected={date}
-            onChange={(date) => setDate(date)}
-            dateFormat="dd-MM-yyy"
-            popperClassName="popper"
-            wrapperClassName="center-in-grid"
-          />
           <div class="sticky">
-            <button onClick={toggleAnimate}>
+            <DatePicker
+              id="journal-datepicker"
+              selected={date}
+              onChange={(date) => setDate(date)}
+              dateFormat="dd-MM-yyy"
+              showYearDropdown
+              popperClassName="popper"
+              wrapperClassName="center-in-grid"
+            />
+            <button id="journal-animation-bt" onClick={toggleAnimate}>
               {animate
                 ? "Disable journal animation"
                 : "Enable journal animation"}
@@ -110,7 +111,6 @@ function HomePage() {
               Add New Entry
             </button>
           </div>
-
           <div id="entries-container">
             {entries.map((entryObject, index) => {
               return (

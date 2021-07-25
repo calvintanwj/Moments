@@ -29,14 +29,16 @@ function MarkdownEntry(props) {
   return (
     <div id="journal">
       <button onClick={props.deleteHandler}>
-        <i class="far fa-times-circle"></i>
+        {" "}
+        <i class="fas fa-trash-alt fa-2x"></i>
       </button>
       <div id="entry-text" onClick={props.clickHandler}>
         <h2 id="entry-title">{entry.title}</h2>
         <p>{format(new Date(entry.date), "dd-MM-yyyy")}</p>
-        <ReactMarkdown components={components} remarkPlugins={[gfm]}>
-          {entry.entry}
-        </ReactMarkdown>
+        <ReactMarkdown
+          components={components}
+          remarkPlugins={[gfm]}
+        ></ReactMarkdown>
       </div>
     </div>
   );

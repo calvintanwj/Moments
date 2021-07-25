@@ -190,9 +190,8 @@ function Journal(props) {
       )}`,
       newEntry
     );
-    console.log(`New Index: ${numPosts.data.entries.length - 1}`);
+    props.dateChangeHandler(date);
     setIndex(numPosts.data.entries.length - 1);
-    // await axios.put(`https://momentsorbital.herokuapp.com/journal/${entry._id}`, newEntry)
   }
 
   // Keep track of position of cursor
@@ -219,7 +218,6 @@ function Journal(props) {
 
   // Contains the main logic to toggle between editing and preview mode
   function toggleMode() {
-    console.log(input);
     setEditing(!isEditing);
   }
 
@@ -315,9 +313,11 @@ function Journal(props) {
       <div id="edit-area" class={animate ? "contract" : ""}>
         <input id="journal-title-edit" value={title} onChange={titleHandler} />
         <DatePicker
+          id="journal-edit-datepicker"
           selected={date}
           onChange={(date) => dateHandler(date)}
           dateFormat={"dd-MM-yyy"}
+          showYearDropdown
           className="no-border text-font"
         />
         <textarea

@@ -355,11 +355,12 @@ function EditProfileBtn(prop) {
             />
           </div>
           <h5 className="edit-labels">Profile Picture</h5>
-          <div id="image-preview" onClick={() => setEditPicture(!editPicture)}>
+          <div id="image-preview" >
             <img
               src={`https://momentsorbital.herokuapp.com/images/${prop.profilePic}`}
               // src={`http://localhost:5000/images/${prop.profilePic}`}
               alt="profile-pic"
+              onClick={() => setEditPicture(!editPicture)}
             />
             <i class="fas fa-edit" />
             {editPicture && (

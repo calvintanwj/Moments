@@ -94,7 +94,7 @@ function SchedulerToolbar(props) {
             className="date-picker"
             selected={props.dateDesired}
             onChange={(date) => goToDate(date)}
-            dateFormat="dd/MM/yyyy"
+            dateFormat="dd-MM-yyyy"
             showYearDropdown
             // scrollableMonthYearDropdown
           />
