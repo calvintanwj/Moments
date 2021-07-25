@@ -6,6 +6,8 @@
   flex-direction: column;
   padding: 5px;
   position: relative;
+  height: 88vh;
+  width: 98%;
 }
 
 /* Styling for top header of journal */
@@ -26,9 +28,8 @@
 /* ============================================================================ */
 
 #back-button {
-  height: 40px;
-  width: 70px;
-  margin-left: 10px;
+  width: 10%;
+  margin-left: 4%;
   border-radius: 35%;
   outline: none;
   display: flex;
@@ -77,8 +78,9 @@
 #mode-switch + label {
   cursor: pointer;
   text-indent: -9999px;
-  width: 90px;
-  height: 40px;
+  width: 75px;
+  height: 30px;
+  margin-right: 6%;
   display: block;
   border-radius: 100px;
   position: relative;
@@ -97,8 +99,8 @@
   position: absolute;
   top: 5px;
   left: 5px;
-  width: 30px;
-  height: 30px;
+  width: 30%;
+  height: 65%;
   border-radius: 90px;
   background: rgba(124, 122, 122, 0.767);
   transition: 0.5s;
@@ -258,7 +260,7 @@
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   padding: 20px;
-  margin-top: 10px;
+  margin-top: 2%;
   outline: none;
   align-self: center;
   justify-content: center;
@@ -299,8 +301,8 @@
 
 /* Styling for journal area */
 #edit-area {
-  width: 40vw;
-  height: 62vh;
+  width: 85%;
+  height: calc(100% - (210px));
 }
 
 .contract {
@@ -311,20 +313,20 @@
 /* Animation for journal area */
 @keyframes contract {
   from {
-    height: 69vh;
+    height: calc(100% - 150px);
     width: 86%;
     opacity: 0.4;
   }
   to {
-    height: 62vh;
-    width: 40vw;
+    height: calc(100% - (210px));
+    width: 85%;
     opacity: 1;
   }
 }
 
 /* Styling for preview area */
 #preview-area {
-  height: 69vh;
+  height: calc(100% - 150px);
   width: 86%;
 }
 
@@ -336,12 +338,12 @@
 /* Animation for the preview-area */
 @keyframes expand {
   from {
-    height: 62vh;
-    width: 40vw;
+    height: calc(100% - (210px));
+    width: 85%;
     opacity: 0.4;
   }
   to {
-    height: 69vh;
+    height: calc(100% - 150px);
     width: 86%;
     opacity: 1;
   }
@@ -396,6 +398,7 @@
   background-color: #f5f2f3;
   margin-right: 8px;
   border-radius: 10px;
+  font-size: 0.75em;
 }
 
 #delete-button:hover {
@@ -469,5 +472,5 @@
   font-size: 0.8em;
   padding: 10px;
   width: 97%;
-  height: 79%;
+  height: calc(100% - 105px);
 }
