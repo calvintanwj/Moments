@@ -365,20 +365,20 @@ body {
 #public-profile-form h5 {
   position: fixed;
   left: 42%;
-  top: 33%;
+  top: 34%;
 }
 
 #image-preview {
   height: 120px;
   width: 120px;
   position: fixed;
-  top: 39.5%;
+  top: 44%;
   left: 41.5%;
 }
 
 #image-preview img {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   cursor: pointer;
   padding: 4px;
@@ -492,7 +492,7 @@ body {
   flex-direction: column;
   position: fixed;
   width: 200px;
-  left: 45%;
+  left: 31%;
   top: 30%;
 }
 
@@ -533,9 +533,9 @@ body {
 
 #change-passwordreqs {
   position: relative;
-  bottom: 30px;
-  right: 20px;
-  width: 200%;
+  bottom: 130px;
+  left: 360px;
+  width: 160%;
   display: grid;
   grid-template-columns: 2;
   grid-template-rows: 3;

@@ -22,8 +22,8 @@
   justify-content: space-between;
   width: 100%;
   height: 7%;
-  margin-top: 10px;
-  margin-bottom: -20px;
+  margin-top: 1%;
+  margin-bottom: -3%;
 }
 
 /* General styling for date-picker */
@@ -81,10 +81,11 @@
 
 /* General styling for scheduler date*/
 #scheduler-date {
-  font-size: 1.25em;
+  font-size: 0.95em;
   margin: 0px;
   margin-left: 10px;
   color: rgba(63, 61, 61, 0.938);
+  height: 30%;
 }
 
 /* Styling for buttons of scheduler toolbar*/
@@ -120,7 +121,7 @@
 }
 
 #add-event-button i {
-  font-size: 1.2em;
+  font-size: 1.1em;
   color: black;
 }
 
@@ -185,11 +186,11 @@
 }
 
 #scheduler-left-button i {
-  font-size: 1.5em;
+  font-size: 1.3em;
 }
 
 #scheduler-right-button i {
-  font-size: 1.5em;
+  font-size: 1.3em;
 }
 
 #scheduler-right-button {
@@ -200,6 +201,7 @@
 
 /* General styling for scheduler */
 #scheduler {
+  margin-top: 0.5%;
   height: 92.7%;
   cursor: pointer;
   z-index: 5000;

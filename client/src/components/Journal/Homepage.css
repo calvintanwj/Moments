@@ -26,10 +26,10 @@
 #entries-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  height: 85vh;
+  height: 74vh;
   gap: 0px 5px;
   justify-items: center;
-  margin-top: 2.6%;
+  margin-top: 2.4%;
   overflow: hidden auto;
 }
 
@@ -57,12 +57,12 @@
 }
 
 #AddButton {
-  font-size: 1rem;
+  font-size: 1em;
   outline: none;
   justify-content: center;
   font-family: "Exo 2", sans-serif;
   height: 15vh;
-  width: 70%;
+  width: 75%;
   position: relative;
   overflow: visible;
   border: 1px solid #f5f2f3;
@@ -91,7 +91,7 @@
   width: 80%;
   margin-left: 10%;
   margin-right: -20%;
-  height: 2vh;
+  height: 2.5vh;
   margin-top: 6%;
   text-align: center;
   cursor: pointer;
@@ -131,6 +131,7 @@
 
 #AddButton .fa-plus-circle {
   display: block;
+  font-size: 2em;
 }
 
 .sticky {
@@ -146,9 +147,10 @@
 
 .sticky > button {
   width: 25%;
-  height: 4vh;
+  height: 7.3vh;
   font-family: "Exo 2", sans-serif;
   font-weight: bold;
+  font-size: 0.8em;
   border: 1px solid #f5f2f3;
   border-radius: 20px;
   box-shadow: -3px -3px 4px rgba(255, 255, 255, 0.828),
