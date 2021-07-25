@@ -11,10 +11,9 @@ function HomePage() {
   const [date, setDate] = useState(new Date());
   const [entries, setEntries] = useState([]);
   const [selectedID, setSelectedID] = useState(-1);
-  const [animate, setAnimate] = useState(true)
+  const [animate, setAnimate] = useState(true);
 
   function handleSelectEntry(index) {
-    console.log(`Selecting to ${index}`);
     setSelectedID(index);
   }
 
@@ -31,18 +30,18 @@ function HomePage() {
     //     entry: "",
     //   }
     // );
-    const res = await axios.post('http://localhost:5000/journal/', {
-      date: format(date, 'yyyy-MM-dd'),
+    const res = await axios.post("http://localhost:5000/journal/", {
+      date: format(date, "yyyy-MM-dd"),
       title: "Journal Title",
-      entry: ""
+      entry: "",
     });
     const newEntries = [...entries, res.data.data];
     setEntries(newEntries);
   }
 
   async function handleDeleteEntry(entry, index) {
-    handleUnselectEntry(entry)
-    await axios.delete(`http://localhost:5000/journal/${entry._id}`)
+    handleUnselectEntry(entry);
+    await axios.delete(`http://localhost:5000/journal/${entry._id}`);
     // await axios.delete(`https://momentsorbital.herokuapp.com/journal/${entry._id}`);
     removeEntry(index);
   }
@@ -69,20 +68,22 @@ function HomePage() {
   }
 
   function toggleAnimate() {
-    setAnimate(!animate)
+    setAnimate(!animate);
   }
 
   useEffect(() => {
     async function fetchData() {
-      const queryObject = await axios.get(`http://localhost:5000/journal/${format(date, 'yyyy-MM-dd')}`);
+      const queryObject = await axios.get(
+        `http://localhost:5000/journal/${format(date, "yyyy-MM-dd")}`
+      );
       // const queryObject = await axios.get(
       //   `https://momentsorbital.herokuapp.com/journal/${format(
       //     date,
       //     "yyyy-MM-dd"
       //   )}`
       // );
-      const entries = queryObject.data.entries ?? []
-      setEntries(entries)
+      const entries = queryObject.data.entries ?? [];
+      setEntries(entries);
     }
     fetchData();
   }, [date]);
@@ -91,19 +92,25 @@ function HomePage() {
     <div id="journal-component">
       {selectedID === -1 ? (
         <div id="journal-homepage">
-          <DatePicker selected={date}
-            onChange={(date) => setDate(date)}
-            dateFormat='dd-MM-yyy'
-            popperClassName="popper"
-            wrapperClassName="center-in-grid"
-          />
           <div class="sticky">
-            <button onClick={toggleAnimate}>
-              {animate ? "Disable journal animation" : "Enable journal animation"}
+            <DatePicker
+              id="journal-datepicker"
+              selected={date}
+              onChange={(date) => setDate(date)}
+              dateFormat="dd-MM-yyy"
+              showYearDropdown
+              popperClassName="popper"
+              wrapperClassName="center-in-grid"
+            />
+            <button id="journal-animation-bt" onClick={toggleAnimate}>
+              {animate
+                ? "Disable journal animation"
+                : "Enable journal animation"}
             </button>
-            <button id="Add-Entry-bar" onClick={handleAddEntry}>Add New Entry</button>
+            <button id="Add-Entry-bar" onClick={handleAddEntry}>
+              Add New Entry
+            </button>
           </div>
-
           <div id="entries-container">
             {entries.map((entryObject, index) => {
               return (
@@ -130,9 +137,7 @@ function HomePage() {
           editHandler={(entryData, index) => handleEditEntry(entryData, index)}
           unselectHandler={() => handleUnselectEntry()}
           dateChangeHandler={(newEntry) => handleEntryDateChange(newEntry)}
-          deleteHandler={(index) =>
-            handleDeleteEntry(entries[index], index)
-          }
+          deleteHandler={(index) => handleDeleteEntry(entries[index], index)}
           animate={animate}
         />
       )}

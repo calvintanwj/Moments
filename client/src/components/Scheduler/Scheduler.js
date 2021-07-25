@@ -1,5 +1,5 @@
 import "./Scheduler.css";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -11,6 +11,7 @@ import SchedulerToolbar from "./SchedulerToolbar.js";
 import AddEventForm from "./AddEventForm.js";
 import axios from "axios";
 import { CirclePicker } from "react-color";
+import AuthContext from "../../context/AuthContext";
 
 // Scheduler component
 function Scheduler() {
@@ -32,6 +33,7 @@ function Scheduler() {
 
   // Array of events
   const [events, setEvents] = useState([]);
+  const { loggedIn } = useContext(AuthContext);
 
   async function renderEvents() {
     try {
@@ -48,8 +50,10 @@ function Scheduler() {
   }
 
   useEffect(() => {
-    renderEvents();
-  }, []);
+    if (loggedIn) {
+      renderEvents();
+    }
+  }, [loggedIn]);
 
   // styling for Edit Form
   const customStylesForEdit = {
