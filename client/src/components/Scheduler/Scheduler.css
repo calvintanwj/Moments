@@ -444,7 +444,6 @@
   height: 10%;
   background: transparent;
   border: none;
-  position: fixed;
 }
 
 #edit-event-close-button:after {
@@ -452,9 +451,9 @@
   content: "\f410";
   font-size: 30px;
   cursor: pointer;
-  position: fixed;
-  top: 27%;
-  right: 42%;
+  position: relative;
+  left: 10%;
+  bottom: 10%;
 }
 
 #edit-event-close-button:hover {
@@ -633,7 +632,8 @@
 
 #discard-prompt p {
   font-weight: bold;
-  margin-top: 1%;
+  font-size: 0.9em;
+  margin-top: -1%;
 }
 
 #discard-prompt button {
@@ -641,7 +641,7 @@
   padding: 5px;
   float: right;
   margin: 0 3px;
-  margin-top: 6%;
+  margin-top: 2.5%;
   cursor: pointer;
   border: none;
   border-radius: 10px;
