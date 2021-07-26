@@ -35,10 +35,9 @@ function MarkdownEntry(props) {
       <div id="entry-text" onClick={props.clickHandler}>
         <h2 id="entry-title">{entry.title}</h2>
         <p>{format(new Date(entry.date), "dd-MM-yyyy")}</p>
-        <ReactMarkdown
-          components={components}
-          remarkPlugins={[gfm]}
-        >{entry.entry}</ReactMarkdown>
+        <ReactMarkdown components={components} remarkPlugins={[gfm]}>
+          {entry.entry}
+        </ReactMarkdown>
       </div>
     </div>
   );

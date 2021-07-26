@@ -88,12 +88,13 @@ function AddEventForm(props) {
   }
 
   const customStylesForDiscard = {
-    overlay: { zIndex: 9999 },
+    overlay: { zIndex: 9999, width: "100vw", height: "100vh" },
     content: {
-      top: "43%",
+      top: "44.5%",
       bottom: "42.5%",
-      left: "41%",
-      right: "41%",
+      left: "42%",
+      right: "42%",
+      overflow: "auto",
     },
   };
 
