@@ -38,7 +38,7 @@ function MarkdownEntry(props) {
         <ReactMarkdown
           components={components}
           remarkPlugins={[gfm]}
-        ></ReactMarkdown>
+        >{entry.entry}</ReactMarkdown>
       </div>
     </div>
   );
